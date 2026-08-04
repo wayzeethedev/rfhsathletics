@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>River Falls Athletics</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#f4f1eb;
+    --card:#faf8f5;
+    --text:#151515;
+    --muted:#77736d;
+    --border:#dad5ce;
+    --accent:#b4472d;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Inter,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:28px 22px 120px;
+}
+
+.top{
+    margin-bottom:50px;
+}
+
+.small{
+    text-transform:uppercase;
+    letter-spacing:.16em;
+    font-size:.72rem;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:14px;
+}
+
+h1{
+    font-family:"Instrument Serif",serif;
+    font-size:clamp(2.7rem,8vw,5.4rem);
+    line-height:.92;
+    font-weight:400;
+    max-width:650px;
+}
+
+.subtitle{
+    margin-top:22px;
+    max-width:520px;
+    color:var(--muted);
+    line-height:1.7;
+    font-size:.98rem;
+}
+
+.games{
+    display:grid;
+    gap:26px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    display:grid;
+    grid-template-columns:90px 1fr auto;
+    gap:30px;
+    padding:28px;
+    transition:.18s;
+    cursor:pointer;
+}
+
+.card:hover{
+    border-color:var(--accent);
+    transform:translateY(-2px);
+}
+
+.date{
+    text-align:center;
+}
+
+.day{
+    font-size:3rem;
+    font-weight:800;
+    line-height:.9;
+}
+
+.month{
+    margin-top:6px;
+    text-transform:uppercase;
+    font-size:.78rem;
+    letter-spacing:.18em;
+    color:var(--muted);
+}
+
+.info{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.sport{
+    color:var(--accent);
+    font-size:.74rem;
+    text-transform:uppercase;
+    letter-spacing:.18em;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.matchup{
+    font-family:"Instrument Serif",serif;
+    font-size:2rem;
+    line-height:1;
+    margin-bottom:10px;
+}
+
+.meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    color:var(--muted);
+    font-size:.92rem;
+}
+
+.side{
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    align-items:flex-end;
+    min-width:120px;
+}
+
+.badge{
+    border:1px solid var(--text);
+    padding:4px 10px;
+    font-size:.72rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+}
+
+.time{
+    font-size:1.1rem;
+    font-weight:700;
+}
+
+@media(max-width:700px){
+
+.card{
+grid-template-columns:70px 1fr;
+gap:18px;
+}
+
+.side{
+grid-column:2;
+flex-direction:row;
+justify-content:space-between;
+align-items:center;
+margin-top:18px;
+}
+
+.matchup{
+font-size:1.6rem;
+}
+
+.day{
+font-size:2.4rem;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="top">
+<div class="small">River Falls Wildcats Athletics</div>
+
+<h1>Upcoming Games</h1>
+
+<p class="subtitle">
+Follow every River Falls Wildcats matchup throughout the season. Conference games, home events, and away contests—all in one place.
+</p>
+</div>
+
+<div class="games">
+
+<div class="card">
+    <div class="date">
+        <div class="day">20</div>
+        <div class="month">AUG</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">vs</span> Stevens Point
+        </div>
+
+        <div class="meta">
+            <span>📍 River Falls High School</span>
+            <span>Season Opener</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Home</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">28</div>
+        <div class="month">AUG</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">@</span> Marshfield
+        </div>
+
+        <div class="meta">
+            <span>📍 Marshfield High School</span>
+            <span>Buy Tickets Available</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Away</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">04</div>
+        <div class="month">SEP</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">@</span> Eau Claire North
+        </div>
+
+        <div class="meta">
+            <span>📍 Eau Claire North High School</span>
+            <span>Non-Conference</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Away</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">11</div>
+        <div class="month">SEP</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">@</span> Superior
+        </div>
+
+        <div class="meta">
+            <span>📍 Superior High School</span>
+            <span>Big Rivers Conference</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Away</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">18</div>
+        <div class="month">SEP</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">vs</span> Chippewa Falls
+        </div>
+
+        <div class="meta">
+            <span>📍 River Falls High School</span>
+            <span>Big Rivers Conference</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Home</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">25</div>
+        <div class="month">SEP</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">vs</span> New Richmond
+        </div>
+
+        <div class="meta">
+            <span>📍 River Falls High School</span>
+            <span>Big Rivers Conference</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Home</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">02</div>
+        <div class="month">OCT</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">@</span> Hudson
+        </div>
+
+        <div class="meta">
+            <span>📍 Hudson High School</span>
+            <span>Big Rivers Conference</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Away</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">09</div>
+        <div class="month">OCT</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">vs</span> Rice Lake
+        </div>
+
+        <div class="meta">
+            <span>📍 River Falls High School</span>
+            <span>Big Rivers Conference</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Home</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="date">
+        <div class="day">16</div>
+        <div class="month">OCT</div>
+    </div>
+
+    <div class="info">
+        <div class="sport">Football • Varsity</div>
+        <div class="matchup">
+            River Falls <span style="color:#9a968f;">@</span> Menomonie
+        </div>
+
+        <div class="meta">
+            <span>📍 Menomonie High School</span>
+            <span>Big Rivers Conference</span>
+        </div>
+    </div>
+
+    <div class="side">
+        <div class="badge">Away</div>
+        <div class="time">7:00 PM</div>
+    </div>
+</div>
+
+</div>
+
+</body>
+</html>
