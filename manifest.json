@@ -1,0 +1,23 @@
+{
+    "name": "Wiley Bucks",
+    "short_name": "Wiley Bucks",
+    "description": "Earn rewards by showing your Wildcat pride at school events.",
+    "start_url": "/student.html",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#f6f7fb",
+    "theme_color": "#5B2D90",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

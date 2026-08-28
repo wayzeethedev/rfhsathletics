@@ -1,0 +1,2601 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Wiley Bucks Admin</title>
+
+<link rel="manifest" href="manifest.json">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    rel="stylesheet"
+>
+
+<!-- QR SCANNER -->
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Inter, sans-serif;
+    }
+
+    body {
+        background: #f6f7fb;
+        color: #222;
+        min-height: 100vh;
+        padding: 28px 18px calc(90px + env(safe-area-inset-bottom));
+    }
+
+    button,
+    input,
+    select {
+        font: inherit;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .page-header p {
+        color: #777;
+        font-size: .9rem;
+    }
+
+    /* =========================
+       SECTIONS
+    ========================= */
+
+    .section {
+        display: none;
+    }
+
+    .section.active {
+        display: block;
+    }
+
+    .section-title {
+        font-size: 21px;
+        font-weight: 700;
+        margin-bottom: 14px;
+    }
+
+    /* =========================
+       CARDS
+    ========================= */
+
+    .card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 14px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    /* =========================
+       STATS
+    ========================= */
+
+    .stat-container {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 26px;
+    }
+
+    .stat-box {
+        flex: 1;
+        min-width: 0;
+        background: #fff;
+        border-radius: 16px;
+        padding: 18px 10px;
+        text-align: center;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .stat-label {
+        color: #777;
+        font-size: .75rem;
+    }
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .primary-btn {
+        width: 100%;
+        border: none;
+        border-radius: 13px;
+        padding: 13px 16px;
+        background: #5B2D90;
+        color: #fff;
+        font-weight: 600;
+        font-size: .9rem;
+        transition: .15s ease;
+    }
+
+    .primary-btn:hover {
+        background: #4d257a;
+    }
+
+    .primary-btn:active {
+        transform: scale(.99);
+    }
+
+    .secondary-btn {
+        border: 1px solid #ddd;
+        background: #fff;
+        color: #222;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 600;
+        font-size: .82rem;
+    }
+
+    .secondary-btn:hover {
+        background: #f7f7f7;
+    }
+
+    .danger-btn {
+        border: none;
+        background: #fff0f0;
+        color: #c62828;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 600;
+        font-size: .82rem;
+    }
+
+    /* =========================
+       EVENTS
+    ========================= */
+
+    .event-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .event-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+
+    .event-title {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    .event-matchup {
+        color: #666;
+        font-size: .82rem;
+        margin-top: 3px;
+    }
+
+    .event-points {
+        color: #5B2D90;
+        font-size: .82rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .event-info {
+        color: #777;
+        font-size: .82rem;
+        line-height: 1.55;
+    }
+
+    .event-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .event-actions button {
+        flex: 1;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 30px 15px;
+        color: #888;
+        font-size: .9rem;
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-group {
+        margin-bottom: 14px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: .8rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px 13px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        background: #fff;
+        color: #222;
+        outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        border-color: #5B2D90;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 10px;
+    }
+
+    .form-row .form-group {
+        flex: 1;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .35);
+        z-index: 5000;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 15px;
+    }
+
+    .modal-overlay.show {
+        display: flex;
+    }
+
+    .modal {
+        width: 100%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+        font-size: 21px;
+    }
+
+    .close-btn {
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 50%;
+        background: #f1f1f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* =========================
+       CHECK IN
+    ========================= */
+
+    .scanner-card {
+        text-align: center;
+    }
+
+    .event-select-label {
+        display: block;
+        text-align: left;
+        font-size: .8rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    #eventSelect {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        background: #fff;
+        margin-bottom: 18px;
+    }
+
+    #reader {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 14px;
+    }
+
+    #reader video {
+        border-radius: 14px;
+    }
+
+    .scanner-status {
+        margin-top: 14px;
+        min-height: 24px;
+        font-size: .85rem;
+        font-weight: 600;
+    }
+
+    .scanner-status.success {
+        color: #2e7d32;
+    }
+
+    .scanner-status.error {
+        color: #c62828;
+    }
+
+    .scanner-status.info {
+        color: #777;
+    }
+
+    .checkin-result {
+        display: none;
+        margin-top: 15px;
+        padding: 14px;
+        background: #f5f0fa;
+        border-radius: 13px;
+        text-align: left;
+    }
+
+    .checkin-result.show {
+        display: block;
+    }
+
+    .checkin-result strong {
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    .checkin-result span {
+        color: #777;
+        font-size: .8rem;
+    }
+
+    .recent-checkins {
+        margin-top: 20px;
+    }
+
+    .recent-checkin {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .recent-checkin:last-child {
+        border-bottom: none;
+    }
+
+    .student-name {
+        font-size: .85rem;
+        font-weight: 600;
+    }
+
+    .checkin-time {
+        color: #888;
+        font-size: .72rem;
+    }
+
+    /* =========================
+       ACCOUNT
+    ========================= */
+
+    .profile {
+        text-align: center;
+        padding: 12px 0 24px;
+    }
+
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto 14px;
+        background: #eee;
+    }
+
+    .profile h2 {
+        font-size: 21px;
+        margin-bottom: 4px;
+    }
+
+    .profile p {
+        color: #777;
+        font-size: .85rem;
+    }
+
+    .account-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .account-row:last-child {
+        border-bottom: none;
+    }
+
+    .account-label {
+        color: #777;
+        font-size: .8rem;
+    }
+
+    .account-value {
+        max-width: 65%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: .82rem;
+        font-weight: 600;
+    }
+
+    .logout-btn {
+        width: 100%;
+        border: none;
+        border-radius: 13px;
+        padding: 13px;
+        margin-top: 14px;
+        background: #222;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
+    .nav-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(64px + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+        background: #fff;
+        border-top: 1px solid #e9e9e9;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 3000;
+        box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
+    }
+
+    .nav-item {
+        flex: 1;
+        height: 64px;
+        border: none;
+        background: none;
+        color: #777;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .nav-item.active {
+        color: #5B2D90;
+    }
+
+    .nav-item .material-symbols-outlined {
+        font-size: 24px;
+    }
+
+    .nav-label {
+        font-size: .68rem;
+        font-weight: 600;
+    }
+
+    /* =========================
+       LOADING
+    ========================= */
+
+    .loading {
+        text-align: center;
+        color: #888;
+        padding: 25px;
+        font-size: .85rem;
+    }
+
+    /* =========================
+       ACCESS DENIED
+    ========================= */
+
+    #accessDenied {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: #f6f7fb;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 25px;
+        text-align: center;
+    }
+
+    #accessDenied.show {
+        display: flex;
+    }
+
+    .denied-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 30px 22px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .denied-card .icon {
+        font-size: 42px;
+        margin-bottom: 12px;
+    }
+
+    .denied-card h2 {
+        margin-bottom: 8px;
+    }
+
+    .denied-card p {
+        color: #777;
+        font-size: .85rem;
+        line-height: 1.5;
+    }
+
+    @media (min-width: 700px) {
+        body {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .modal-overlay {
+            align-items: center;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     ACCESS DENIED
+========================= -->
+
+<div id="accessDenied">
+    <div class="denied-card">
+        <div class="icon">🔒</div>
+        <h2>Admin Access Required</h2>
+        <p>
+            You must sign in with an authorized RFSD administrator account.
+        </p>
+    </div>
+</div>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="page-header">
+    <h1 id="pageTitle">Manage Events</h1>
+    <p id="pageSubtitle">
+        Create and manage Wiley Bucks events.
+    </p>
+</header>
+
+
+<!-- =========================
+     MANAGE EVENTS
+========================= -->
+
+<section
+    class="section active"
+    id="eventsSection"
+>
+
+    <div class="stat-container">
+
+        <div class="stat-box">
+            <div
+                class="stat-number"
+                id="eventCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Events
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div
+                class="stat-number"
+                id="upcomingCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Upcoming
+            </div>
+        </div>
+
+        <div class="stat-box">
+            <div
+                class="stat-number"
+                id="checkinCount"
+            >
+                0
+            </div>
+
+            <div class="stat-label">
+                Check-ins
+            </div>
+        </div>
+
+    </div>
+
+
+    <button
+        class="primary-btn"
+        id="addEventBtn"
+        style="margin-bottom: 20px;"
+    >
+        + Add Event
+    </button>
+
+
+    <h2 class="section-title">
+        Events
+    </h2>
+
+    <div id="eventsList">
+        <div class="loading">
+            Loading events...
+        </div>
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CHECK IN
+========================= -->
+
+<section
+    class="section"
+    id="checkinSection"
+>
+
+    <h2 class="section-title">
+        Check In Students
+    </h2>
+
+    <div class="card scanner-card">
+
+        <label
+            class="event-select-label"
+            for="eventSelect"
+        >
+            Select Event
+        </label>
+
+        <select id="eventSelect">
+            <option value="">
+                Select an event...
+            </option>
+        </select>
+
+
+        <div id="reader"></div>
+
+
+        <div
+            class="scanner-status info"
+            id="scannerStatus"
+        >
+            Select an event to begin scanning.
+        </div>
+
+
+        <div
+            class="checkin-result"
+            id="checkinResult"
+        >
+            <strong id="resultName">
+                Student
+            </strong>
+
+            <span id="resultMessage">
+                Successfully checked in.
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="card recent-checkins">
+
+        <h3 style="font-size:17px; margin-bottom:8px;">
+            Recent Check-ins
+        </h3>
+
+        <div id="recentCheckins">
+            <div class="empty-state">
+                No check-ins yet.
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ACCOUNT
+========================= -->
+
+<section
+    class="section"
+    id="accountSection"
+>
+
+    <h2 class="section-title">
+        Account
+    </h2>
+
+    <div class="card">
+
+        <div class="profile">
+
+            <img
+                class="profile-picture"
+                id="profilePicture"
+                src=""
+                alt="Profile Picture"
+            >
+
+            <h2 id="profileName">
+                Loading...
+            </h2>
+
+            <p id="profileEmail">
+                Loading...
+            </p>
+
+        </div>
+
+
+        <div class="account-row">
+
+            <span class="account-label">
+                Name
+            </span>
+
+            <span
+                class="account-value"
+                id="accountName"
+            >
+                Loading...
+            </span>
+
+        </div>
+
+
+        <div class="account-row">
+
+            <span class="account-label">
+                Email
+            </span>
+
+            <span
+                class="account-value"
+                id="accountEmail"
+            >
+                Loading...
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="logout-btn"
+        id="logoutBtn"
+    >
+        Sign Out
+    </button>
+
+</section>
+
+
+<!-- =========================
+     EVENT MODAL
+========================= -->
+
+<div
+    class="modal-overlay"
+    id="eventModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Add Event
+            </h2>
+
+            <button
+                class="close-btn"
+                id="closeModalBtn"
+            >
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="eventName">
+                Sport / Event
+            </label>
+
+            <input
+                type="text"
+                id="eventName"
+                placeholder="Football"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="eventMatchup">
+                Matchup
+            </label>
+
+            <input
+                type="text"
+                id="eventMatchup"
+                placeholder="Home vs Hudson"
+            >
+
+        </div>
+
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label for="eventDate">
+                    Date
+                </label>
+
+                <input
+                    type="date"
+                    id="eventDate"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="eventTime">
+                    Time
+                </label>
+
+                <input
+                    type="time"
+                    id="eventTime"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="eventLocation">
+                Location
+            </label>
+
+            <input
+                type="text"
+                id="eventLocation"
+                placeholder="Main Gym"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="eventPoints">
+                Wiley Bucks
+            </label>
+
+            <input
+                type="number"
+                id="eventPoints"
+                placeholder="25"
+                min="0"
+            >
+
+        </div>
+
+
+        <button
+            class="primary-btn"
+            id="saveEventBtn"
+        >
+            Create Event
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     BOTTOM NAVIGATION
+========================= -->
+
+<nav class="nav-bar">
+
+    <button
+        class="nav-item active"
+        data-section="eventsSection"
+        data-title="Manage Events"
+        data-subtitle="Create and manage Wiley Bucks events."
+    >
+        <span class="material-symbols-outlined">
+            event
+        </span>
+
+        <span class="nav-label">
+            Events
+        </span>
+    </button>
+
+
+    <button
+        class="nav-item"
+        data-section="checkinSection"
+        data-title="Check In"
+        data-subtitle="Scan student QR codes for an event."
+    >
+        <span class="material-symbols-outlined">
+            qr_code_scanner
+        </span>
+
+        <span class="nav-label">
+            Check In
+        </span>
+    </button>
+
+
+    <button
+        class="nav-item"
+        data-section="accountSection"
+        data-title="Account"
+        data-subtitle="Manage your administrator account."
+    >
+        <span class="material-symbols-outlined">
+            person
+        </span>
+
+        <span class="nav-label">
+            Account
+        </span>
+    </button>
+
+</nav>
+
+
+<!-- =========================
+     FIREBASE
+========================= -->
+
+<script type="module">
+
+    import {
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+    import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        getDoc,
+        doc,
+        updateDoc,
+        deleteDoc,
+        setDoc,
+        query,
+        orderBy,
+        serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+    /* =========================
+       FIREBASE CONFIG
+    ========================= */
+
+    const firebaseConfig = {
+
+        apiKey:
+            "AIzaSyDUS75R4BH3-3e603dNvlKxIJU2ThNOc1k",
+
+        authDomain:
+            "river-falls-athletics-76449.firebaseapp.com",
+
+        projectId:
+            "river-falls-athletics-76449",
+
+        storageBucket:
+            "river-falls-athletics-76449.firebasestorage.app",
+
+        messagingSenderId:
+            "493469404152",
+
+        appId:
+            "1:493469404152:web:d47d73b848931d38ebe40d",
+
+        measurementId:
+            "G-CLQX2GN19Y"
+    };
+
+
+    const app =
+        initializeApp(firebaseConfig);
+
+    const auth =
+        getAuth(app);
+
+    const db =
+        getFirestore(app);
+
+
+    /* =========================
+       DOM
+    ========================= */
+
+    const eventsSection =
+        document.getElementById("eventsSection");
+
+    const checkinSection =
+        document.getElementById("checkinSection");
+
+    const accountSection =
+        document.getElementById("accountSection");
+
+    const pageTitle =
+        document.getElementById("pageTitle");
+
+    const pageSubtitle =
+        document.getElementById("pageSubtitle");
+
+    const accessDenied =
+        document.getElementById("accessDenied");
+
+    const eventsList =
+        document.getElementById("eventsList");
+
+    const eventCount =
+        document.getElementById("eventCount");
+
+    const upcomingCount =
+        document.getElementById("upcomingCount");
+
+    const checkinCount =
+        document.getElementById("checkinCount");
+
+    const eventModal =
+        document.getElementById("eventModal");
+
+    const modalTitle =
+        document.getElementById("modalTitle");
+
+    const addEventBtn =
+        document.getElementById("addEventBtn");
+
+    const closeModalBtn =
+        document.getElementById("closeModalBtn");
+
+    const saveEventBtn =
+        document.getElementById("saveEventBtn");
+
+    const eventName =
+        document.getElementById("eventName");
+
+    const eventMatchup =
+        document.getElementById("eventMatchup");
+
+    const eventDate =
+        document.getElementById("eventDate");
+
+    const eventTime =
+        document.getElementById("eventTime");
+
+    const eventLocation =
+        document.getElementById("eventLocation");
+
+    const eventPoints =
+        document.getElementById("eventPoints");
+
+    const eventSelect =
+        document.getElementById("eventSelect");
+
+    const scannerStatus =
+        document.getElementById("scannerStatus");
+
+    const checkinResult =
+        document.getElementById("checkinResult");
+
+    const resultName =
+        document.getElementById("resultName");
+
+    const resultMessage =
+        document.getElementById("resultMessage");
+
+    const recentCheckins =
+        document.getElementById("recentCheckins");
+
+    const profilePicture =
+        document.getElementById("profilePicture");
+
+    const profileName =
+        document.getElementById("profileName");
+
+    const profileEmail =
+        document.getElementById("profileEmail");
+
+    const accountName =
+        document.getElementById("accountName");
+
+    const accountEmail =
+        document.getElementById("accountEmail");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+
+    let currentUser = null;
+    let editingEventId = null;
+    let events = [];
+    let scanner = null;
+    let scannerRunning = false;
+
+
+    /* =========================
+       ADMIN EMAIL CHECK
+    ========================= */
+
+    function isAdminEmail(email) {
+
+        const normalized =
+            (email || "")
+                .trim()
+                .toLowerCase();
+
+        return (
+            normalized.endsWith("@gmail.com") ||
+            normalized.endsWith("@rfsd.k12.wi.us")
+        );
+    }
+
+
+    /* =========================
+       AUTH
+    ========================= */
+
+    onAuthStateChanged(
+        auth,
+        async (user) => {
+
+            if (!user) {
+
+                window.location.replace(
+                    "/student.html"
+                );
+
+                return;
+            }
+
+
+            if (!isAdminEmail(user.email)) {
+
+                await signOut(auth);
+
+                accessDenied.classList.add(
+                    "show"
+                );
+
+                setTimeout(() => {
+
+                    window.location.replace(
+                        "/student.html"
+                    );
+
+                }, 1500);
+
+                return;
+            }
+
+
+            currentUser = user;
+
+            loadProfile(user);
+
+            await loadEvents();
+        }
+    );
+
+
+    /* =========================
+       PROFILE
+    ========================= */
+
+    function loadProfile(user) {
+
+        const name =
+            user.displayName ||
+            "Administrator";
+
+        const email =
+            user.email ||
+            "";
+
+        const photo =
+            user.photoURL ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5B2D90&color=fff&size=200`;
+
+        profilePicture.src = photo;
+
+        profileName.textContent =
+            name;
+
+        profileEmail.textContent =
+            email;
+
+        accountName.textContent =
+            name;
+
+        accountEmail.textContent =
+            email;
+    }
+
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(item => {
+
+            item.addEventListener(
+                "click",
+                async () => {
+
+                    document
+                        .querySelectorAll(".nav-item")
+                        .forEach(nav => {
+                            nav.classList.remove(
+                                "active"
+                            );
+                        });
+
+                    item.classList.add(
+                        "active"
+                    );
+
+
+                    document
+                        .querySelectorAll(".section")
+                        .forEach(section => {
+                            section.classList.remove(
+                                "active"
+                            );
+                        });
+
+
+                    const section =
+                        document.getElementById(
+                            item.dataset.section
+                        );
+
+                    section.classList.add(
+                        "active"
+                    );
+
+
+                    pageTitle.textContent =
+                        item.dataset.title;
+
+                    pageSubtitle.textContent =
+                        item.dataset.subtitle;
+
+
+                    if (
+                        item.dataset.section ===
+                        "checkinSection"
+                    ) {
+
+                        await loadEventSelect();
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    /* =========================
+       LOAD EVENTS
+    ========================= */
+
+    async function loadEvents() {
+
+        eventsList.innerHTML = `
+            <div class="loading">
+                Loading events...
+            </div>
+        `;
+
+        try {
+
+            const snapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "events"
+                    )
+                );
+
+
+            events = [];
+
+            snapshot.forEach(
+                documentSnapshot => {
+
+                    events.push({
+                        id:
+                            documentSnapshot.id,
+
+                        ...documentSnapshot.data()
+                    });
+
+                }
+            );
+
+
+            events.sort(
+                (a, b) => {
+
+                    return (
+                        (a.dateTime || "")
+                            .localeCompare(
+                                b.dateTime || ""
+                            )
+                    );
+
+                }
+            );
+
+
+            renderEvents();
+
+            updateStats();
+
+        } catch (error) {
+
+            console.error(
+                "Failed to load events:",
+                error
+            );
+
+            eventsList.innerHTML = `
+                <div class="empty-state">
+                    Failed to load events.
+                </div>
+            `;
+        }
+    }
+
+
+    /* =========================
+       RENDER EVENTS
+    ========================= */
+
+    function renderEvents() {
+
+        if (!events.length) {
+
+            eventsList.innerHTML = `
+                <div class="card empty-state">
+                    No events yet.<br>
+                    Create your first event above.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        eventsList.innerHTML =
+            events.map(event => {
+
+                const date =
+                    event.dateTime
+                        ? new Date(
+                            event.dateTime
+                        ).toLocaleDateString(
+                            undefined,
+                            {
+                                weekday:
+                                    "long",
+                                month:
+                                    "long",
+                                day:
+                                    "numeric"
+                            }
+                        )
+                        : "Date TBD";
+
+
+                const time =
+                    event.dateTime
+                        ? new Date(
+                            event.dateTime
+                        ).toLocaleTimeString(
+                            undefined,
+                            {
+                                hour:
+                                    "numeric",
+                                minute:
+                                    "2-digit"
+                            }
+                        )
+                        : "";
+
+
+                return `
+
+                    <div
+                        class="event-card"
+                        data-id="${event.id}"
+                    >
+
+                        <div class="event-header">
+
+                            <div>
+
+                                <div class="event-title">
+                                    ${escapeHtml(
+                                        event.name ||
+                                        "Event"
+                                    )}
+                                </div>
+
+                                <div class="event-matchup">
+                                    ${escapeHtml(
+                                        event.matchup ||
+                                        ""
+                                    )}
+                                </div>
+
+                            </div>
+
+                            <div class="event-points">
+                                +${event.points || 0} Bucks
+                            </div>
+
+                        </div>
+
+
+                        <div class="event-info">
+
+                            ${date}
+                            ${time ? ` • ${time}` : ""}
+                            <br>
+
+                            ${escapeHtml(
+                                event.location ||
+                                "Location TBD"
+                            )}
+
+                        </div>
+
+
+                        <div class="event-actions">
+
+                            <button
+                                class="secondary-btn"
+                                onclick="editEvent('${event.id}')"
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                class="danger-btn"
+                                onclick="removeEvent('${event.id}')"
+                            >
+                                Delete
+                            </button>
+
+                        </div>
+
+                    </div>
+                `;
+
+            }).join("");
+    }
+
+
+    /* =========================
+       STATS
+    ========================= */
+
+    function updateStats() {
+
+        eventCount.textContent =
+            events.length;
+
+
+        const now =
+            new Date();
+
+
+        const upcoming =
+            events.filter(
+                event =>
+                    event.dateTime &&
+                    new Date(
+                        event.dateTime
+                    ) >= now
+            );
+
+
+        upcomingCount.textContent =
+            upcoming.length;
+    }
+
+
+    /* =========================
+       ADD EVENT
+    ========================= */
+
+    addEventBtn.addEventListener(
+        "click",
+        () => {
+
+            editingEventId = null;
+
+            modalTitle.textContent =
+                "Add Event";
+
+            saveEventBtn.textContent =
+                "Create Event";
+
+            clearEventForm();
+
+            eventModal.classList.add(
+                "show"
+            );
+        }
+    );
+
+
+    /* =========================
+       CLOSE MODAL
+    ========================= */
+
+    closeModalBtn.addEventListener(
+        "click",
+        closeEventModal
+    );
+
+
+    eventModal.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target ===
+                eventModal
+            ) {
+
+                closeEventModal();
+
+            }
+
+        }
+    );
+
+
+    function closeEventModal() {
+
+        eventModal.classList.remove(
+            "show"
+        );
+
+        editingEventId = null;
+
+        clearEventForm();
+    }
+
+
+    function clearEventForm() {
+
+        eventName.value = "";
+
+        eventMatchup.value = "";
+
+        eventDate.value = "";
+
+        eventTime.value = "";
+
+        eventLocation.value = "";
+
+        eventPoints.value = "";
+    }
+
+
+    /* =========================
+       EDIT EVENT
+    ========================= */
+
+    window.editEvent =
+        function(id) {
+
+            const event =
+                events.find(
+                    item =>
+                        item.id === id
+                );
+
+            if (!event) return;
+
+
+            editingEventId = id;
+
+            modalTitle.textContent =
+                "Edit Event";
+
+            saveEventBtn.textContent =
+                "Save Changes";
+
+
+            eventName.value =
+                event.name || "";
+
+            eventMatchup.value =
+                event.matchup || "";
+
+            eventLocation.value =
+                event.location || "";
+
+            eventPoints.value =
+                event.points || "";
+
+
+            if (event.dateTime) {
+
+                const date =
+                    new Date(
+                        event.dateTime
+                    );
+
+
+                eventDate.value =
+                    date
+                        .toISOString()
+                        .split("T")[0];
+
+
+                eventTime.value =
+                    date
+                        .toTimeString()
+                        .slice(0, 5);
+            }
+
+
+            eventModal.classList.add(
+                "show"
+            );
+        };
+
+
+    /* =========================
+       SAVE EVENT
+    ========================= */
+
+    saveEventBtn.addEventListener(
+        "click",
+        async () => {
+
+            const name =
+                eventName.value.trim();
+
+            const matchup =
+                eventMatchup.value.trim();
+
+            const date =
+                eventDate.value;
+
+            const time =
+                eventTime.value;
+
+            const location =
+                eventLocation.value.trim();
+
+            const points =
+                Number(
+                    eventPoints.value
+                );
+
+
+            if (
+                !name ||
+                !date ||
+                !time ||
+                !location ||
+                Number.isNaN(points)
+            ) {
+
+                alert(
+                    "Please complete all event fields."
+                );
+
+                return;
+            }
+
+
+            const dateTime =
+                `${date}T${time}`;
+
+
+            saveEventBtn.disabled =
+                true;
+
+            saveEventBtn.textContent =
+                "Saving...";
+
+
+            try {
+
+                if (editingEventId) {
+
+                    await updateDoc(
+                        doc(
+                            db,
+                            "events",
+                            editingEventId
+                        ),
+                        {
+                            name,
+                            matchup,
+                            dateTime,
+                            location,
+                            points,
+                            updatedAt:
+                                serverTimestamp()
+                        }
+                    );
+
+                } else {
+
+                    await addDoc(
+                        collection(
+                            db,
+                            "events"
+                        ),
+                        {
+                            name,
+                            matchup,
+                            dateTime,
+                            location,
+                            points,
+                            createdAt:
+                                serverTimestamp(),
+                            createdBy:
+                                currentUser.uid
+                        }
+                    );
+
+                }
+
+
+                closeEventModal();
+
+                await loadEvents();
+
+                await loadEventSelect();
+
+            } catch (error) {
+
+                console.error(
+                    "Failed to save event:",
+                    error
+                );
+
+                alert(
+                    "Could not save the event."
+                );
+
+            } finally {
+
+                saveEventBtn.disabled =
+                    false;
+
+                saveEventBtn.textContent =
+                    editingEventId
+                        ? "Save Changes"
+                        : "Create Event";
+            }
+
+        }
+    );
+
+
+    /* =========================
+       DELETE EVENT
+    ========================= */
+
+    window.removeEvent =
+        async function(id) {
+
+            const event =
+                events.find(
+                    item =>
+                        item.id === id
+                );
+
+            if (!event) return;
+
+
+            const confirmed =
+                confirm(
+                    `Delete "${event.name}"?`
+                );
+
+
+            if (!confirmed) return;
+
+
+            try {
+
+                await deleteDoc(
+                    doc(
+                        db,
+                        "events",
+                        id
+                    )
+                );
+
+
+                await loadEvents();
+
+                await loadEventSelect();
+
+            } catch (error) {
+
+                console.error(
+                    "Failed to delete event:",
+                    error
+                );
+
+                alert(
+                    "Could not delete the event."
+                );
+            }
+        };
+
+
+    /* =========================
+       EVENT SELECT
+    ========================= */
+
+    async function loadEventSelect() {
+
+        eventSelect.innerHTML = `
+            <option value="">
+                Select an event...
+            </option>
+        `;
+
+
+        events.forEach(event => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value =
+                event.id;
+
+            option.textContent =
+                `${event.name} — ${formatShortDate(event.dateTime)}`;
+
+            eventSelect.appendChild(
+                option
+            );
+
+        });
+    }
+
+
+    eventSelect.addEventListener(
+        "change",
+        async () => {
+
+            const eventId =
+                eventSelect.value;
+
+
+            stopScanner();
+
+            checkinResult.classList.remove(
+                "show"
+            );
+
+
+            if (!eventId) {
+
+                scannerStatus.textContent =
+                    "Select an event to begin scanning.";
+
+                scannerStatus.className =
+                    "scanner-status info";
+
+                return;
+            }
+
+
+            startScanner(eventId);
+
+            await loadRecentCheckins(
+                eventId
+            );
+        }
+    );
+
+
+    /* =========================
+       QR SCANNER
+    ========================= */
+
+    async function startScanner(eventId) {
+
+        if (scannerRunning) {
+            return;
+        }
+
+
+        scannerStatus.textContent =
+            "Starting camera...";
+
+        scannerStatus.className =
+            "scanner-status info";
+
+
+        try {
+
+            scanner =
+                new Html5Qrcode(
+                    "reader"
+                );
+
+
+            await scanner.start(
+
+                {
+                    facingMode:
+                        "environment"
+                },
+
+                {
+                    fps: 10,
+                    qrbox: {
+                        width: 240,
+                        height: 240
+                    }
+                },
+
+                async decodedText => {
+
+                    await processQRCode(
+                        decodedText,
+                        eventId
+                    );
+
+                },
+
+                () => {
+                    // Ignore normal scan failures.
+                }
+
+            );
+
+
+            scannerRunning = true;
+
+            scannerStatus.textContent =
+                "Camera ready — scan a student's QR code.";
+
+        } catch (error) {
+
+            console.error(
+                "Scanner error:",
+                error
+            );
+
+            scannerStatus.textContent =
+                "Camera could not start. Check your camera permission.";
+
+            scannerStatus.className =
+                "scanner-status error";
+        }
+    }
+
+
+    async function stopScanner() {
+
+        if (
+            scanner &&
+            scannerRunning
+        ) {
+
+            try {
+
+                await scanner.stop();
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+            }
+
+            scanner.clear();
+
+            scanner = null;
+
+            scannerRunning = false;
+        }
+    }
+
+
+    /* =========================
+       PROCESS QR
+    ========================= */
+
+    let processingScan = false;
+
+
+    async function processQRCode(
+        qrValue,
+        eventId
+    ) {
+
+        if (processingScan) {
+            return;
+        }
+
+
+        processingScan = true;
+
+
+        try {
+
+            const studentUid =
+                qrValue.trim();
+
+
+            if (!studentUid) {
+
+                throw new Error(
+                    "Invalid QR code."
+                );
+            }
+
+
+            const eventRef =
+                doc(
+                    db,
+                    "events",
+                    eventId
+                );
+
+
+            const studentRef =
+                doc(
+                    db,
+                    "users",
+                    studentUid
+                );
+
+
+            const studentSnapshot =
+                await getDoc(
+                    studentRef
+                );
+
+
+            if (
+                !studentSnapshot.exists()
+            ) {
+
+                throw new Error(
+                    "Student account was not found."
+                );
+            }
+
+
+            const student =
+                studentSnapshot.data();
+
+
+            const checkinRef =
+                doc(
+                    db,
+                    "events",
+                    eventId,
+                    "checkins",
+                    studentUid
+                );
+
+
+            const existing =
+                await getDoc(
+                    checkinRef
+                );
+
+
+            if (existing.exists()) {
+
+                showCheckinResult(
+                    student.name ||
+                        student.displayName ||
+                        "Student",
+                    "Already checked in.",
+                    false
+                );
+
+                return;
+            }
+
+
+            await setDoc(
+                checkinRef,
+                {
+                    studentUid,
+                    studentName:
+                        student.name ||
+                        student.displayName ||
+                        "Student",
+                    studentEmail:
+                        student.email ||
+                        "",
+                    eventId,
+                    points:
+                        Number(
+                            events.find(
+                                event =>
+                                    event.id ===
+                                    eventId
+                            )?.points || 0
+                        ),
+                    checkedInAt:
+                        serverTimestamp(),
+                    checkedInBy:
+                        currentUser.uid
+                }
+            );
+
+
+            const event =
+                events.find(
+                    item =>
+                        item.id === eventId
+                );
+
+
+            showCheckinResult(
+                student.name ||
+                    student.displayName ||
+                    "Student",
+                `Checked in — +${event?.points || 0} Wiley Bucks`,
+                true
+            );
+
+
+            await loadRecentCheckins(
+                eventId
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Check-in error:",
+                error
+            );
+
+            showCheckinResult(
+                "Check-in Failed",
+                error.message ||
+                    "Invalid student QR code.",
+                false
+            );
+
+        } finally {
+
+            setTimeout(() => {
+
+                processingScan =
+                    false;
+
+            }, 1500);
+        }
+    }
+
+
+    /* =========================
+       CHECK-IN RESULT
+    ========================= */
+
+    function showCheckinResult(
+        name,
+        message,
+        success
+    ) {
+
+        resultName.textContent =
+            name;
+
+        resultMessage.textContent =
+            message;
+
+        checkinResult.classList.add(
+            "show"
+        );
+
+
+        scannerStatus.textContent =
+            success
+                ? "Student checked in successfully."
+                : message;
+
+        scannerStatus.className =
+            success
+                ? "scanner-status success"
+                : "scanner-status error";
+    }
+
+
+    /* =========================
+       RECENT CHECK-INS
+    ========================= */
+
+    async function loadRecentCheckins(
+        eventId
+    ) {
+
+        recentCheckins.innerHTML = `
+            <div class="loading">
+                Loading...
+            </div>
+        `;
+
+
+        try {
+
+            const snapshot =
+                await getDocs(
+                    collection(
+                        db,
+                        "events",
+                        eventId,
+                        "checkins"
+                    )
+                );
+
+
+            if (
+                snapshot.empty
+            ) {
+
+                recentCheckins.innerHTML = `
+                    <div class="empty-state">
+                        No students checked in yet.
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            const checkins = [];
+
+
+            snapshot.forEach(
+                item => {
+
+                    checkins.push(
+                        item.data()
+                    );
+
+                }
+            );
+
+
+            checkins.sort(
+                (a, b) => {
+
+                    const aTime =
+                        a.checkedInAt?.seconds ||
+                        0;
+
+                    const bTime =
+                        b.checkedInAt?.seconds ||
+                        0;
+
+                    return bTime - aTime;
+
+                }
+            );
+
+
+            recentCheckins.innerHTML =
+                checkins
+                    .slice(0, 10)
+                    .map(checkin => {
+
+                        const time =
+                            checkin.checkedInAt
+                                ? new Date(
+                                    checkin
+                                        .checkedInAt
+                                        .seconds *
+                                        1000
+                                )
+                                    .toLocaleTimeString(
+                                        undefined,
+                                        {
+                                            hour:
+                                                "numeric",
+                                            minute:
+                                                "2-digit"
+                                        }
+                                    )
+                                : "Just now";
+
+
+                        return `
+
+                            <div class="recent-checkin">
+
+                                <div>
+
+                                    <div class="student-name">
+                                        ${escapeHtml(
+                                            checkin.studentName ||
+                                            "Student"
+                                        )}
+                                    </div>
+
+                                    <div class="checkin-time">
+                                        ${escapeHtml(
+                                            checkin.studentEmail ||
+                                            ""
+                                        )}
+                                    </div>
+
+                                </div>
+
+                                <div class="checkin-time">
+                                    ${time}
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    })
+                    .join("");
+
+
+        } catch (error) {
+
+            console.error(
+                "Failed to load check-ins:",
+                error
+            );
+
+            recentCheckins.innerHTML = `
+                <div class="empty-state">
+                    Unable to load check-ins.
+                </div>
+            `;
+        }
+    }
+
+
+    /* =========================
+       LOGOUT
+    ========================= */
+
+    logoutBtn.addEventListener(
+        "click",
+        async () => {
+
+            logoutBtn.disabled =
+                true;
+
+            logoutBtn.textContent =
+                "Signing Out...";
+
+
+            try {
+
+                await signOut(
+                    auth
+                );
+
+                window.location.replace(
+                    "/student.html"
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Logout failed:",
+                    error
+                );
+
+                logoutBtn.disabled =
+                    false;
+
+                logoutBtn.textContent =
+                    "Sign Out";
+            }
+        }
+    );
+
+
+    /* =========================
+       HELPERS
+    ========================= */
+
+    function formatShortDate(
+        value
+    ) {
+
+        if (!value) {
+            return "Date TBD";
+        }
+
+
+        return new Date(
+            value
+        ).toLocaleDateString(
+            undefined,
+            {
+                month:
+                    "short",
+                day:
+                    "numeric",
+                year:
+                    "numeric"
+            }
+        );
+    }
+
+
+    function escapeHtml(
+        value
+    ) {
+
+        return String(value || "")
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+            .replace(
+                /</g,
+                "&lt;"
+            )
+            .replace(
+                />/g,
+                "&gt;"
+            )
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+    }
+
+</script>
+
+</body>
+</html>
