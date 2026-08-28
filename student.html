@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -123,19 +124,18 @@ h3 {
 .checked-in {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    margin-top: 12px;
-    padding: 7px 11px;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
     background: #e8f7ed;
     color: #218739;
-    border: 1px solid #b9e6c4;
-    border-radius: 9px;
-    font-size: .78rem;
+    font-size: .75rem;
     font-weight: 700;
 }
 
 .checked-in .material-symbols-outlined {
-    font-size: 17px;
+    font-size: 16px;
 }
 
 .loading {
@@ -320,128 +320,133 @@ h3 {
     }
 }
 </style>
+
 </head>
 
 <body>
 
 <div class="login-overlay" id="loginOverlay">
-    <div class="login-card">
 
-        <div class="login-logo">🏈</div>
+<div class="login-card">
 
-        <h2>Wiley Bucks</h2>
+    <div class="login-logo">🏈</div>
 
-        <p class="login-subtitle">
-            Attend events, earn Wiley Bucks, and redeem rewards.
-            Sign in to continue.
-        </p>
+    <h2>Wiley Bucks</h2>
 
-        <button class="google-btn" id="googleSignInBtn">
+    <p class="login-subtitle">
+        Attend events, earn Wiley Bucks, and redeem rewards.
+        Sign in to continue.
+    </p>
 
-            <svg
-                class="google-icon"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 48 48"
-            >
-                <path
-                    fill="#FFC107"
-                    d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
-                />
-                <path
-                    fill="#FF3D00"
-                    d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
-                />
-                <path
-                    fill="#4CAF50"
-                    d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
-                />
-                <path
-                    fill="#1976D2"
-                    d="M43.611,20.083H42V20H24v8h11.303c-.792,2.237-2.231,4.166-4.087,5.571l.003-.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
-                />
-            </svg>
+    <button class="google-btn" id="googleSignInBtn">
 
-            <span>Sign in with Google</span>
-        </button>
+        <svg
+            class="google-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 48 48"
+        >
+            <path
+                fill="#FFC107"
+                d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
+            />
+            <path
+                fill="#FF3D00"
+                d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
+            />
+            <path
+                fill="#4CAF50"
+                d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
+            />
+            <path
+                fill="#1976D2"
+                d="M43.611,20.083H42V20H24v8h11.303c-.792,2.237-2.231,4.166-4.087,5.571l.003-.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
+            />
+        </svg>
 
-        <div class="login-loading" id="loginLoading">
-            Signing in...
-        </div>
+        <span>Sign in with Google</span>
 
-        <div class="login-error" id="loginError"></div>
+    </button>
 
-        <p class="login-note">
-            Use your @students.rfsd.k12.wi.us account
-        </p>
-
+    <div class="login-loading" id="loginLoading">
+        Signing in...
     </div>
+
+    <div class="login-error" id="loginError"></div>
+
+    <p class="login-note">
+        Use your @students.rfsd.k12.wi.us account
+    </p>
+
+</div>
+
 </div>
 
 <main id="app">
 
-    <h1 id="welcomeMessage">
-        Welcome!
-    </h1>
+<h1 id="welcomeMessage">
+    Welcome!
+</h1>
 
-    <p class="subtitle">
-        Keep showing your Wildcat pride and earn more Wiley Bucks.
-    </p>
+<p class="subtitle">
+    Keep showing your Wildcat pride and earn more Wiley Bucks.
+</p>
 
-    <div class="stat-container">
+<div class="stat-container">
 
-        <div class="stat-box">
-            <h2 id="eventsAttended">0</h2>
-            <p>Events Attended</p>
-        </div>
-
-        <div class="stat-box">
-            <h2 id="wileyBucks">0</h2>
-            <p>Wiley Bucks</p>
-        </div>
-
-        <div class="stat-box">
-            <h2 id="rankDisplay">#-</h2>
-            <p>Rank</p>
-        </div>
-
+    <div class="stat-box">
+        <h2 id="eventsAttended">0</h2>
+        <p>Events Attended</p>
     </div>
 
-    <h3>Upcoming Events</h3>
-
-    <div id="eventsContainer">
-        <div class="loading">
-            Loading events...
-        </div>
+    <div class="stat-box">
+        <h2 id="wileyBucks">0</h2>
+        <p>Wiley Bucks</p>
     </div>
+
+    <div class="stat-box">
+        <h2 id="rankDisplay">#-</h2>
+        <p>Rank</p>
+    </div>
+
+</div>
+
+<h3>Upcoming Events</h3>
+
+<div id="eventsContainer">
+    <div class="loading">
+        Loading events...
+    </div>
+</div>
+
 
 </main>
 
 <nav class="nav-bar">
 
-    <a href="student.html" class="nav-item active">
-        <span class="material-symbols-outlined">home</span>
-        <span>Home</span>
-    </a>
+<a href="student.html" class="nav-item active">
+    <span class="material-symbols-outlined">home</span>
+    <span>Home</span>
+</a>
 
-    <a href="shop.html" class="nav-item">
-        <span class="material-symbols-outlined">shopping_bag</span>
-        <span>Shop</span>
-    </a>
+<a href="shop.html" class="nav-item">
+    <span class="material-symbols-outlined">shopping_bag</span>
+    <span>Shop</span>
+</a>
 
-    <a href="checkin.html" class="nav-item">
-        <span class="material-symbols-outlined">qr_code_scanner</span>
-        <span>Check In</span>
-    </a>
+<a href="checkin.html" class="nav-item">
+    <span class="material-symbols-outlined">qr_code_scanner</span>
+    <span>Check In</span>
+</a>
 
-    <a href="leaderboard.html" class="nav-item">
-        <span class="material-symbols-outlined">leaderboard</span>
-        <span>Leaderboard</span>
-    </a>
+<a href="leaderboard.html" class="nav-item">
+    <span class="material-symbols-outlined">leaderboard</span>
+    <span>Leaderboard</span>
+</a>
 
-    <a href="account.html" class="nav-item">
-        <span class="material-symbols-outlined">person</span>
-        <span>Account</span>
-    </a>
+<a href="account.html" class="nav-item">
+    <span class="material-symbols-outlined">person</span>
+    <span>Account</span>
+</a>
 
 </nav>
 
@@ -463,10 +468,9 @@ import {
     getFirestore,
     doc,
     getDoc,
+    setDoc,
     collection,
-    getDocs,
-    query,
-    orderBy
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -495,7 +499,13 @@ const wileyBucks = document.getElementById("wileyBucks");
 const rankDisplay = document.getElementById("rankDisplay");
 const eventsContainer = document.getElementById("eventsContainer");
 
+let currentUser = null;
 let currentStudent = null;
+let eventsUnsubscribe = null;
+let userUnsubscribe = null;
+let usersUnsubscribe = null;
+
+window.wileyEvents = [];
 
 googleSignInBtn.addEventListener("click", async () => {
 
@@ -504,333 +514,735 @@ googleSignInBtn.addEventListener("click", async () => {
     loginError.classList.remove("show");
 
     try {
-        await signInWithPopup(auth, provider);
-    } catch (error) {
-        console.error(error);
 
-        loginError.textContent =
+        const result =
+            await signInWithPopup(
+                auth,
+                provider
+            );
+
+        const user = result.user;
+
+        const email =
+            (user.email || "")
+                .trim()
+                .toLowerCase();
+
+        if (
+            !email.endsWith(
+                "@students.rfsd.k12.wi.us"
+            )
+        ) {
+
+            await signOut(auth);
+
+            loginError.textContent =
+                "You must sign in with your @students.rfsd.k12.wi.us account.";
+
+            loginError.classList.add("show");
+
+            return;
+        }
+
+        const userRef =
+            doc(db, "users", user.uid);
+
+        const userSnap =
+            await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+
+            await setDoc(
+                userRef,
+                {
+                    displayName:
+                        user.displayName || "Wildcat",
+
+                    email:
+                        user.email || "",
+
+                    photoURL:
+                        user.photoURL || "",
+
+                    bucks: 0,
+
+                    eventsAttended: 0,
+
+                    checkedInEvents: [],
+
+                    isAdmin: false,
+
+                    qrCode: user.uid,
+
+                    createdAt:
+                        new Date().toISOString(),
+
+                    lastLogin:
+                        new Date().toISOString()
+                }
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Google sign-in error:",
+            error
+        );
+
+        let message =
             "Sign in failed. Please try again.";
 
+        if (error.code === "auth/popup-closed-by-user") {
+            message = "Sign-in window was closed.";
+        }
+
+        if (error.code === "auth/popup-blocked") {
+            message = "Your browser blocked the sign-in popup. Please allow popups for this site.";
+        }
+
+        if (error.code === "auth/unauthorized-domain") {
+            message = "This website is not authorized in Firebase Authentication.";
+        }
+
+        if (error.code === "auth/api-key-not-valid.-please-pass-a-valid-api-key") {
+            message = "Firebase API key is invalid. Check the Firebase configuration.";
+        }
+
+        loginError.textContent = message;
         loginError.classList.add("show");
+
     } finally {
+
         googleSignInBtn.disabled = false;
         loginLoading.classList.remove("show");
+
     }
 
 });
 
-function formatEventDate(dateValue) {
+function createEventDate(dateValue, timeValue) {
 
-    let date;
-
-    if (dateValue?.toDate) {
-        date = dateValue.toDate();
-    } else if (dateValue?.seconds) {
-        date = new Date(dateValue.seconds * 1000);
-    } else {
-        date = new Date(dateValue);
+    if (!dateValue) {
+        return null;
     }
 
-    if (isNaN(date.getTime())) {
+    if (dateValue?.toDate) {
+
+        const date =
+            dateValue.toDate();
+
+        applyTime(date, timeValue);
+
+        return date;
+    }
+
+    if (dateValue?.seconds) {
+
+        const date =
+            new Date(
+                dateValue.seconds * 1000
+            );
+
+        applyTime(date, timeValue);
+
+        return date;
+    }
+
+    const dateString =
+        String(dateValue);
+
+    if (
+        /^\d{4}-\d{2}-\d{2}$/
+            .test(dateString)
+    ) {
+
+        const parts =
+            dateString
+                .split("-")
+                .map(Number);
+
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
+
+        let hours = 0;
+        let minutes = 0;
+
+        if (
+            timeValue &&
+            /^\d{1,2}:\d{2}$/
+                .test(String(timeValue))
+        ) {
+
+            const timeParts =
+                String(timeValue)
+                    .split(":")
+                    .map(Number);
+
+            hours = timeParts[0];
+            minutes = timeParts[1];
+        }
+
+        return new Date(
+            year,
+            month - 1,
+            day,
+            hours,
+            minutes,
+            0,
+            0
+        );
+    }
+
+    const parsed =
+        new Date(
+            `${dateString}T${timeValue || "00:00"}`
+        );
+
+    if (
+        isNaN(
+            parsed.getTime()
+        )
+    ) {
+        return null;
+    }
+
+    return parsed;
+}
+
+function applyTime(date, timeValue) {
+
+    if (
+        !timeValue ||
+        !/^\d{1,2}:\d{2}$/
+            .test(String(timeValue))
+    ) {
+        return;
+    }
+
+    const parts =
+        String(timeValue)
+            .split(":")
+            .map(Number);
+
+    date.setHours(
+        parts[0] || 0
+    );
+
+    date.setMinutes(
+        parts[1] || 0
+    );
+
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+}
+
+function formatEventDate(date) {
+
+    if (
+        !date ||
+        isNaN(date.getTime())
+    ) {
         return "Date unavailable";
     }
 
-    return date.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric"
-    });
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            weekday: "long",
+            month: "long",
+            day: "numeric"
+        }
+    );
 }
 
-function formatEventTime(dateValue) {
+function formatEventTime(date) {
 
-    let date;
-
-    if (dateValue?.toDate) {
-        date = dateValue.toDate();
-    } else if (dateValue?.seconds) {
-        date = new Date(dateValue.seconds * 1000);
-    } else {
-        date = new Date(dateValue);
-    }
-
-    if (isNaN(date.getTime())) {
+    if (
+        !date ||
+        isNaN(date.getTime())
+    ) {
         return "";
     }
 
-    return date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit"
+    return date.toLocaleTimeString(
+        "en-US",
+        {
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
+}
+
+function isEventCheckedIn(event) {
+
+    if (!currentStudent) {
+        return false;
+    }
+
+    const checkedInEvents =
+        Array.isArray(
+            currentStudent.checkedInEvents
+        )
+            ? currentStudent.checkedInEvents
+            : [];
+
+    return checkedInEvents.some(item => {
+
+        if (
+            typeof item === "string"
+        ) {
+            return item === event.id;
+        }
+
+        if (
+            typeof item === "object" &&
+            item !== null
+        ) {
+
+            return (
+                item.id === event.id ||
+                item.eventId === event.id ||
+                item.eventID === event.id
+            );
+        }
+
+        return false;
     });
 }
 
-async function loadStudentData(user) {
-
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-
-    if (!userSnap.exists()) {
-        throw new Error("Student account not found.");
-    }
-
-    const student = userSnap.data();
+function updateStudentStats(student) {
 
     currentStudent = student;
 
     const name =
         student.displayName ||
-        user.displayName ||
+        currentUser?.displayName ||
         "Wildcat";
 
     welcomeMessage.textContent =
         `Welcome, ${name}!`;
 
     const checkedInEvents =
-        Array.isArray(student.checkedInEvents)
-            ? student.checkedInEvents.map(String)
+        Array.isArray(
+            student.checkedInEvents
+        )
+            ? student.checkedInEvents
             : [];
 
+    const attended =
+        Number(
+            student.eventsAttended
+        );
+
     eventsAttended.textContent =
-        checkedInEvents.length;
+        Number.isFinite(attended)
+            ? attended
+            : checkedInEvents.length;
+
+    const bucks =
+        Number(
+            student.bucks ??
+            student.wileyBucks ??
+            0
+        );
 
     wileyBucks.textContent =
-        student.wileyBucks ??
-        student.bucks ??
-        0;
+        Number.isFinite(bucks)
+            ? bucks
+            : 0;
 
-    await loadRank(
-        student.wileyBucks ??
-        student.bucks ??
-        0
-    );
-
-    await loadEvents(checkedInEvents);
+    renderEvents();
+    updateRank();
 }
 
-async function loadRank(studentBucks) {
+function updateRank() {
 
-    try {
+    if (!currentStudent) {
+        rankDisplay.textContent = "#-";
+        return;
+    }
 
-        const usersSnap =
-            await getDocs(collection(db, "users"));
-
-        const scores = [];
-
-        usersSnap.forEach(userDoc => {
-
-            const data = userDoc.data();
-
-            const bucks =
-                Number(
-                    data.wileyBucks ??
-                    data.bucks ??
-                    0
-                );
-
-            scores.push(bucks);
-        });
-
-        scores.sort((a, b) => b - a);
-
-        const rank =
-            scores.findIndex(
-                score => score <= Number(studentBucks)
-            ) + 1;
-
-        if (rank > 0) {
-            rankDisplay.textContent = `#${rank}`;
-        } else {
-            rankDisplay.textContent = "#-";
-        }
-
-    } catch (error) {
-
-        console.error(
-            "Could not calculate rank:",
-            error
+    const studentBucks =
+        Number(
+            currentStudent.bucks ??
+            currentStudent.wileyBucks ??
+            0
         );
 
-        rankDisplay.textContent = "#-";
+    if (usersUnsubscribe) {
+        usersUnsubscribe();
     }
+
+    usersUnsubscribe =
+        onSnapshot(
+            collection(db, "users"),
+            snapshot => {
+
+                const scores = [];
+
+                snapshot.forEach(
+                    userDoc => {
+
+                        const data =
+                            userDoc.data();
+
+                        const bucks =
+                            Number(
+                                data.bucks ??
+                                data.wileyBucks ??
+                                0
+                            );
+
+                        scores.push(
+                            Number.isFinite(bucks)
+                                ? bucks
+                                : 0
+                        );
+                    }
+                );
+
+                scores.sort(
+                    (a, b) => b - a
+                );
+
+                const rank =
+                    scores.findIndex(
+                        score =>
+                            score <=
+                            studentBucks
+                    ) + 1;
+
+                rankDisplay.textContent =
+                    rank > 0
+                        ? `#${rank}`
+                        : "#-";
+
+            },
+            error => {
+
+                console.error(
+                    "Could not calculate rank:",
+                    error
+                );
+
+                rankDisplay.textContent =
+                    "#-";
+            }
+        );
 }
 
-async function loadEvents(checkedInEvents) {
+function renderEvents() {
 
-    eventsContainer.innerHTML =
-        `<div class="loading">Loading events...</div>`;
+    const now =
+        new Date();
 
-    try {
+    const upcomingEvents =
+        window.wileyEvents
+            .filter(event => {
 
-        const eventsQuery =
-            query(
-                collection(db, "events"),
-                orderBy("date", "asc")
+                return (
+                    event.parsedDate &&
+                    event.parsedDate >= now
+                );
+
+            })
+            .sort(
+                (a, b) =>
+                    a.parsedDate -
+                    b.parsedDate
             );
 
-        const eventsSnap =
-            await getDocs(eventsQuery);
-
-        const now = new Date();
-
-        const events = [];
-
-        eventsSnap.forEach(eventDoc => {
-
-            const event = eventDoc.data();
-
-            let eventDate;
-
-            if (event.date?.toDate) {
-                eventDate = event.date.toDate();
-            } else if (event.date?.seconds) {
-                eventDate = new Date(
-                    event.date.seconds * 1000
-                );
-            } else {
-                eventDate = new Date(event.date);
-            }
-
-            if (
-                !isNaN(eventDate.getTime()) &&
-                eventDate >= now
-            ) {
-
-                events.push({
-                    id: eventDoc.id,
-                    ...event,
-                    parsedDate: eventDate
-                });
-
-            }
-
-        });
-
-        if (!events.length) {
-
-            eventsContainer.innerHTML =
-                `<div class="empty">
-                    No upcoming events.
-                </div>`;
-
-            return;
-        }
-
-        eventsContainer.innerHTML = "";
-
-        events.forEach(event => {
-
-            const card =
-                document.createElement("div");
-
-            card.className = "event-card";
-
-            const title =
-                event.name ||
-                event.title ||
-                event.sport ||
-                "Event";
-
-            const matchup =
-                event.matchup ||
-                event.opponent ||
-                "";
-
-            const points =
-                event.points ??
-                event.bucks ??
-                0;
-
-            const location =
-                event.location ||
-                event.venue ||
-                "";
-
-            const date =
-                formatEventDate(event.date);
-
-            const time =
-                formatEventTime(event.date);
-
-            const isCheckedIn =
-                checkedInEvents.includes(
-                    String(event.id)
-                );
-
-            card.innerHTML = `
-                <div class="event-header">
-                    <div>
-                        <div class="event-title">
-                            ${escapeHtml(title)}
-                        </div>
-
-                        ${
-                            matchup
-                            ? `<div class="event-matchup">
-                                ${escapeHtml(matchup)}
-                               </div>`
-                            : ""
-                        }
-                    </div>
-
-                    <div class="event-points">
-                        +${Number(points)} Bucks
-                    </div>
-                </div>
-
-                <div class="event-info">
-                    ${escapeHtml(date)}
-                    ${time ? ` • ${escapeHtml(time)}` : ""}
-                    ${location
-                        ? `<br>${escapeHtml(location)}`
-                        : ""}
-                </div>
-
-                ${
-                    isCheckedIn
-                    ? `<div class="checked-in">
-                        <span class="material-symbols-outlined">
-                            check_circle
-                        </span>
-                        Checked In
-                       </div>`
-                    : ""
-                }
-            `;
-
-            eventsContainer.appendChild(card);
-        });
-
-    } catch (error) {
-
-        console.error(
-            "Could not load events:",
-            error
-        );
+    if (!upcomingEvents.length) {
 
         eventsContainer.innerHTML =
             `<div class="empty">
-                Unable to load events right now.
+                No upcoming events.
             </div>`;
+
+        return;
     }
+
+    eventsContainer.innerHTML = "";
+
+    upcomingEvents.forEach(event => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "event-card";
+
+        const title =
+            event.name ||
+            event.title ||
+            event.sport ||
+            "Event";
+
+        const matchup =
+            event.matchup ||
+            event.opponent ||
+            "";
+
+        const points =
+            Number(
+                event.points ??
+                event.bucks ??
+                0
+            );
+
+        const location =
+            event.location ||
+            event.venue ||
+            "";
+
+        const date =
+            formatEventDate(
+                event.parsedDate
+            );
+
+        const time =
+            formatEventTime(
+                event.parsedDate
+            );
+
+        const checkedIn =
+            isEventCheckedIn(event);
+
+        card.innerHTML = `
+
+            <div class="event-header">
+
+                <div>
+
+                    <div class="event-title">
+                        ${escapeHtml(title)}
+                    </div>
+
+                    ${
+                        matchup
+                            ? `
+                                <div class="event-matchup">
+                                    ${escapeHtml(matchup)}
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    ${
+                        checkedIn
+                            ? `
+                                <div class="checked-in">
+                                    <span class="material-symbols-outlined">
+                                        check_circle
+                                    </span>
+                                    Checked In
+                                </div>
+                            `
+                            : ""
+                    }
+
+                </div>
+
+                <div class="event-points">
+                    +${Number.isFinite(points) ? points : 0} Bucks
+                </div>
+
+            </div>
+
+            <div class="event-info">
+
+                ${escapeHtml(date)}
+
+                ${
+                    time
+                        ? ` • ${escapeHtml(time)}`
+                        : ""
+                }
+
+                ${
+                    location
+                        ? `<br>${escapeHtml(location)}`
+                        : ""
+                }
+
+            </div>
+        `;
+
+        eventsContainer.appendChild(card);
+    });
 }
 
 function escapeHtml(value) {
 
     return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
+
+function subscribeToEvents() {
+
+    if (eventsUnsubscribe) {
+        eventsUnsubscribe();
+    }
+
+    eventsUnsubscribe =
+        onSnapshot(
+            collection(db, "events"),
+            snapshot => {
+
+                const events = [];
+
+                snapshot.forEach(
+                    eventDoc => {
+
+                        const event =
+                            eventDoc.data();
+
+                        const parsedDate =
+                            createEventDate(
+                                event.date,
+                                event.time
+                            );
+
+                        if (!parsedDate) {
+                            return;
+                        }
+
+                        events.push({
+                            id: eventDoc.id,
+                            ...event,
+                            parsedDate
+                        });
+
+                    }
+                );
+
+                window.wileyEvents =
+                    events;
+
+                renderEvents();
+
+            },
+            error => {
+
+                console.error(
+                    "Could not load events:",
+                    error
+                );
+
+                eventsContainer.innerHTML =
+                    `<div class="empty">
+                        Unable to load events right now.
+                    </div>`;
+            }
+        );
+}
+
+function subscribeToStudent(user) {
+
+    if (userUnsubscribe) {
+        userUnsubscribe();
+    }
+
+    userUnsubscribe =
+        onSnapshot(
+            doc(
+                db,
+                "users",
+                user.uid
+            ),
+            snapshot => {
+
+                if (!snapshot.exists()) {
+
+                    signOut(auth);
+
+                    loginError.textContent =
+                        "Student account not found. Please sign in again.";
+
+                    loginError.classList.add(
+                        "show"
+                    );
+
+                    loginOverlay.classList.remove(
+                        "hidden"
+                    );
+
+                    return;
+                }
+
+                updateStudentStats(
+                    snapshot.data()
+                );
+
+            },
+            error => {
+
+                console.error(
+                    "Could not load student account:",
+                    error
+                );
+
+                loginError.textContent =
+                    "Unable to load your student account.";
+
+                loginError.classList.add(
+                    "show"
+                );
+            }
+        );
 }
 
 onAuthStateChanged(
     auth,
     async user => {
 
+        if (userUnsubscribe) {
+            userUnsubscribe();
+            userUnsubscribe = null;
+        }
+
+        if (eventsUnsubscribe) {
+            eventsUnsubscribe();
+            eventsUnsubscribe = null;
+        }
+
+        if (usersUnsubscribe) {
+            usersUnsubscribe();
+            usersUnsubscribe = null;
+        }
+
+        currentUser = null;
+        currentStudent = null;
+        window.wileyEvents = [];
+
         if (!user) {
 
-            loginOverlay.classList.remove("hidden");
+            loginOverlay.classList.remove(
+                "hidden"
+            );
+
             return;
         }
 
@@ -845,23 +1257,88 @@ onAuthStateChanged(
             )
         ) {
 
-            loginOverlay.classList.add("hidden");
+            currentUser = user;
+
+            loginOverlay.classList.add(
+                "hidden"
+            );
 
             try {
 
-                await loadStudentData(user);
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
+
+                const userSnap =
+                    await getDoc(
+                        userRef
+                    );
+
+                if (!userSnap.exists()) {
+
+                    await setDoc(
+                        userRef,
+                        {
+                            displayName:
+                                user.displayName ||
+                                "Wildcat",
+
+                            email:
+                                user.email ||
+                                "",
+
+                            photoURL:
+                                user.photoURL ||
+                                "",
+
+                            bucks: 0,
+
+                            eventsAttended: 0,
+
+                            checkedInEvents: [],
+
+                            isAdmin: false,
+
+                            qrCode:
+                                user.uid,
+
+                            createdAt:
+                                new Date().toISOString(),
+
+                            lastLogin:
+                                new Date().toISOString()
+                        }
+                    );
+
+                }
+
+                subscribeToStudent(
+                    user
+                );
+
+                subscribeToEvents();
 
             } catch (error) {
 
-                console.error(error);
-
-                await signOut(auth);
+                console.error(
+                    "Student initialization error:",
+                    error
+                );
 
                 loginError.textContent =
-                    "Student account not found. Please contact an administrator.";
+                    "Unable to load your account. Please try again.";
 
-                loginError.classList.add("show");
-                loginOverlay.classList.remove("hidden");
+                loginError.classList.add(
+                    "show"
+                );
+
+                loginOverlay.classList.remove(
+                    "hidden"
+                );
+
             }
 
             return;
@@ -884,8 +1361,14 @@ onAuthStateChanged(
         loginError.textContent =
             "You must sign in with your @students.rfsd.k12.wi.us account.";
 
-        loginError.classList.add("show");
-        loginOverlay.classList.remove("hidden");
+        loginError.classList.add(
+            "show"
+        );
+
+        loginOverlay.classList.remove(
+            "hidden"
+        );
+
     }
 );
 
@@ -893,4 +1376,3 @@ onAuthStateChanged(
 
 </body>
 </html>
-
