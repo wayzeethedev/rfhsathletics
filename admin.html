@@ -544,6 +544,7 @@
             <div class="account-name" id="accountName">
                 Loading...
             </div>
+
             <div class="account-email" id="accountEmail">
                 Loading...
             </div>
@@ -667,11 +668,10 @@
         collection,
         addDoc,
         getDocs,
-        getDoc,
         doc,
         updateDoc,
-        arrayUnion,
-        serverTimestamp
+        serverTimestamp,
+        runTransaction
     } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -758,7 +758,9 @@
     function formatDate(dateString, timeString) {
         if (!dateString) return "";
 
-        const date = new Date(`${dateString}T${timeString || "00:00"}`);
+        const date = new Date(
+            `${dateString}T${timeString || "00:00"}`
+        );
 
         return date.toLocaleDateString("en-US", {
             weekday: "long",
@@ -1009,12 +1011,15 @@
             scannerPlaceholder.style.display = "none";
 
             scannerStatus.className = "scanner-status";
-            scannerStatus.textContent = "Ready — scan a student's QR code.";
+            scannerStatus.textContent =
+                "Ready — scan a student's QR code.";
 
         } catch (error) {
             console.error(error);
 
-            scannerStatus.className = "scanner-status error";
+            scannerStatus.className =
+                "scanner-status error";
+
             scannerStatus.textContent =
                 "Camera could not start. Check camera permissions.";
         }
@@ -1036,6 +1041,7 @@
         scannerRunning = false;
         scannerPlaceholder.style.display = "flex";
         html5QrCode = null;
+        processingScan = false;
     }
 
     async function handleQrCode(decodedText) {
@@ -1067,7 +1073,9 @@
             );
 
             if (!selectedEvent) {
-                throw new Error("Selected event no longer exists.");
+                throw new Error(
+                    "Selected event no longer exists."
+                );
             }
 
             scannerStatus.className = "scanner-status";
@@ -1079,78 +1087,131 @@
                 studentUid
             );
 
-            const studentSnapshot = await getDoc(studentRef);
+            let result = null;
 
-            if (!studentSnapshot.exists()) {
-                throw new Error("Student account not found.");
-            }
+            await runTransaction(db, async transaction => {
 
-            const student = studentSnapshot.data();
+                const studentSnapshot =
+                    await transaction.get(studentRef);
 
-            const checkedInEvents =
-                Array.isArray(student.checkedInEvents)
-                    ? student.checkedInEvents
-                    : [];
-
-            const alreadyCheckedIn = checkedInEvents.some(
-                item => {
-                    if (typeof item === "string") {
-                        return item === eventId;
-                    }
-
-                    return item &&
-                        (
-                            item.eventId === eventId ||
-                            item.id === eventId
-                        );
+                if (!studentSnapshot.exists()) {
+                    throw new Error(
+                        "Student account not found."
+                    );
                 }
-            );
+
+                const student =
+                    studentSnapshot.data();
+
+                const checkedInEvents =
+                    Array.isArray(student.checkedInEvents)
+                        ? student.checkedInEvents
+                        : [];
+
+                const alreadyCheckedIn =
+                    checkedInEvents.some(item => {
+
+                        if (typeof item === "string") {
+                            return item === eventId;
+                        }
+
+                        return item &&
+                            (
+                                item.eventId === eventId ||
+                                item.id === eventId
+                            );
+                    });
+
+                const currentBucks =
+                    Number(student.bucks || 0);
+
+                const currentEventsAttended =
+                    Number(student.eventsAttended || 0);
+
+                result = {
+                    name:
+                        student.displayName ||
+                        "Student",
+
+                    email:
+                        student.email ||
+                        "",
+
+                    bucks:
+                        currentBucks,
+
+                    alreadyCheckedIn
+                };
+
+                if (alreadyCheckedIn) {
+                    return;
+                }
+
+                const checkIn = {
+                    eventId,
+                    eventName:
+                        selectedEvent.name || "Event",
+                    points:
+                        Number(selectedEvent.points || 0),
+                    checkedInAt:
+                        new Date().toISOString()
+                };
+
+                transaction.update(
+                    studentRef,
+                    {
+                        checkedInEvents: [
+                            ...checkedInEvents,
+                            checkIn
+                        ],
+
+                        bucks:
+                            currentBucks +
+                            Number(selectedEvent.points || 0),
+
+                        eventsAttended:
+                            currentEventsAttended + 1,
+
+                        lastCheckIn:
+                            serverTimestamp()
+                    }
+                );
+
+                result.newBucks =
+                    currentBucks +
+                    Number(selectedEvent.points || 0);
+            });
 
             studentName.textContent =
-                student.displayName || "Student";
+                result.name;
 
             studentEmail.textContent =
-                student.email || "";
+                result.email;
 
             studentBucks.textContent =
-                `${Number(student.bucks || 0)} Wiley Bucks`;
+                `${result.alreadyCheckedIn
+                    ? result.bucks
+                    : result.newBucks
+                } Wiley Bucks`;
 
             studentResult.classList.add("show");
 
-            if (alreadyCheckedIn) {
+            if (result.alreadyCheckedIn) {
+
                 scannerStatus.className =
                     "scanner-status error";
 
                 scannerStatus.textContent =
-                    `${student.displayName || "Student"} is already checked in.`;
+                    `${result.name} is already checked in.`;
 
                 return;
             }
-
-            const checkIn = {
-                eventId: eventId,
-                eventName: selectedEvent.name || "Event",
-                points: Number(selectedEvent.points || 0),
-                checkedInAt: new Date().toISOString()
-            };
-
-            await updateDoc(
-                studentRef,
-                {
-                    checkedInEvents: arrayUnion(checkIn),
-                    bucks: Number(student.bucks || 0) +
-                        Number(selectedEvent.points || 0),
-                    eventsAttended:
-                        Number(student.eventsAttended || 0) + 1,
-                    lastCheckIn: serverTimestamp()
-                }
-            );
 
             scannerStatus.className =
                 "scanner-status success";
 
             scannerStatus.textContent =
-                `${student.displayName || "Student"} checked in successfully! +${Number(selectedEvent.points || 0)} Bucks`;
+                `${result.name} checked in successfully! +${Number(selectedEvent.points || 0)} Bucks`;
 
         } catch (error) {
             console.error(error);
@@ -1159,7 +1220,9 @@
                 "scanner-status error";
 
             scannerStatus.textContent =
-                error.message || "Check-in failed.";
+                error.message ||
+                "Check-in failed.";
+
         } finally {
             setTimeout(() => {
                 processingScan = false;
@@ -1178,69 +1241,108 @@
 
     document
         .getElementById("addEventBtn")
-        .addEventListener("click", openAddEvent);
+        .addEventListener(
+            "click",
+            openAddEvent
+        );
 
     document
         .getElementById("closeModalBtn")
-        .addEventListener("click", closeEventModal);
+        .addEventListener(
+            "click",
+            closeEventModal
+        );
 
     document
         .getElementById("cancelEventBtn")
-        .addEventListener("click", closeEventModal);
+        .addEventListener(
+            "click",
+            closeEventModal
+        );
 
     document
         .getElementById("saveEventBtn")
-        .addEventListener("click", saveEvent);
+        .addEventListener(
+            "click",
+            saveEvent
+        );
 
     document
         .getElementById("startScannerBtn")
-        .addEventListener("click", startScanner);
+        .addEventListener(
+            "click",
+            startScanner
+        );
 
     document
         .getElementById("stopScannerBtn")
-        .addEventListener("click", stopScanner);
+        .addEventListener(
+            "click",
+            stopScanner
+        );
 
     document
         .getElementById("logoutBtn")
-        .addEventListener("click", async () => {
-            try {
-                await signOut(auth);
-                window.location.replace("/student.html");
-            } catch (error) {
-                console.error(error);
+        .addEventListener(
+            "click",
+            async () => {
+                try {
+                    await signOut(auth);
+                    window.location.replace(
+                        "/student.html"
+                    );
+                } catch (error) {
+                    console.error(error);
+                }
             }
-        });
+        );
 
-    onAuthStateChanged(auth, async user => {
-        if (!user) {
-            window.location.replace("/student.html");
-            return;
+    onAuthStateChanged(
+        auth,
+        async user => {
+
+            if (!user) {
+                window.location.replace(
+                    "/student.html"
+                );
+                return;
+            }
+
+            const email =
+                (user.email || "")
+                    .trim()
+                    .toLowerCase();
+
+            if (
+                !email.endsWith("@gmail.com") &&
+                !email.endsWith("@rfsd.k12.wi.us")
+            ) {
+                await signOut(auth);
+
+                window.location.replace(
+                    "/student.html"
+                );
+
+                return;
+            }
+
+            const name =
+                user.displayName ||
+                "Administrator";
+
+            accountName.textContent =
+                name;
+
+            accountEmail.textContent =
+                user.email || "";
+
+            profilePicture.src =
+                user.photoURL ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5B2D90&color=fff&size=200`;
+
+            await loadEvents();
         }
-
-        const email =
-            (user.email || "").trim().toLowerCase();
-
-        if (
-            !email.endsWith("@gmail.com") &&
-            !email.endsWith("@rfsd.k12.wi.us")
-        ) {
-            await signOut(auth);
-            window.location.replace("/student.html");
-            return;
-        }
-
-        const name =
-            user.displayName || "Administrator";
-
-        accountName.textContent = name;
-        accountEmail.textContent = user.email || "";
-
-        profilePicture.src =
-            user.photoURL ||
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5B2D90&color=fff&size=200`;
-
-        await loadEvents();
-    });
+    );
 
 </script>
 
