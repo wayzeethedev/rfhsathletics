@@ -1280,7 +1280,7 @@
                 try {
                     await signOut(auth);
                     window.location.replace(
-                        "/student.html"
+                        "/index.html"
                     );
                 } catch (error) {
                     console.error(error);
@@ -1294,7 +1294,7 @@
 
             if (!user) {
                 window.location.replace(
-                    "/student.html"
+                    "/index.html"
                 );
                 return;
             }
@@ -1311,7 +1311,7 @@
                 await signOut(auth);
 
                 window.location.replace(
-                    "/student.html"
+                    "/index.html"
                 );
 
                 return;
