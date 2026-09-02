@@ -22,7 +22,7 @@ const auth = getAuth(app);
 // Check whether the user is logged in
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        window.location.replace("/student.html");
+        window.location.replace("/index.html");
     }
 });
 

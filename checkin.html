@@ -1,587 +1,534 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    >
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <title>Wiley Bucks</title>
+  <title>Wiley Bucks</title>
 
-    <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="manifest.json">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-    >
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-        rel="stylesheet"
-    >
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    rel="stylesheet">
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Inter, sans-serif;
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, sans-serif;
+    }
 
-        body {
-            background: #f6f7fb;
-            color: #222;
-            min-height: 100vh;
+    body {
+      background: #f6f7fb;
+      color: #222;
+      min-height: 100vh;
 
-            padding:
-                32px 20px
-                calc(90px + env(safe-area-inset-bottom));
-        }
+      padding:
+        32px 20px calc(90px + env(safe-area-inset-bottom));
+    }
 
-        h1 {
-            font-size: 28px;
-            margin-bottom: 24px;
-        }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
 
-        .checkin-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    .checkin-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .qr-container {
-            width: min(500px, calc(100vw - 40px));
-            aspect-ratio: 1 / 1;
+    .qr-container {
+      width: min(500px, calc(100vw - 40px));
+      aspect-ratio: 1 / 1;
 
-            background: #fff;
-            padding: 18px;
+      background: #fff;
+      padding: 18px;
 
-            border-radius: 28px;
+      border-radius: 28px;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-            box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
-        }
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
 
-        .qr-container img {
-            width: 100%;
-            height: 100%;
+    .qr-container img {
+      width: 100%;
+      height: 100%;
 
-            object-fit: contain;
+      object-fit: contain;
 
-            border-radius: 14px;
+      border-radius: 14px;
 
-            display: block;
-        }
+      display: block;
+    }
 
-        .student-name {
-            text-align: center;
-            margin-top: 18px;
+    .student-name {
+      text-align: center;
+      margin-top: 18px;
 
-            font-size: 22px;
-            font-weight: 700;
-        }
+      font-size: 22px;
+      font-weight: 700;
+    }
 
-        .student-email {
-            text-align: center;
-            margin-top: 5px;
+    .student-email {
+      text-align: center;
+      margin-top: 5px;
 
-            color: #777;
-            font-size: .85rem;
-        }
+      color: #777;
+      font-size: .85rem;
+    }
 
-        .qr-label {
-            margin-top: 18px;
+    .qr-label {
+      margin-top: 18px;
 
-            text-align: center;
+      text-align: center;
 
-            color: #777;
-            font-size: .78rem;
-            line-height: 1.4;
+      color: #777;
+      font-size: .78rem;
+      line-height: 1.4;
 
-            max-width: 360px;
-        }
+      max-width: 360px;
+    }
 
-        .loading {
-            color: #777;
-            text-align: center;
-            margin-top: 20px;
-        }
+    .loading {
+      color: #777;
+      text-align: center;
+      margin-top: 20px;
+    }
 
-        .error {
-            display: none;
+    .error {
+      display: none;
 
-            margin-top: 20px;
-            padding: 12px 16px;
+      margin-top: 20px;
+      padding: 12px 16px;
 
-            background: #fff0f0;
-            color: #c62828;
+      background: #fff0f0;
+      color: #c62828;
 
-            border-radius: 12px;
+      border-radius: 12px;
 
-            text-align: center;
-            font-size: .85rem;
-        }
+      text-align: center;
+      font-size: .85rem;
+    }
 
-        .error.show {
-            display: block;
-        }
+    .error.show {
+      display: block;
+    }
 
-        /* =========================
+    /* =========================
            BOTTOM NAVIGATION
         ========================= */
 
-        .nav-bar {
-            position: fixed;
+    .nav-bar {
+      position: fixed;
 
-            left: 0;
-            right: 0;
-            bottom: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
 
-            height: calc(60px + env(safe-area-inset-bottom));
+      height: calc(60px + env(safe-area-inset-bottom));
 
-            padding-bottom:
-                calc(env(safe-area-inset-bottom) - 12px);
+      padding-bottom:
+        calc(env(safe-area-inset-bottom) - 12px);
 
-            background: #fff;
+      background: #fff;
 
-            border-top: 1px solid #e9e9e9;
+      border-top: 1px solid #e9e9e9;
 
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
 
-            box-shadow:
-                0 -2px 12px rgba(0, 0, 0, .06);
+      box-shadow:
+        0 -2px 12px rgba(0, 0, 0, .06);
 
-            z-index: 100;
-        }
+      z-index: 100;
+    }
 
-        .nav-item {
-            flex: 1;
-            height: 72px;
+    .nav-item {
+      flex: 1;
+      height: 72px;
 
-            display: flex;
-            flex-direction: column;
+      display: flex;
+      flex-direction: column;
 
-            justify-content: center;
-            align-items: center;
+      justify-content: center;
+      align-items: center;
 
-            gap: 2px;
+      gap: 2px;
 
-            text-decoration: none;
+      text-decoration: none;
 
-            color: #777;
+      color: #777;
 
-            -webkit-tap-highlight-color: transparent;
-        }
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        .nav-item:hover,
-        .nav-item.active {
-            color: #5B2D90;
-        }
+    .nav-item:hover,
+    .nav-item.active {
+      color: #5B2D90;
+    }
 
-        .nav-item .material-symbols-outlined {
-            font-size: 24px;
-        }
+    .nav-item .material-symbols-outlined {
+      font-size: 24px;
+    }
 
-        .nav-item span:last-child {
-            font-size: .72rem;
-            font-weight: 600;
-        }
+    .nav-item span:last-child {
+      font-size: .72rem;
+      font-weight: 600;
+    }
 
-        @media (max-width: 480px) {
-            body {
-                padding-left: 16px;
-                padding-right: 16px;
-            }
+    @media (max-width: 480px) {
+      body {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
 
-            .qr-container {
-                width: calc(100vw - 32px);
-                padding: 14px;
-                border-radius: 24px;
-            }
+      .qr-container {
+        width: calc(100vw - 32px);
+        padding: 14px;
+        border-radius: 24px;
+      }
 
-            .student-name {
-                font-size: 20px;
-            }
-        }
-    </style>
+      .student-name {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1>Check In</h1>
+  <h1>Check In</h1>
 
-    <main class="checkin-content">
+  <main class="checkin-content">
 
-        <div class="qr-container">
-            <img
-                id="studentQr"
-                alt="Your Wiley Bucks QR Code"
-            >
-        </div>
+    <div class="qr-container">
+      <img id="studentQr" alt="Your Wiley Bucks QR Code">
+    </div>
 
-        <h2
-            class="student-name"
-            id="studentName"
-        >
-            Loading...
-        </h2>
+    <h2 class="student-name" id="studentName">
+      Loading...
+    </h2>
 
-        <p
-            class="student-email"
-            id="studentEmail"
-        >
-            Loading...
-        </p>
+    <p class="student-email" id="studentEmail">
+      Loading...
+    </p>
 
-        <p class="qr-label">
-            Show this QR code to an event administrator
-            to check in and earn Wiley Bucks.
-        </p>
+    <p class="qr-label">
+      Show this QR code to an event administrator
+      to check in and earn Wiley Bucks.
+    </p>
 
-        <div
-            class="error"
-            id="errorMessage"
-        ></div>
+    <div class="error" id="errorMessage"></div>
 
-    </main>
+  </main>
 
-    <!-- =========================
+  <!-- =========================
          BOTTOM NAVIGATION
     ========================= -->
 
-    <nav class="nav-bar">
+  <nav class="nav-bar">
 
-        <a
-            href="index.html"
-            class="nav-item"
-        >
-            <span class="material-symbols-outlined">
-                home
-            </span>
+    <a href="index.html" class="nav-item">
+      <span class="material-symbols-outlined">
+        home
+      </span>
 
-            <span>
-                Home
-            </span>
-        </a>
+      <span>
+        Home
+      </span>
+    </a>
 
-        <a
-            href="shop.html"
-            class="nav-item"
-        >
-            <span class="material-symbols-outlined">
-                shopping_bag
-            </span>
+    <a href="shop.html" class="nav-item">
+      <span class="material-symbols-outlined">
+        shopping_bag
+      </span>
 
-            <span>
-                Shop
-            </span>
-        </a>
+      <span>
+        Shop
+      </span>
+    </a>
 
-        <a
-            href="checkin.html"
-            class="nav-item active"
-        >
-            <span class="material-symbols-outlined">
-                qr_code_scanner
-            </span>
+    <a href="checkin.html" class="nav-item active">
+      <span class="material-symbols-outlined">
+        qr_code_scanner
+      </span>
 
-            <span>
-                Check In
-            </span>
-        </a>
+      <span>
+        Check In
+      </span>
+    </a>
 
-        <a
-            href="leaderboard.html"
-            class="nav-item"
-        >
-            <span class="material-symbols-outlined">
-                leaderboard
-            </span>
+    <a href="leaderboard.html" class="nav-item">
+      <span class="material-symbols-outlined">
+        leaderboard
+      </span>
 
-            <span>
-                Leaderboard
-            </span>
-        </a>
+      <span>
+        Leaderboard
+      </span>
+    </a>
 
-        <a
-            href="account.html"
-            class="nav-item"
-        >
-            <span class="material-symbols-outlined">
-                person
-            </span>
+    <a href="account.html" class="nav-item">
+      <span class="material-symbols-outlined">
+        person
+      </span>
 
-            <span>
-                Account
-            </span>
-        </a>
+      <span>
+        Account
+      </span>
+    </a>
 
-    </nav>
+  </nav>
 
-    <!-- =========================
+  <!-- =========================
          FIREBASE
     ========================= -->
 
-    <script type="module">
+  <script type="module">
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
-        import {
-            initializeApp
-        } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
-        import {
-            getAuth,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-        import {
-            getFirestore,
-            doc,
-            getDoc,
-            setDoc
-        } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    /* =========================
+       FIREBASE CONFIG
+    ========================= */
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyDUS75R4BH3-3e603dNvlKxIJU2ThNOc1k",
 
-        /* =========================
-           FIREBASE CONFIG
-        ========================= */
+      authDomain: "river-falls-athletics-76449.firebaseapp.com",
 
-        const firebaseConfig = {
-            apiKey:
-                "AIzaSyDUS75R4BH3-3e603dNvlKxIJU2ThNOc1k",
+      projectId: "river-falls-athletics-76449",
 
-            authDomain:
-                "river-falls-athletics-76449.firebaseapp.com",
+      storageBucket: "river-falls-athletics-76449.firebasestorage.app",
 
-            projectId:
-                "river-falls-athletics-76449",
+      messagingSenderId: "493469404152",
 
-            storageBucket:
-                "river-falls-athletics-76449.firebasestorage.app",
+      appId: "1:493469404152:web:d47d73b848931d38ebe40d",
 
-            messagingSenderId:
-                "493469404152",
+      measurementId: "G-CLQX2GN19Y"
+    };
 
-            appId:
-                "1:493469404152:web:d47d73b848931d38ebe40d",
+    /* =========================
+       INITIALIZE FIREBASE
+    ========================= */
 
-            measurementId:
-                "G-CLQX2GN19Y"
-        };
+    const app = initializeApp(firebaseConfig);
 
+    const auth = getAuth(app);
 
-        /* =========================
-           INITIALIZE FIREBASE
-        ========================= */
+    const db = getFirestore(app);
 
-        const app = initializeApp(firebaseConfig);
+    /* =========================
+       DOM
+    ========================= */
 
-        const auth = getAuth(app);
+    const studentQr =
+      document.getElementById("studentQr");
 
-        const db = getFirestore(app);
+    const studentName =
+      document.getElementById("studentName");
 
+    const studentEmail =
+      document.getElementById("studentEmail");
 
-        /* =========================
-           DOM
-        ========================= */
+    const errorMessage =
+      document.getElementById("errorMessage");
 
-        const studentQr =
-            document.getElementById("studentQr");
+    /* =========================
+       SHOW ERROR
+    ========================= */
 
-        const studentName =
-            document.getElementById("studentName");
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.classList.add("show");
+    }
 
-        const studentEmail =
-            document.getElementById("studentEmail");
+    /* =========================
+       CREATE QR CODE
+    ========================= */
 
-        const errorMessage =
-            document.getElementById("errorMessage");
+    function generateQrCode(uid) {
 
+      /*
+       * The Firebase UID is unique to the
+       * student's Google account.
+       *
+       * We prefix it with WILEY:
+       * 
+       * WILEY:firebaseUserUid
+       *
+       * The admin scanner will read this value.
+       */
 
-        /* =========================
-           SHOW ERROR
-        ========================= */
+      const qrData = `WILEY:${uid}`;
 
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.classList.add("show");
-        }
+      const encodedData =
+        encodeURIComponent(qrData);
 
+      /*
+       * QR Server generates the actual QR image.
+       */
 
-        /* =========================
-           CREATE QR CODE
-        ========================= */
+      const qrUrl =
+        `https://api.qrserver.com/v1/create-qr-code/?size=800x800&margin=20&data=${encodedData}`;
 
-        function generateQrCode(uid) {
+      studentQr.src = qrUrl;
 
-            /*
-             * The Firebase UID is unique to the
-             * student's Google account.
-             *
-             * We prefix it with WILEY:
-             * 
-             * WILEY:firebaseUserUid
-             *
-             * The admin scanner will read this value.
-             */
-
-            const qrData = `WILEY:${uid}`;
-
-            const encodedData =
-                encodeURIComponent(qrData);
-
-            /*
-             * QR Server generates the actual QR image.
-             */
-
-            const qrUrl =
-                `https://api.qrserver.com/v1/create-qr-code/?size=800x800&margin=20&data=${encodedData}`;
-
-            studentQr.src = qrUrl;
-
-            studentQr.onerror = () => {
-                showError(
-                    "Unable to load your QR code. Please check your internet connection."
-                );
-            };
-        }
-
-
-        /* =========================
-           AUTH STATE
-        ========================= */
-
-        onAuthStateChanged(
-            auth,
-            async (user) => {
-
-                if (!user) {
-                    window.location.replace(
-                        "/index.html"
-                    );
-
-                    return;
-                }
-
-
-                /* =========================
-                   ONLY STUDENT ACCOUNTS
-                ========================= */
-
-                const email =
-                    (user.email || "")
-                        .trim()
-                        .toLowerCase();
-
-                if (
-                    !email.endsWith(
-                        "@students.rfsd.k12.wi.us"
-                    )
-                ) {
-
-                    window.location.replace(
-                        "/index.html"
-                    );
-
-                    return;
-                }
-
-
-                /* =========================
-                   DISPLAY USER
-                ========================= */
-
-                const name =
-                    user.displayName ||
-                    "Wildcat";
-
-                studentName.textContent =
-                    name;
-
-                studentEmail.textContent =
-                    email;
-
-
-                /* =========================
-                   GENERATE UNIQUE QR
-                ========================= */
-
-                generateQrCode(user.uid);
-
-
-                /* =========================
-                   CREATE / UPDATE STUDENT
-                   FIRESTORE RECORD
-                ========================= */
-
-                try {
-
-                    const studentRef =
-                        doc(
-                            db,
-                            "students",
-                            user.uid
-                        );
-
-                    const studentSnapshot =
-                        await getDoc(studentRef);
-
-
-                    if (!studentSnapshot.exists()) {
-
-                        await setDoc(
-                            studentRef,
-                            {
-                                uid: user.uid,
-                                name: name,
-                                email: email,
-                                bucks: 0,
-                                eventsAttended: 0,
-                                createdAt: new Date()
-                            }
-                        );
-
-                    } else {
-
-                        /*
-                         * Keep the student's profile
-                         * information current.
-                         */
-
-                        await setDoc(
-                            studentRef,
-                            {
-                                uid: user.uid,
-                                name: name,
-                                email: email
-                            },
-                            {
-                                merge: true
-                            }
-                        );
-                    }
-
-                } catch (error) {
-
-                    console.error(
-                        "Firestore error:",
-                        error
-                    );
-
-                    showError(
-                        "Your QR code loaded, but your student profile could not be synced."
-                    );
-                }
-
-            }
+      studentQr.onerror = () => {
+        showError(
+          "Unable to load your QR code. Please check your internet connection."
         );
+      };
+    }
 
-    </script>
+    /* =========================
+       AUTH STATE
+    ========================= */
+
+    onAuthStateChanged(
+      auth,
+      async (user) => {
+
+        if (!user) {
+          window.location.replace(
+            "/index.html"
+          );
+
+          return;
+        }
+
+        /* =========================
+           ONLY STUDENT ACCOUNTS
+        ========================= */
+
+        const email =
+          (user.email || "")
+          .trim()
+          .toLowerCase();
+
+        if (
+          !email.endsWith(
+            "@students.rfsd.k12.wi.us"
+          )
+        ) {
+
+          window.location.replace(
+            "/index.html"
+          );
+
+          return;
+        }
+
+        /* =========================
+           DISPLAY USER
+        ========================= */
+
+        const name =
+          user.displayName ||
+          "Wildcat";
+
+        studentName.textContent =
+          name;
+
+        studentEmail.textContent =
+          email;
+
+        /* =========================
+           GENERATE UNIQUE QR
+        ========================= */
+
+        generateQrCode(user.uid);
+
+        /* =========================
+           CREATE / UPDATE STUDENT
+           FIRESTORE RECORD
+        ========================= */
+
+        try {
+
+          const studentRef =
+            doc(
+              db,
+              "students",
+              user.uid
+            );
+
+          const studentSnapshot =
+            await getDoc(studentRef);
+
+          if (!studentSnapshot.exists()) {
+
+            await setDoc(
+              studentRef, {
+                uid: user.uid,
+                name: name,
+                email: email,
+                bucks: 0,
+                eventsAttended: 0,
+                createdAt: new Date()
+              }
+            );
+
+          } else {
+
+            /*
+             * Keep the student's profile
+             * information current.
+             */
+
+            await setDoc(
+              studentRef, {
+                uid: user.uid,
+                name: name,
+                email: email
+              }, {
+                merge: true
+              }
+            );
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Firestore error:",
+            error
+          );
+
+          showError(
+            "Your QR code loaded, but your student profile could not be synced."
+          );
+        }
+
+      }
+    );
+  </script>
 
 </body>
+
 </html>
