@@ -3,22 +3,27 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Wiley Bucks">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#5B2D90">
   <title>Wiley Bucks</title>
   <link rel="manifest" href="manifest.json">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: Inter, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     body {
@@ -26,6 +31,7 @@
       color: #222;
       min-height: 100vh;
       padding: 32px 20px calc(90px + env(safe-area-inset-bottom));
+      touch-action: manipulation;
     }
 
     h1 {
@@ -89,6 +95,7 @@
       padding: 16px;
       box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
       margin-bottom: 12px;
+      touch-action: manipulation;
     }
 
     .event-header {
@@ -110,6 +117,17 @@
       margin-top: 3px;
     }
 
+    .event-theme {
+      display: inline-block;
+      background: #f0eef4;
+      color: #5B2D90;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: .7rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
     .event-points {
       color: #5B2D90;
       font-weight: 700;
@@ -123,11 +141,47 @@
       line-height: 1.5;
     }
 
+    .event-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ticket-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: #002E57;
+      color: #fff;
+      font-size: .8rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+      touch-action: manipulation;
+    }
+
+    .ticket-btn:hover {
+      background: #4d267a;
+    }
+
+    .ticket-btn:active {
+      transform: scale(0.97);
+    }
+
+    .ticket-btn .material-symbols-outlined {
+      font-size: 18px;
+      pointer-events: none;
+    }
+
     .checked-in {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      margin-top: 8px;
       padding: 6px 10px;
       border-radius: 8px;
       background: #e8f7ed;
@@ -138,6 +192,17 @@
 
     .checked-in .material-symbols-outlined {
       font-size: 16px;
+    }
+
+    .event-status-badge.cancelled {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: .7rem;
+      font-weight: 600;
+      margin-left: 6px;
+      background: #fff0f0;
+      color: #c62828;
     }
 
     .loading {
@@ -217,6 +282,7 @@
       font-weight: 600;
       cursor: pointer;
       transition: .15s ease;
+      touch-action: manipulation;
     }
 
     .google-btn:hover {
@@ -224,7 +290,7 @@
     }
 
     .google-btn:active {
-      transform: scale(.99);
+      transform: scale(.98);
     }
 
     .google-btn:disabled {
@@ -235,6 +301,7 @@
     .google-icon {
       width: 20px;
       height: 20px;
+      pointer-events: none;
     }
 
     .login-loading {
@@ -284,6 +351,7 @@
       align-items: center;
       box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
       z-index: 100;
+      touch-action: manipulation;
     }
 
     .nav-item {
@@ -296,6 +364,10 @@
       gap: 2px;
       text-decoration: none;
       color: #777;
+      touch-action: manipulation;
+      cursor: pointer;
+      background: none;
+      border: none;
     }
 
     .nav-item:hover,
@@ -305,11 +377,28 @@
 
     .nav-item .material-symbols-outlined {
       font-size: 24px;
+      pointer-events: none;
     }
 
     .nav-item span:last-child {
       font-size: .72rem;
       font-weight: 600;
+      pointer-events: none;
+    }
+
+    a {
+      text-decoration: none;
+      touch-action: manipulation;
+    }
+
+    img {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+
+    button {
+      touch-action: manipulation;
     }
 
     @media (max-width: 480px) {
@@ -321,6 +410,19 @@
       .login-card {
         padding: 26px 20px;
       }
+
+      .stat-container {
+        flex-wrap: wrap;
+      }
+
+      .stat-box {
+        flex: 1 1 30%;
+        min-width: 80px;
+      }
+
+      .event-header {
+        flex-wrap: wrap;
+      }
     }
   </style>
 </head>
@@ -328,129 +430,77 @@
 <body>
   <div class="login-overlay" id="loginOverlay">
     <div class="login-card">
-
       <div class="login-logo">🏈</div>
-
       <h2>Wiley Bucks</h2>
-
-      <p class="login-subtitle">
-        Attend events, earn Wiley Bucks, and redeem rewards.
-        Sign in to continue.
-      </p>
-
+      <p class="login-subtitle">Attend events, earn Wiley Bucks, and redeem rewards. Sign in to continue.</p>
       <button class="google-btn" id="googleSignInBtn">
-
-        <svg class="google-icon" xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 48 48">
-          <path fill="#FFC107"
-            d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
-          <path fill="#FF3D00"
-            d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
-          <path fill="#4CAF50"
-            d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
-          <path fill="#1976D2"
-            d="M43.611,20.083H42V20H24v8h11.303c-.792,2.237-2.231,4.166-4.087,5.571l.003-.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+        <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+          <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+          <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+          <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+          <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-.792,2.237-2.231,4.166-4.087,5.571l.003-.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
         </svg>
-
         <span>Sign in with Google</span>
-
       </button>
-
-      <div class="login-loading" id="loginLoading">
-        Signing in...
-      </div>
-
+      <div class="login-loading" id="loginLoading">Signing in...</div>
       <div class="login-error" id="loginError"></div>
-
-      <p class="login-note">
-        Use your @students.rfsd.k12.wi.us account
-      </p>
-
+      <p class="login-note">Use your @students.rfsd.k12.wi.us account</p>
     </div>
   </div>
-  <main id="app">
-    <h1 id="welcomeMessage">
-      Welcome!
-    </h1>
 
-    <p class="subtitle">
-      Keep showing your Wildcat pride and earn more Wiley Bucks.
-    </p>
+  <main id="app">
+    <h1 id="welcomeMessage">Welcome!</h1>
+    <p class="subtitle">Keep showing your Wildcat pride and earn more Wiley Bucks.</p>
 
     <div class="stat-container">
-
       <div class="stat-box">
         <h2 id="eventsAttended">0</h2>
         <p>Events Attended</p>
       </div>
-
       <div class="stat-box">
         <h2 id="wileyBucks">0</h2>
         <p>Wiley Bucks</p>
       </div>
-
       <div class="stat-box">
         <h2 id="rankDisplay">#-</h2>
         <p>Rank</p>
       </div>
-
     </div>
 
     <h3>Upcoming Events</h3>
-
     <div id="eventsContainer">
-      <div class="loading">
-        Loading events...
-      </div>
+      <div class="loading">Loading events...</div>
     </div>
   </main>
+
   <nav class="nav-bar">
     <a href="index.html" class="nav-item active">
       <span class="material-symbols-outlined">home</span>
       <span>Home</span>
     </a>
-
     <a href="prizes.html" class="nav-item">
       <span class="material-symbols-outlined">shopping_bag</span>
       <span>Prizes</span>
     </a>
-
     <a href="checkin.html" class="nav-item">
       <span class="material-symbols-outlined">qr_code_scanner</span>
       <span>Check In</span>
     </a>
-
     <a href="leaderboard.html" class="nav-item">
       <span class="material-symbols-outlined">leaderboard</span>
       <span>Leaderboard</span>
     </a>
-
     <a href="account.html" class="nav-item">
       <span class="material-symbols-outlined">person</span>
       <span>Account</span>
     </a>
   </nav>
+
   <script type="module">
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-    import {
-      getAuth,
-      signInWithPopup,
-      GoogleAuthProvider,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      getDoc,
-      setDoc,
-      collection,
-      onSnapshot,
-      query,
-      orderBy
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyA4ZMuE3-l-PwTQlPvLpykFzUvk7QDF9Z0",
       authDomain: "wileybucks.firebaseapp.com",
@@ -460,10 +510,12 @@
       appId: "1:1037519230312:web:b6ed0297b5d677808972dd",
       measurementId: "G-E81C7PYNC7"
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
+
     const loginOverlay = document.getElementById("loginOverlay");
     const googleSignInBtn = document.getElementById("googleSignInBtn");
     const loginLoading = document.getElementById("loginLoading");
@@ -473,12 +525,14 @@
     const wileyBucks = document.getElementById("wileyBucks");
     const rankDisplay = document.getElementById("rankDisplay");
     const eventsContainer = document.getElementById("eventsContainer");
+
     let currentUser = null;
     let currentStudent = null;
     let eventsUnsubscribe = null;
     let studentUnsubscribe = null;
     let usersUnsubscribe = null;
     let events = [];
+
     googleSignInBtn.addEventListener("click", async () => {
       googleSignInBtn.disabled = true;
       loginLoading.classList.add("show");
@@ -489,19 +543,16 @@
         console.error("Google sign-in error:", error);
         let message = "Sign in failed. Please try again.";
         if (error.code === "auth/popup-blocked") {
-          message =
-            "Your browser blocked the Google sign-in window. Please allow popups and try again.";
+          message = "Your browser blocked the Google sign-in window. Please allow popups and try again.";
         }
         if (error.code === "auth/popup-closed-by-user") {
           message = "Sign in was cancelled.";
         }
         if (error.code === "auth/unauthorized-domain") {
-          message =
-            "This website is not authorized in Firebase Authentication.";
+          message = "This website is not authorized in Firebase Authentication.";
         }
         if (error.code === "auth/api-key-not-valid") {
-          message =
-            "The Firebase API key is invalid. Check the Firebase project configuration.";
+          message = "The Firebase API key is invalid. Check the Firebase project configuration.";
         }
         loginError.textContent = message;
         loginError.classList.add("show");
@@ -512,15 +563,14 @@
     });
 
     function isStudentEmail(email) {
-      return String(email || "").trim().toLowerCase().endsWith(
-        "@students.rfsd.k12.wi.us");
+      return String(email || "").trim().toLowerCase().endsWith("@students.rfsd.k12.wi.us");
     }
 
     function isAdminEmail(email) {
       const normalized = String(email || "").trim().toLowerCase();
-      return (normalized.endsWith("@gmail.com") || normalized.endsWith(
-        "@rfsd.k12.wi.us"));
+      return (normalized.endsWith("@gmail.com") || normalized.endsWith("@rfsd.k12.wi.us"));
     }
+
     async function createStudentAccount(user) {
       const studentRef = doc(db, "users", user.uid);
       const snapshot = await getDoc(studentRef);
@@ -543,12 +593,9 @@
     }
 
     function createEventDate(dateValue, timeValue) {
-      if (!dateValue) {
-        return null;
-      }
+      if (!dateValue) return null;
       const dateString = String(dateValue).trim();
-      const timeString = /^\d{2}:\d{2}$/.test(String(timeValue || "")) ? String(
-        timeValue) : "00:00";
+      const timeString = /^\d{2}:\d{2}$/.test(String(timeValue || "")) ? String(timeValue) : "00:00";
       if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
         const [year, month, day] = dateString.split("-").map(Number);
         const [hours, minutes] = timeString.split(":").map(Number);
@@ -564,16 +611,22 @@
         return date;
       }
       const parsed = new Date(`${dateString}T${timeString}`);
-      if (Number.isNaN(parsed.getTime())) {
-        return null;
-      }
+      if (Number.isNaN(parsed.getTime())) return null;
       return parsed;
     }
 
-    function formatEventDate(date) {
-      if (!date || Number.isNaN(date.getTime())) {
-        return "Date unavailable";
+    function formatEventDisplay(event) {
+      let display = event.name || "Event";
+      if (event.type) display = `${event.type}: ${display}`;
+      if (event.opponent) {
+        const loc = event.locationType === "Home" ? "vs" : "at";
+        display += ` ${loc} ${event.opponent}`;
       }
+      return display;
+    }
+
+    function formatEventDate(date) {
+      if (!date || Number.isNaN(date.getTime())) return "Date unavailable";
       return date.toLocaleDateString("en-US", {
         weekday: "long",
         month: "long",
@@ -582,9 +635,7 @@
     }
 
     function formatEventTime(date) {
-      if (!date || Number.isNaN(date.getTime())) {
-        return "";
-      }
+      if (!date || Number.isNaN(date.getTime())) return "";
       return date.toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "2-digit"
@@ -592,18 +643,11 @@
     }
 
     function isEventCheckedIn(event) {
-      if (!currentStudent) {
-        return false;
-      }
-      const checkedInEvents = Array.isArray(currentStudent.checkedInEvents) ?
-        currentStudent.checkedInEvents : [];
+      if (!currentStudent) return false;
+      const checkedInEvents = Array.isArray(currentStudent.checkedInEvents) ? currentStudent.checkedInEvents : [];
       return checkedInEvents.some(item => {
-        if (typeof item === "string") {
-          return (item === event.id);
-        }
-        if (item && typeof item === "object") {
-          return (item.id === event.id || item.eventId === event.id);
-        }
+        if (typeof item === "string") return (item === event.id);
+        if (item && typeof item === "object") return (item.id === event.id || item.eventId === event.id);
         return false;
       });
     }
@@ -612,11 +656,9 @@
       currentStudent = student;
       const name = student.displayName || currentUser?.displayName || "Wildcat";
       welcomeMessage.textContent = `Welcome, ${name}!`;
-      const checkedInEvents = Array.isArray(student.checkedInEvents) ? student
-        .checkedInEvents : [];
+      const checkedInEvents = Array.isArray(student.checkedInEvents) ? student.checkedInEvents : [];
       const attended = Number(student.eventsAttended);
-      eventsAttended.textContent = Number.isFinite(attended) ? attended :
-        checkedInEvents.length;
+      eventsAttended.textContent = Number.isFinite(attended) ? attended : checkedInEvents.length;
       const bucks = Number(student.wileyBucks ?? student.bucks ?? 0);
       wileyBucks.textContent = Number.isFinite(bucks) ? bucks : 0;
       renderEvents();
@@ -633,15 +675,12 @@
         return;
       }
       usersUnsubscribe = onSnapshot(collection(db, "users"), snapshot => {
-        const studentBucks = Number(currentStudent.wileyBucks ??
-          currentStudent.bucks ?? 0);
+        const studentBucks = Number(currentStudent.wileyBucks ?? currentStudent.bucks ?? 0);
         const scores = [];
         snapshot.forEach(userDoc => {
           const data = userDoc.data();
           const bucks = Number(data.wileyBucks ?? data.bucks ?? 0);
-          if (Number.isFinite(bucks)) {
-            scores.push(bucks);
-          }
+          if (Number.isFinite(bucks)) scores.push(bucks);
         });
         scores.sort((a, b) => b - a);
         const rank = scores.findIndex(score => score <= studentBucks) + 1;
@@ -652,40 +691,73 @@
       });
     }
 
+    function getStatusBadge(event) {
+      if (event.cancelled) {
+        return `<span class="event-status-badge cancelled">Cancelled</span>`;
+      }
+      return '';
+    }
+
     function renderEvents() {
-      if (!eventsContainer) {
-        return;
-      }
+      if (!eventsContainer) return;
       const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const upcomingEvents = events.filter(event => {
-        return (event.parsedDate && event.parsedDate >= now);
+        if (event.cancelled) return false;
+        return (event.parsedDate && event.parsedDate >= today);
       }).sort((a, b) => a.parsedDate - b.parsedDate);
+
       if (upcomingEvents.length === 0) {
-        eventsContainer.innerHTML =
-          ` <div class="empty"> No upcoming events. </div> `;
+        eventsContainer.innerHTML = `<div class="empty">No upcoming events.</div>`;
         return;
       }
+
       eventsContainer.innerHTML = "";
       upcomingEvents.forEach(event => {
         const card = document.createElement("div");
         card.className = "event-card";
-        const title = event.name || event.title || event.sport || "Event";
-        const matchup = event.matchup || event.opponent || "";
-        const points = Number(event.points ?? event.bucks ?? 0);
-        const location = event.location || event.venue || "";
+        const displayName = formatEventDisplay(event);
+        const points = Number(event.points ?? 0);
+        const location = event.location || "";
         const date = formatEventDate(event.parsedDate);
         const time = formatEventTime(event.parsedDate);
         const checkedIn = isEventCheckedIn(event);
-        card.innerHTML =
-          ` <div class="event-header"> <div> <div class="event-title"> ${escapeHtml(title)} </div> ${ matchup ? ` <div class="event-matchup"> ${escapeHtml(matchup)} </div> ` : "" } ${ checkedIn ? ` <div class="checked-in"> <span class="material-symbols-outlined"> check_circle </span> Checked In </div> ` : "" } </div> <div class="event-points"> +${points} Bucks </div> </div> <div class="event-info"> ${escapeHtml(date)} ${ time ? ` • ${escapeHtml(time)}` : "" } ${ location ? `<br>${escapeHtml(location)}` : "" } </div> `;
+        const statusBadge = getStatusBadge(event);
+        const theme = event.theme ? `<div class="event-theme">${escapeHtml(event.theme)}</div>` : '';
+        const ticketsRequired = event.ticketsRequired || false;
+        const ticketLink = event.ticketLink || '';
+
+        card.innerHTML = `
+          <div class="event-header">
+            <div>
+              <div class="event-title">${escapeHtml(displayName)}${statusBadge}</div>
+              ${theme}
+              ${checkedIn ? `<div class="checked-in"><span class="material-symbols-outlined">check_circle</span>Checked In</div>` : ''}
+            </div>
+            <div class="event-points">+${points} Bucks</div>
+          </div>
+          <div class="event-info">
+            ${escapeHtml(date)}${time ? ` • ${escapeHtml(time)}` : ''}${location ? `<br>${escapeHtml(location)}` : ''}
+          </div>
+          <div class="event-actions">
+            ${ticketsRequired && ticketLink && !checkedIn ? `
+              <a href="${escapeHtml(ticketLink)}" target="_blank" class="ticket-btn" rel="noopener noreferrer">
+                <span class="material-symbols-outlined">confirmation_number</span>Get Tickets
+              </a>
+            ` : ''}
+            ${ticketsRequired && ticketLink && checkedIn ? `
+              <a href="${escapeHtml(ticketLink)}" target="_blank" class="ticket-btn" style="background:#666;" rel="noopener noreferrer">
+                <span class="material-symbols-outlined">confirmation_number</span>View Tickets
+              </a>
+            ` : ''}
+          </div>
+        `;
         eventsContainer.appendChild(card);
       });
     }
 
     function escapeHtml(value) {
-      return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'",
-          "&#039;");
+      return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     }
 
     function subscribeToEvents() {
@@ -698,21 +770,14 @@
         snapshot.forEach(eventDoc => {
           const data = eventDoc.data();
           const parsedDate = createEventDate(data.date, data.time);
-          if (!parsedDate) {
-            return;
-          }
-          loadedEvents.push({
-            id: eventDoc.id,
-            ...data,
-            parsedDate
-          });
+          if (!parsedDate) return;
+          loadedEvents.push({ id: eventDoc.id, ...data, parsedDate });
         });
         events = loadedEvents;
         renderEvents();
       }, error => {
         console.error("Events listener error:", error);
-        eventsContainer.innerHTML =
-          ` <div class="empty"> Unable to load events right now. </div> `;
+        eventsContainer.innerHTML = `<div class="empty">Unable to load events right now.</div>`;
       });
     }
 
@@ -728,8 +793,7 @@
             await createStudentAccount(user);
           } catch (error) {
             console.error("Could not create student account:", error);
-            loginError.textContent =
-              "Your account could not be created. Please try again.";
+            loginError.textContent = "Your account could not be created. Please try again.";
             loginError.classList.add("show");
           }
           return;
@@ -756,6 +820,15 @@
         usersUnsubscribe = null;
       }
     }
+
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+
+    document.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+    });
+
     onAuthStateChanged(auth, async user => {
       cleanupListeners();
       currentUser = null;
@@ -764,8 +837,7 @@
       if (!user) {
         loginOverlay.classList.remove("hidden");
         welcomeMessage.textContent = "Welcome!";
-        eventsContainer.innerHTML =
-          ` <div class="loading"> Loading events... </div> `;
+        eventsContainer.innerHTML = `<div class="loading">Loading events...</div>`;
         return;
       }
       const email = (user.email || "").trim().toLowerCase();
@@ -777,8 +849,7 @@
       }
       if (!isStudentEmail(email)) {
         await signOut(auth);
-        loginError.textContent =
-          "You must sign in with your @students.rfsd.k12.wi.us account.";
+        loginError.textContent = "You must sign in with your @students.rfsd.k12.wi.us account.";
         loginError.classList.add("show");
         loginOverlay.classList.remove("hidden");
         return;

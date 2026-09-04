@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Wiley Bucks - Import">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#5B2D90">
+  <title>Wiley Bucks - Import Events</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    body {
+      background: #f6f7fb;
+      color: #222;
+      min-height: 100vh;
+      padding: 32px 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+      margin-bottom: 16px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 300px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: .85rem;
+      font-family: 'Courier New', monospace;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      border-color: #5B2D90;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .15s ease;
+      touch-action: manipulation;
+    }
+
+    .btn:active {
+      transform: scale(.97);
+    }
+
+    .btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #5B2D90;
+      color: #fff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #4d267a;
+    }
+
+    .btn-success {
+      background: #2e7d32;
+      color: #fff;
+    }
+
+    .btn-success:hover:not(:disabled) {
+      background: #1e5f22;
+    }
+
+    .btn-danger {
+      background: #c62828;
+      color: #fff;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: #a02020;
+    }
+
+    .btn-outline {
+      background: #f0eef4;
+      color: #5B2D90;
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: #e5e2ec;
+    }
+
+    .status {
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-top: 12px;
+      font-size: .85rem;
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.success {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+
+    .status.error {
+      background: #fff0f0;
+      color: #c62828;
+    }
+
+    .status.loading {
+      background: #fff8e1;
+      color: #f57f17;
+    }
+
+    .status .spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #f57f17;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .file-upload {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .file-upload input[type="file"] {
+      display: none;
+    }
+
+    .file-upload label {
+      padding: 10px 20px;
+      background: #f0eef4;
+      color: #5B2D90;
+      border-radius: 12px;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    .file-upload label:hover {
+      background: #e5e2ec;
+    }
+
+    .file-upload .file-name {
+      color: #777;
+      font-size: .85rem;
+    }
+
+    .preview-count {
+      margin-top: 10px;
+      color: #666;
+      font-size: .85rem;
+    }
+
+    .preview-count strong {
+      color: #222;
+    }
+
+    .nav-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: calc(60px + env(safe-area-inset-bottom));
+      padding-bottom: calc(env(safe-area-inset-bottom) - 12px);
+      background: #fff;
+      border-top: 1px solid #e9e9e9;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
+      z-index: 100;
+    }
+
+    .nav-item {
+      flex: 1;
+      height: 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+      color: #777;
+      touch-action: manipulation;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: #5B2D90;
+    }
+
+    .nav-item .material-symbols-outlined {
+      font-size: 24px;
+      pointer-events: none;
+    }
+
+    .nav-item span:last-child {
+      font-size: .72rem;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .info-box {
+      background: #f6f7fb;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 12px;
+      font-size: .85rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      color: #222;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 16px calc(80px + env(safe-area-inset-bottom));
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+        padding: 14px;
+      }
+
+      .btn-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Import Events</h1>
+  <p class="subtitle">Mass import events into the database.</p>
+
+  <div class="card">
+    <h2 style="font-size:18px; margin-bottom:12px;">Upload JSON File</h2>
+    <div class="file-upload">
+      <label for="fileInput">Choose JSON File</label>
+      <input type="file" id="fileInput" accept=".json">
+      <span class="file-name" id="fileName">No file selected</span>
+    </div>
+    <button class="btn btn-outline" id="loadSampleBtn" style="margin-top:10px;">Load Sample Data</button>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size:18px; margin-bottom:12px;">JSON Data</h2>
+    <textarea id="jsonInput" placeholder='Paste your JSON data here or upload a file...'></textarea>
+    <div class="preview-count" id="previewCount">Events: <strong>0</strong></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="validateBtn">Validate</button>
+      <button class="btn btn-success" id="importBtn" disabled>Import to Database</button>
+      <button class="btn btn-danger" id="clearBtn">Clear</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="card">
+    <h2 style="font-size:18px; margin-bottom:8px;">Check-in Timing</h2>
+    <div class="info-box">
+      <p><strong>When do check-ins open?</strong></p>
+      <p>Check-ins are controlled by an admin in the admin dashboard. An admin must manually open check-ins for each event by clicking the <strong>"Open Check-in"</strong> button on the <strong>Event Check-ins</strong> page.</p>
+      <p style="margin-top:8px;">Once opened, students can scan their QR codes to check in. The admin can also close check-ins at any time.</p>
+      <p style="margin-top:8px;"><strong>Default state:</strong> <code>checkinsOpen: false</code> when imported. Admins must open them manually.</p>
+    </div>
+  </div>
+
+  <nav class="nav-bar">
+    <a href="admin.html" class="nav-item">
+      <span class="material-symbols-outlined">event</span>
+      <span>Events</span>
+    </a>
+    <a href="import.html" class="nav-item active">
+      <span class="material-symbols-outlined">upload</span>
+      <span>Import</span>
+    </a>
+    <a href="admin.html" class="nav-item">
+      <span class="material-symbols-outlined">admin_panel_settings</span>
+      <span>Admin</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getFirestore, collection, writeBatch, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA4ZMuE3-l-PwTQlPvLpykFzUvk7QDF9Z0",
+      authDomain: "wileybucks.firebaseapp.com",
+      projectId: "wileybucks",
+      storageBucket: "wileybucks.firebasestorage.app",
+      messagingSenderId: "1037519230312",
+      appId: "1:1037519230312:web:b6ed0297b5d677808972dd",
+      measurementId: "G-E81C7PYNC7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const jsonInput = document.getElementById('jsonInput');
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const previewCount = document.getElementById('previewCount');
+    const validateBtn = document.getElementById('validateBtn');
+    const importBtn = document.getElementById('importBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const loadSampleBtn = document.getElementById('loadSampleBtn');
+    const status = document.getElementById('status');
+
+    let currentEvents = [];
+
+    const sampleData = {
+      "events": [
+        {
+          "type": "Sports",
+          "name": "Football",
+          "locationType": "Away",
+          "opponent": "Eau Claire North",
+          "date": "2026-09-04",
+          "time": "19:00",
+          "location": "University of Wisconsin-River Falls Ramer Field",
+          "points": 25,
+          "theme": null,
+          "ticketsRequired": false,
+          "ticketLink": null,
+          "cancelled": false,
+          "checkinsOpen": false
+        },
+        {
+          "type": "Sports",
+          "name": "Football",
+          "locationType": "Away",
+          "opponent": "Superior",
+          "date": "2026-09-11",
+          "time": "19:00",
+          "location": "Superior High School NBC Spartan Sports Complex",
+          "points": 25,
+          "theme": null,
+          "ticketsRequired": false,
+          "ticketLink": null,
+          "cancelled": false,
+          "checkinsOpen": false
+        },
+        {
+          "type": "Sports",
+          "name": "Football",
+          "locationType": "Away",
+          "opponent": "Chippewa Falls",
+          "date": "2026-09-18",
+          "time": "19:00",
+          "location": "University of Wisconsin-River Falls Ramer Field",
+          "points": 25,
+          "theme": null,
+          "ticketsRequired": false,
+          "ticketLink": null,
+          "cancelled": false,
+          "checkinsOpen": false
+        },
+        {
+          "type": "Sports",
+          "name": "Football",
+          "locationType": "Home",
+          "opponent": "New Richmond",
+          "date": "2026-09-25",
+          "time": "19:00",
+          "location": "University of Wisconsin-River Falls Ramer Field",
+          "points": 25,
+          "theme": null,
+          "ticketsRequired": false,
+          "ticketLink": null,
+          "cancelled": false,
+          "checkinsOpen": false
+        },
+        {
+          "type": "Sports",
+          "name": "Football",
+          "locationType": "Away",
+          "opponent": "Hudson",
+          "date": "2026-10-02",
+          "time": "19:00",
+          "location": "Hudson High School Raider Stadium",
+          "points": 25,
+          "theme": null,
+          "ticketsRequired": false,
+          "ticketLink": null,
+          "cancelled": false,
+          "checkinsOpen": false
+        },
+        {
+          "type": "Sports",
+          "name": "Football",
+          "locationType": "Home",
+          "opponent": "Rice Lake",
+          "date": "2026-10-09",
+          "time": "19:00",
+          "location": "University of Wisconsin-River Falls Ramer Field",
+          "points": 25,
+          "theme": null,
+          "ticketsRequired": false,
+          "ticketLink": null,
+          "cancelled": false,
+          "checkinsOpen": false
+        },
+        {
+          "type": "Sports",
+          "name": "Football",
+          "locationType": "Away",
+          "opponent": "Menomonie",
+          "date": "2026-10-16",
+          "time": "19:00",
+          "location": "Don and Nona Williams Stadium UW-Stout Football Field",
+          "points": 25,
+          "theme": null,
+          "ticketsRequired": false,
+          "ticketLink": null,
+          "cancelled": false,
+          "checkinsOpen": false
+        }
+      ]
+    };
+
+    function showStatus(message, type = 'loading') {
+      status.className = `status show ${type}`;
+      if (type === 'loading') {
+        status.innerHTML = `<span class="spinner"></span> ${message}`;
+      } else {
+        status.textContent = message;
+      }
+    }
+
+    function hideStatus() {
+      status.className = 'status';
+    }
+
+    function validateEvents(data) {
+      if (!data || !data.events || !Array.isArray(data.events)) {
+        return { valid: false, error: 'Invalid data structure. Expected { events: [...] }' };
+      }
+
+      const required = ['type', 'name', 'opponent', 'date', 'time', 'location'];
+      const errors = [];
+
+      data.events.forEach((event, index) => {
+        required.forEach(field => {
+          if (!event[field]) {
+            errors.push(`Event ${index + 1}: Missing required field "${field}"`);
+          }
+        });
+        if (event.date && !/^\d{4}-\d{2}-\d{2}$/.test(event.date)) {
+          errors.push(`Event ${index + 1}: Invalid date format. Use YYYY-MM-DD`);
+        }
+        if (event.time && !/^\d{2}:\d{2}$/.test(event.time)) {
+          errors.push(`Event ${index + 1}: Invalid time format. Use HH:MM (24-hour)`);
+        }
+        if (event.points && isNaN(Number(event.points))) {
+          errors.push(`Event ${index + 1}: Points must be a number`);
+        }
+        if (event.type && !['Sports', 'Band Concert', 'Choir Concert', 'Orchestra Concert', 'Theater', 'Academic', 'Other'].includes(event.type)) {
+          errors.push(`Event ${index + 1}: Invalid type. Must be one of: Sports, Band Concert, Choir Concert, Orchestra Concert, Theater, Academic, Other`);
+        }
+        if (event.locationType && !['Home', 'Away'].includes(event.locationType)) {
+          errors.push(`Event ${index + 1}: Invalid locationType. Must be "Home" or "Away"`);
+        }
+      });
+
+      return { valid: errors.length === 0, error: errors.join('\n') };
+    }
+
+    function updatePreview() {
+      try {
+        const data = JSON.parse(jsonInput.value);
+        if (data.events && Array.isArray(data.events)) {
+          currentEvents = data.events;
+          previewCount.innerHTML = `Events: <strong>${currentEvents.length}</strong>`;
+          const validation = validateEvents(data);
+          if (validation.valid) {
+            importBtn.disabled = false;
+            showStatus(`✅ Valid: ${currentEvents.length} events ready to import.`, 'success');
+          } else {
+            importBtn.disabled = true;
+            showStatus(`❌ ${validation.error}`, 'error');
+          }
+        } else {
+          currentEvents = [];
+          previewCount.innerHTML = 'Events: <strong>0</strong>';
+          importBtn.disabled = true;
+          showStatus('⚠️ No events found in the data.', 'error');
+        }
+      } catch (e) {
+        currentEvents = [];
+        previewCount.innerHTML = 'Events: <strong>0</strong>';
+        importBtn.disabled = true;
+        if (jsonInput.value.trim()) {
+          showStatus('❌ Invalid JSON: ' + e.message, 'error');
+        } else {
+          hideStatus();
+        }
+      }
+    }
+
+    jsonInput.addEventListener('input', updatePreview);
+
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      fileName.textContent = file.name;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        jsonInput.value = event.target.result;
+        updatePreview();
+      };
+      reader.onerror = function() {
+        showStatus('❌ Failed to read file.', 'error');
+      };
+      reader.readAsText(file);
+    });
+
+    loadSampleBtn.addEventListener('click', function() {
+      jsonInput.value = JSON.stringify(sampleData, null, 2);
+      updatePreview();
+    });
+
+    clearBtn.addEventListener('click', function() {
+      jsonInput.value = '';
+      currentEvents = [];
+      previewCount.innerHTML = 'Events: <strong>0</strong>';
+      importBtn.disabled = true;
+      hideStatus();
+      fileInput.value = '';
+      fileName.textContent = 'No file selected';
+    });
+
+    validateBtn.addEventListener('click', function() {
+      try {
+        const data = JSON.parse(jsonInput.value);
+        const validation = validateEvents(data);
+        if (validation.valid) {
+          showStatus(`✅ Valid: ${data.events.length} events found.`, 'success');
+          importBtn.disabled = false;
+        } else {
+          showStatus(`❌ ${validation.error}`, 'error');
+          importBtn.disabled = true;
+        }
+      } catch (e) {
+        showStatus('❌ Invalid JSON: ' + e.message, 'error');
+        importBtn.disabled = true;
+      }
+    });
+
+    importBtn.addEventListener('click', async function() {
+      if (currentEvents.length === 0) {
+        showStatus('❌ No events to import.', 'error');
+        return;
+      }
+
+      importBtn.disabled = true;
+      validateBtn.disabled = true;
+      showStatus(`⏳ Importing ${currentEvents.length} events...`, 'loading');
+
+      try {
+        const batch = writeBatch(db);
+        const eventsRef = collection(db, 'events');
+
+        let successCount = 0;
+        let errorCount = 0;
+
+        for (const event of currentEvents) {
+          try {
+            const docRef = doc(eventsRef);
+            const eventData = {
+              type: event.type || 'Sports',
+              name: event.name || 'Event',
+              locationType: event.locationType || 'Home',
+              opponent: event.opponent || '',
+              date: event.date || '',
+              time: event.time || '19:00',
+              location: event.location || '',
+              points: Number(event.points) || 25,
+              theme: event.theme || null,
+              ticketsRequired: event.ticketsRequired || false,
+              ticketLink: event.ticketLink || null,
+              cancelled: event.cancelled || false,
+              checkinsOpen: event.checkinsOpen || false,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp()
+            };
+            batch.set(docRef, eventData);
+            successCount++;
+          } catch (err) {
+            console.error('Error preparing event:', err);
+            errorCount++;
+          }
+        }
+
+        if (successCount > 0) {
+          await batch.commit();
+          showStatus(`✅ Successfully imported ${successCount} events!${errorCount > 0 ? ` (${errorCount} failed)` : ''}`, 'success');
+          setTimeout(hideStatus, 5000);
+        } else {
+          showStatus('❌ No events were imported.', 'error');
+        }
+
+      } catch (error) {
+        console.error('Import error:', error);
+        showStatus(`❌ Import failed: ${error.message}`, 'error');
+      } finally {
+        importBtn.disabled = false;
+        validateBtn.disabled = false;
+        updatePreview();
+      }
+    });
+
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
+
+    document.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.replace('/index.html');
+        return;
+      }
+
+      const email = (user.email || '').trim().toLowerCase();
+
+      if (!email.endsWith('@gmail.com') && !email.endsWith('@rfsd.k12.wi.us')) {
+        window.location.replace('/index.html');
+        return;
+      }
+    });
+  </script>
+
+</body>
+
+</html>

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Wiley Bucks</title>
+  <title>Wiley Bucks - Prizes</title>
 
   <link rel="manifest" href="manifest.json">
 
@@ -41,95 +41,154 @@
       margin-bottom: 24px;
     }
 
-    .stat-container {
-      display: flex;
-      gap: 12px;
+    .loading {
+      text-align: center;
+      color: #777;
+      padding: 40px 0;
+      font-size: .9rem;
+    }
+
+    .loading .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid #eee;
+      border-radius: 50%;
+      border-top-color: #5B2D90;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 24px;
+      text-align: center;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      color: #ccc;
+    }
+
+    .empty-state h3 {
+      font-size: 18px;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    .empty-state p {
+      color: #888;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+
+    .quarter-section {
       margin-bottom: 28px;
     }
 
-    .stat-box {
-      flex: 1 1 0;
-      min-width: 0;
-
-      background: #fff;
-      border-radius: 16px;
-      padding: 18px 12px;
-
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-
-      text-align: center;
-
-      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    .quarter-section:last-child {
+      margin-bottom: 0;
     }
 
-    .stat-box h2 {
-      height: 36px;
+    .quarter-header {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f0f0f0;
+    }
 
-      font-size: 1.5rem;
+    .quarter-header h2 {
+      font-size: 18px;
       font-weight: 700;
-      margin-bottom: 2px;
+      color: #222;
     }
 
-    .stat-box p {
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .quarter-header .quarter-status {
+      font-size: .7rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: #f0f0f0;
+      color: #666;
+    }
 
+    .quarter-header .quarter-status.active {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+
+    .quarter-header .quarter-status.closed {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .quarter-dates {
+      color: #888;
       font-size: .8rem;
-      color: #777;
-      line-height: 1.2;
-    }
-
-    h3 {
-      font-size: 20px;
-      margin-bottom: 14px;
-    }
-
-    .event-card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px;
-
-      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
       margin-bottom: 12px;
     }
 
-    .event-header {
+    .prize-list {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+    }
+
+    .prize-item {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 10px;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 14px;
     }
 
-    .event-title {
-      font-size: 16px;
+    .prize-item:last-child {
+      border-bottom: none;
+    }
+
+    .prize-rank {
+      font-size: .75rem;
       font-weight: 700;
-    }
-
-    .event-matchup {
-      color: #666;
-      font-size: .85rem;
-      margin-top: 3px;
-    }
-
-    .event-points {
       color: #5B2D90;
-      font-weight: 700;
-      font-size: .85rem;
-      white-space: nowrap;
+      min-width: 72px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
-    .event-info {
-      color: #777;
-      font-size: .85rem;
-      line-height: 1.5;
+    .prize-rank.gold {
+      color: #f5a623;
+    }
+
+    .prize-rank.silver {
+      color: #9e9e9e;
+    }
+
+    .prize-rank.bronze {
+      color: #cd7f32;
+    }
+
+    .prize-description {
+      flex: 1;
+      font-size: .9rem;
+      font-weight: 500;
+      color: #222;
+    }
+
+    .prize-description .no-desc {
+      color: #bbb;
+      font-weight: 400;
+      font-size: .8rem;
     }
 
     .nav-bar {
@@ -137,32 +196,31 @@
       left: 0;
       right: 0;
       bottom: 0;
-
       height: calc(60px + env(safe-area-inset-bottom));
       padding-bottom: calc(env(safe-area-inset-bottom) - 12px);
-
       background: #fff;
       border-top: 1px solid #e9e9e9;
-
       display: flex;
       justify-content: space-around;
       align-items: center;
-
       box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
+      z-index: 100;
     }
 
     .nav-item {
       flex: 1;
       height: 72px;
-
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       gap: 2px;
-
       text-decoration: none;
       color: #777;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: Inter, sans-serif;
     }
 
     .nav-item:hover,
@@ -178,53 +236,277 @@
       font-size: .72rem;
       font-weight: 600;
     }
+
+    @media (max-width: 480px) {
+      body {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .prize-item {
+        padding: 12px 14px;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .prize-rank {
+        min-width: 60px;
+        font-size: .7rem;
+      }
+
+      .prize-description {
+        font-size: .85rem;
+        width: 100%;
+        order: 3;
+        margin-top: 2px;
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <h1>Rewards are not currently available.</h1>
-  <p class="subtitle">Please check back later!</p>
+  <h1>Prizes</h1>
+  <p class="subtitle">Check out the prizes you can win!</p>
+
+  <div id="prizesContainer">
+    <div class="loading">
+      <span class="spinner"></span> Loading prizes...
+    </div>
+  </div>
 
   <nav class="nav-bar">
-    <a href="index.html" class="nav-item"
-      onclick="navigate(event,'index.html')">
+    <a href="index.html" class="nav-item">
       <span class="material-symbols-outlined">home</span>
       <span>Home</span>
     </a>
 
-    <a href="prizes.html" class="nav-item active"
-      onclick="navigate(event,'prizes.html')">
+    <a href="prizes.html" class="nav-item active">
       <span class="material-symbols-outlined">shopping_bag</span>
       <span>Prizes</span>
     </a>
 
-    <a href="checkin.html" class="nav-item"
-      onclick="navigate(event,'checkin.html')">
+    <a href="checkin.html" class="nav-item">
       <span class="material-symbols-outlined">qr_code_scanner</span>
       <span>Check In</span>
     </a>
 
-    <a href="leaderboard.html" class="nav-item"
-      onclick="navigate(event,'leaderboard.html')">
+    <a href="leaderboard.html" class="nav-item">
       <span class="material-symbols-outlined">leaderboard</span>
       <span>Leaderboard</span>
     </a>
 
-    <a href="account.html" class="nav-item"
-      onclick="navigate(event,'account.html')">
+    <a href="account.html" class="nav-item">
       <span class="material-symbols-outlined">person</span>
       <span>Account</span>
     </a>
   </nav>
 
-  <script>
-    function navigate(event, page) {
-      event.preventDefault();
-      window.location.href = page;
+  <script type="module">
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      onSnapshot,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA4ZMuE3-l-PwTQlPvLpykFzUvk7QDF9Z0",
+      authDomain: "wileybucks.firebaseapp.com",
+      projectId: "wileybucks",
+      storageBucket: "wileybucks.firebasestorage.app",
+      messagingSenderId: "1037519230312",
+      appId: "1:1037519230312:web:b6ed0297b5d677808972dd",
+      measurementId: "G-E81C7PYNC7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const prizesContainer = document.getElementById('prizesContainer');
+
+    const rankClasses = {
+      '1st Place': 'gold',
+      '2nd Place': 'silver',
+      '3rd Place': 'bronze'
+    };
+
+    function getRankClass(rank) {
+      return rankClasses[rank] || '';
     }
+
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      } catch {
+        return dateString;
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'",
+          "&#039;");
+    }
+
+    function renderEmptyState() {
+      prizesContainer.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🏆</div>
+          <h3>No Prizes Available</h3>
+          <p>Prizes are currently unavailable. Check back at a later time.</p>
+        </div>
+      `;
+    }
+
+    function renderPrizes(quartersWithPrizes) {
+      if (!quartersWithPrizes || quartersWithPrizes.length === 0) {
+        renderEmptyState();
+        return;
+      }
+
+      quartersWithPrizes.sort((a, b) => {
+        if (a.closed === b.closed) return 0;
+        return a.closed ? 1 : -1;
+      });
+
+      let html = '';
+
+      quartersWithPrizes.forEach(quarter => {
+        const statusClass = quarter.closed ? 'closed' : 'active';
+        const statusLabel = quarter.closed ? 'Closed' : 'Active';
+
+        const rankOrder = ['1st Place', '2nd Place', '3rd Place', '4th Place', '5th Place', '6th Place', '7th Place', '8th Place', '9th Place', '10th Place'];
+        const sortedPrizes = [...quarter.prizes].sort((a, b) => {
+          return rankOrder.indexOf(a.rank) - rankOrder.indexOf(b.rank);
+        });
+
+        html += `
+          <div class="quarter-section">
+            <div class="quarter-header">
+              <h2>${escapeHtml(quarter.name || 'Quarter')}</h2>
+              <span class="quarter-status ${statusClass}">${statusLabel}</span>
+            </div>
+            ${quarter.startDate || quarter.endDate ? `
+              <div class="quarter-dates">
+                ${quarter.startDate ? formatDate(quarter.startDate) : ''}
+                ${quarter.startDate && quarter.endDate ? ' — ' : ''}
+                ${quarter.endDate ? formatDate(quarter.endDate) : ''}
+              </div>
+            ` : ''}
+            <div class="prize-list">
+        `;
+
+        sortedPrizes.forEach(prize => {
+          const rankClass = getRankClass(prize.rank);
+          const description = prize.description?.trim() || '';
+
+          html += `
+            <div class="prize-item">
+              <span class="prize-rank ${rankClass}">${escapeHtml(prize.rank || 'Prize')}</span>
+              <span class="prize-description">
+                ${description ? escapeHtml(description) : '<span class="no-desc">No description</span>'}
+              </span>
+            </div>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+      });
+
+      prizesContainer.innerHTML = html;
+    }
+
+    function subscribeToPrizes() {
+      const quartersRef = collection(db, 'quarters');
+
+      onSnapshot(quartersRef, async (quartersSnapshot) => {
+        if (quartersSnapshot.empty) {
+          renderEmptyState();
+          return;
+        }
+
+        const quarters = [];
+        quartersSnapshot.forEach(doc => {
+          const data = doc.data();
+          quarters.push({
+            id: doc.id,
+            ...data,
+            prizes: []
+          });
+        });
+
+        const prizesRef = collection(db, 'prizes');
+        const prizesSnapshot = await getDocs(prizesRef);
+
+        const prizesByQuarter = {};
+        prizesSnapshot.forEach(doc => {
+          const data = doc.data();
+          const quarterId = data.quarterId;
+          if (!quarterId) return;
+          if (!prizesByQuarter[quarterId]) {
+            prizesByQuarter[quarterId] = [];
+          }
+          prizesByQuarter[quarterId].push({
+            id: doc.id,
+            ...data
+          });
+        });
+
+        const quartersWithPrizes = quarters
+          .filter(q => prizesByQuarter[q.id] && prizesByQuarter[q.id].length > 0)
+          .map(q => ({
+            ...q,
+            prizes: prizesByQuarter[q.id] || []
+          }));
+
+        renderPrizes(quartersWithPrizes);
+
+      }, (error) => {
+        console.error('Error loading quarters:', error);
+        prizesContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">⚠️</div>
+            <h3>Unable to Load Prizes</h3>
+            <p>There was an error loading the prizes. Please try again later.</p>
+          </div>
+        `;
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.replace('/index.html');
+        return;
+      }
+
+      const email = (user.email || '').trim().toLowerCase();
+
+      if (email.endsWith('@gmail.com') || email.endsWith('@rfsd.k12.wi.us')) {
+        window.location.replace('/admin.html');
+        return;
+      }
+
+      subscribeToPrizes();
+    });
   </script>
-  <script type="module" src="/auth.js"></script>
 </body>
 
 </html>

@@ -1,140 +1,138 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Wiley Bucks Admin">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#002E57">
   <title>Wiley Bucks Admin</title>
-
   <link rel="manifest" href="manifest.json">
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-    rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: Inter, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
-
     body {
       background: #f6f7fb;
       color: #222;
       min-height: 100vh;
       padding: 32px 20px calc(90px + env(safe-area-inset-bottom));
+      touch-action: manipulation;
     }
-
     main {
       max-width: 700px;
       margin: 0 auto;
     }
-
     h1 {
       font-size: 28px;
       margin-bottom: 4px;
     }
-
     .subtitle {
       color: #666;
       margin-bottom: 24px;
     }
-
     h2 {
       font-size: 20px;
       margin-bottom: 14px;
     }
-
     .section {
       margin-bottom: 28px;
     }
-
     .card {
       background: #fff;
       border-radius: 16px;
       padding: 18px;
       box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
       margin-bottom: 12px;
+      transition: opacity 0.2s;
     }
-
+    .card.loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
     .event-card {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 16px;
     }
-
     .event-main {
       min-width: 0;
       flex: 1;
     }
-
     .event-title {
       font-size: 16px;
       font-weight: 700;
     }
-
     .event-matchup {
       color: #666;
       font-size: .85rem;
       margin-top: 3px;
     }
-
     .event-info {
       color: #777;
       font-size: .8rem;
       line-height: 1.5;
       margin-top: 7px;
     }
-
     .event-points {
-      color: #5B2D90;
+      color: #002E57;
       font-size: .85rem;
       font-weight: 700;
       white-space: nowrap;
     }
-
     .event-actions {
       display: flex;
       gap: 7px;
       flex-shrink: 0;
     }
-
     button {
       border: none;
       cursor: pointer;
       font-family: Inter, sans-serif;
       font-weight: 600;
+      transition: opacity 0.15s;
+      touch-action: manipulation;
     }
-
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    button:active {
+      transform: scale(.97);
+    }
     .primary-btn {
       width: 100%;
       padding: 14px 16px;
-      background: #5B2D90;
+      background: #002E57;
       color: #fff;
       border-radius: 14px;
       font-size: .9rem;
     }
-
-    .primary-btn:hover {
+    .primary-btn:hover:not(:disabled) {
       background: #4d267a;
     }
-
     .secondary-btn {
       padding: 10px 13px;
       background: #f0eef4;
-      color: #5B2D90;
+      color: #002E57;
       border-radius: 10px;
       font-size: .8rem;
     }
-
+    .secondary-btn:hover:not(:disabled) {
+      background: #e5e2ec;
+    }
     .danger-btn {
       padding: 10px 13px;
       background: #fff0f0;
@@ -142,37 +140,37 @@
       border-radius: 10px;
       font-size: .8rem;
     }
-
+    .danger-btn:hover:not(:disabled) {
+      background: #ffe0e0;
+    }
     .icon-btn {
       width: 40px;
       height: 40px;
       border-radius: 11px;
       background: #f0eef4;
-      color: #5B2D90;
+      color: #002E57;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
+    .icon-btn:hover:not(:disabled) {
+      background: #e5e2ec;
+    }
     .icon-btn .material-symbols-outlined {
       font-size: 21px;
     }
-
     .empty {
       text-align: center;
       color: #777;
       padding: 20px 10px;
       font-size: .85rem;
     }
-
     .form-group {
       margin-bottom: 14px;
     }
-
     .form-group:last-child {
       margin-bottom: 0;
     }
-
     label {
       display: block;
       font-size: .8rem;
@@ -180,9 +178,7 @@
       margin-bottom: 6px;
       font-weight: 600;
     }
-
-    input,
-    select {
+    input, select, textarea {
       width: 100%;
       border: 1px solid #ddd;
       background: #fff;
@@ -190,19 +186,22 @@
       padding: 13px 14px;
       font-size: .9rem;
       outline: none;
+      font-family: Inter, sans-serif;
+      transition: border-color 0.2s;
+      touch-action: manipulation;
     }
-
-    input:focus,
-    select:focus {
-      border-color: #5B2D90;
+    input:focus, select:focus, textarea:focus {
+      border-color: #002E57;
     }
-
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-
     .modal {
       position: fixed;
       inset: 0;
@@ -217,13 +216,11 @@
       pointer-events: none;
       transition: .2s ease;
     }
-
     .modal.show {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
     }
-
     .modal-card {
       width: 100%;
       max-width: 500px;
@@ -233,18 +230,15 @@
       border-radius: 20px;
       padding: 22px;
     }
-
     .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 20px;
     }
-
     .modal-header h2 {
       margin: 0;
     }
-
     .modal-close {
       width: 36px;
       height: 36px;
@@ -254,21 +248,20 @@
       align-items: center;
       justify-content: center;
     }
-
+    .modal-close:hover {
+      background: #e5e5e5;
+    }
     .modal-actions {
       display: flex;
       gap: 10px;
       margin-top: 20px;
     }
-
     .modal-actions button {
       flex: 1;
     }
-
     .scanner-card {
       text-align: center;
     }
-
     .scanner-wrapper {
       width: 100%;
       max-width: 430px;
@@ -279,22 +272,18 @@
       overflow: hidden;
       position: relative;
     }
-
     #reader {
       width: 100%;
       height: 100%;
     }
-
     #reader video {
       width: 100% !important;
       height: 100% !important;
       object-fit: cover;
     }
-
     #reader img {
       display: none;
     }
-
     .scanner-placeholder {
       position: absolute;
       inset: 0;
@@ -306,16 +295,13 @@
       gap: 10px;
       pointer-events: none;
     }
-
     .scanner-placeholder .material-symbols-outlined {
       font-size: 54px;
     }
-
     .scanner-placeholder p {
       font-size: .85rem;
       opacity: .75;
     }
-
     .scanner-status {
       border-radius: 12px;
       padding: 12px;
@@ -323,18 +309,20 @@
       color: #666;
       font-size: .85rem;
       margin-bottom: 14px;
+      transition: all 0.2s;
     }
-
     .scanner-status.success {
       background: #eef8f0;
       color: #2e7d32;
     }
-
     .scanner-status.error {
       background: #fff0f0;
       color: #c62828;
     }
-
+    .scanner-status.loading {
+      background: #fff8e1;
+      color: #f57f17;
+    }
     .student-result {
       display: none;
       text-align: left;
@@ -343,53 +331,47 @@
       padding: 14px;
       margin-bottom: 14px;
     }
-
     .student-result.show {
       display: block;
     }
-
     .student-name {
       font-weight: 700;
       font-size: 16px;
     }
-
     .student-email {
       color: #777;
       font-size: .8rem;
       margin-top: 3px;
     }
-
     .student-bucks {
-      color: #5B2D90;
+      color: #002E57;
       font-weight: 700;
       font-size: .85rem;
       margin-top: 8px;
     }
-
     .account-card {
       display: flex;
       align-items: center;
       gap: 14px;
     }
-
     .profile-pic {
       width: 56px;
       height: 56px;
       border-radius: 50%;
       object-fit: cover;
       background: #eee;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
     }
-
     .account-name {
       font-weight: 700;
     }
-
     .account-email {
       color: #777;
       font-size: .8rem;
       margin-top: 3px;
     }
-
     .logout-btn {
       width: 100%;
       padding: 14px;
@@ -399,7 +381,9 @@
       color: #fff;
       font-size: .9rem;
     }
-
+    .logout-btn:hover {
+      background: #333;
+    }
     .nav-bar {
       position: fixed;
       left: 0;
@@ -414,8 +398,8 @@
       align-items: center;
       box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
       z-index: 4000;
+      touch-action: manipulation;
     }
-
     .nav-item {
       flex: 1;
       height: 72px;
@@ -426,62 +410,496 @@
       gap: 2px;
       text-decoration: none;
       color: #777;
+      transition: color 0.2s;
+      touch-action: manipulation;
+      cursor: pointer;
+      background: none;
+      border: none;
     }
-
     .nav-item.active {
-      color: #5B2D90;
+      color: #002E57;
     }
-
     .nav-item .material-symbols-outlined {
       font-size: 24px;
+      pointer-events: none;
     }
-
     .nav-item span:last-child {
       font-size: .72rem;
       font-weight: 600;
+      pointer-events: none;
     }
-
     .hidden {
       display: none !important;
     }
-
+    .admin-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .admin-list-item:last-child {
+      border-bottom: none;
+    }
+    .admin-email-text {
+      font-weight: 500;
+    }
+    .remove-admin-btn {
+      background: none;
+      color: #c62828;
+      font-size: .8rem;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: #fff0f0;
+    }
+    .remove-admin-btn:hover {
+      background: #ffe0e0;
+    }
+    .student-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.15s;
+    }
+    .student-list-item:last-child {
+      border-bottom: none;
+    }
+    .student-list-item:hover {
+      background: #fafafa;
+    }
+    .student-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .student-name-display {
+      font-weight: 600;
+    }
+    .student-email-display {
+      color: #777;
+      font-size: .8rem;
+    }
+    .student-bucks-display {
+      color: #002E57;
+      font-weight: 700;
+      font-size: .9rem;
+      margin-right: 12px;
+    }
+    .student-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .student-actions button {
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: .75rem;
+    }
+    .view-student-btn {
+      background: #f0eef4;
+      color: #002E57;
+    }
+    .view-student-btn:hover {
+      background: #e5e2ec;
+    }
+    .disable-student-btn {
+      background: #fff0f0;
+      color: #c62828;
+    }
+    .disable-student-btn:hover {
+      background: #ffe0e0;
+    }
+    .enable-student-btn {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+    .enable-student-btn:hover {
+      background: #ddf0e0;
+    }
+    .search-box {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .search-box input {
+      flex: 1;
+    }
+    .search-box button {
+      padding: 13px 20px;
+      border-radius: 12px;
+      background: #002E57;
+      color: #fff;
+      font-size: .9rem;
+      white-space: nowrap;
+    }
+    .search-box button:hover {
+      background: #4d267a;
+    }
+    .student-detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: .9rem;
+    }
+    .student-detail-row:last-child {
+      border-bottom: none;
+    }
+    .student-detail-label {
+      color: #666;
+    }
+    .student-detail-value {
+      font-weight: 600;
+    }
+    .checkin-history-item {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: .85rem;
+    }
+    .checkin-history-item:last-child {
+      border-bottom: none;
+    }
+    .checkin-history-event {
+      font-weight: 600;
+    }
+    .checkin-history-points {
+      color: #002E57;
+      font-weight: 700;
+    }
+    .checkin-history-date {
+      color: #777;
+      font-size: .75rem;
+    }
+    .bucks-adjust {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .bucks-adjust-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .bucks-adjust-row input[type="number"] {
+      width: 100px;
+      flex-shrink: 0;
+    }
+    .bucks-adjust-row button {
+      padding: 13px 20px;
+      border-radius: 12px;
+      font-size: .85rem;
+    }
+    .add-bucks-btn {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+    .add-bucks-btn:hover:not(:disabled) {
+      background: #ddf0e0;
+    }
+    .remove-bucks-btn {
+      background: #fff0f0;
+      color: #c62828;
+    }
+    .remove-bucks-btn:hover:not(:disabled) {
+      background: #ffe0e0;
+    }
+    .adjustment-history-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #f5f5f5;
+      font-size: .8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .adjustment-history-item:last-child {
+      border-bottom: none;
+    }
+    .adjustment-amount {
+      font-weight: 700;
+    }
+    .adjustment-amount.positive {
+      color: #2e7d32;
+    }
+    .adjustment-amount.negative {
+      color: #c62828;
+    }
+    .adjustment-detail {
+      color: #666;
+      font-size: .75rem;
+    }
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #323232;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: .9rem;
+      z-index: 6000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .toast.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .toast.success {
+      background: #2e7d32;
+    }
+    .toast.error {
+      background: #c62828;
+    }
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .chip {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+    .chip.open {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+    .chip.closed {
+      background: #f0f0f0;
+      color: #666;
+    }
+    .chip.cancelled {
+      background: #fff3e0;
+      color: #e65100;
+    }
+    .chip.active {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+    .checkin-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid #f5f5f5;
+      font-size: .85rem;
+    }
+    .checkin-item:last-child {
+      border-bottom: none;
+    }
+    .checkin-item button {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: .7rem;
+      background: #fff0f0;
+      color: #c62828;
+    }
+    .checkin-item button:hover {
+      background: #ffe0e0;
+    }
+    .prize-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .prize-item:last-child {
+      border-bottom: none;
+    }
+    .prize-rank {
+      font-weight: 700;
+      color: #002E57;
+      min-width: 40px;
+    }
+    .prize-desc {
+      flex: 1;
+      margin: 0 12px;
+    }
+    .prize-status {
+      font-size: .75rem;
+    }
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+    .leaderboard-rank {
+      font-weight: 700;
+      color: #002E57;
+      min-width: 36px;
+    }
+    .leaderboard-name {
+      flex: 1;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+    .leaderboard-bucks {
+      font-weight: 700;
+      color: #002E57;
+    }
+    .leaderboard-top {
+      background: #f6f7fb;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .leaderboard-top .leaderboard-rank {
+      color: #f57f17;
+    }
+    .quarter-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .quarter-item:last-child {
+      border-bottom: none;
+    }
+    .quarter-info {
+      flex: 1;
+    }
+    .quarter-name {
+      font-weight: 600;
+    }
+    .quarter-dates {
+      color: #777;
+      font-size: .8rem;
+    }
+    .quarter-status {
+      font-size: .75rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .quarter-status.active {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+    .quarter-status.closed {
+      background: #f0f0f0;
+      color: #666;
+    }
+    .export-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .export-grid button {
+      padding: 12px;
+      border-radius: 12px;
+      background: #f0eef4;
+      color: #002E57;
+      font-size: .8rem;
+    }
+    .export-grid button:hover {
+      background: #e5e2ec;
+    }
+    .event-status-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: .7rem;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    .event-status-badge.active {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+    .event-status-badge.cancelled {
+      background: #fff3e0;
+      color: #e65100;
+    }
+    .event-status-badge.ended {
+      background: #f0f0f0;
+      color: #666;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .checkbox-group label {
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+    a {
+      text-decoration: none;
+      touch-action: manipulation;
+    }
+    img {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
     @media (max-width: 520px) {
       body {
         padding-left: 16px;
         padding-right: 16px;
       }
-
       .form-grid {
         grid-template-columns: 1fr;
         gap: 0;
       }
-
       .event-card {
         align-items: flex-start;
       }
-
       .event-actions {
         flex-direction: column;
       }
+      .student-list-item {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .student-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      .bucks-adjust-row {
+        flex-wrap: wrap;
+      }
+      .export-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
-
 </head>
-
 <body>
-
   <main id="app">
-
     <section id="eventsPage">
       <h1>Manage Events</h1>
       <p class="subtitle">Create and manage Wiley Bucks events.</p>
-
       <div class="section">
-        <button class="primary-btn" id="addEventBtn">
-          Add Event
-        </button>
+        <button class="primary-btn" id="addEventBtn">Add Event</button>
       </div>
-
       <div class="section">
         <h2>Events</h2>
         <div id="eventsList"></div>
@@ -490,186 +908,333 @@
 
     <section id="checkinPage" class="hidden">
       <h1>Check In</h1>
-      <p class="subtitle">Select an event and scan student QR codes.</p>
-
+      <p class="subtitle">Select an event and scan student QR codes. Only events open for check-in (within 3 hours of start) are shown.</p>
       <div class="card">
         <div class="form-group">
           <label for="eventSelect">Event</label>
-          <select id="eventSelect">
-            <option value="">Select an event</option>
-          </select>
+          <select id="eventSelect"><option value="">Select an event</option></select>
         </div>
-
-        <button class="primary-btn" id="startScannerBtn">
-          Start Scanner
-        </button>
+        <button class="primary-btn" id="startScannerBtn">Start Scanner</button>
       </div>
-
       <div class="card scanner-card hidden" id="scannerCard">
-
         <h2 id="scannerEventName">Scan Student</h2>
-
         <div class="scanner-wrapper">
           <div id="reader"></div>
-
           <div class="scanner-placeholder" id="scannerPlaceholder">
-            <span class="material-symbols-outlined">
-              qr_code_scanner
-            </span>
+            <span class="material-symbols-outlined">qr_code_scanner</span>
             <p>Point the camera at a student's QR code</p>
           </div>
         </div>
-
-        <div class="scanner-status" id="scannerStatus">
-          Waiting for scan...
-        </div>
-
+        <div class="scanner-status" id="scannerStatus">Waiting for scan...</div>
         <div class="student-result" id="studentResult">
           <div class="student-name" id="studentName"></div>
           <div class="student-email" id="studentEmail"></div>
           <div class="student-bucks" id="studentBucks"></div>
         </div>
+        <button class="secondary-btn" id="stopScannerBtn">Stop Scanner</button>
+      </div>
+    </section>
 
-        <button class="secondary-btn" id="stopScannerBtn">
-          Stop Scanner
-        </button>
+    <section id="studentsPage" class="hidden">
+      <h1>Student Management</h1>
+      <p class="subtitle">Search, view, and manage student accounts.</p>
+      <div class="card">
+        <div class="search-box">
+          <input id="studentSearchInput" type="text" placeholder="Search by name or email...">
+          <button id="studentSearchBtn">Search</button>
+        </div>
+        <div id="studentList">
+          <div class="empty">Loading students...</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="studentDetailPage" class="hidden">
+      <button class="secondary-btn" id="backToStudentsBtn" style="margin-bottom:16px;">
+        <span class="material-symbols-outlined" style="font-size:18px;vertical-align:middle;">arrow_back</span> Back
+      </button>
+      <h1 id="detailStudentName">Student</h1>
+      <p class="subtitle" id="detailStudentEmail">email@example.com</p>
+      <div class="card" id="detailCard">
+        <div class="student-detail-row">
+          <span class="student-detail-label">Wiley Bucks</span>
+          <span class="student-detail-value" id="detailStudentBucks">0</span>
+        </div>
+        <div class="student-detail-row">
+          <span class="student-detail-label">Events Attended</span>
+          <span class="student-detail-value" id="detailStudentEvents">0</span>
+        </div>
+        <div class="student-detail-row">
+          <span class="student-detail-label">Status</span>
+          <span class="student-detail-value" id="detailStudentStatus">Active</span>
+        </div>
+        <div class="bucks-adjust">
+          <div class="bucks-adjust-row">
+            <input id="bucksAdjustInput" type="number" value="10" min="1">
+            <button class="add-bucks-btn" id="addBucksBtn">+ Add Bucks</button>
+            <button class="remove-bucks-btn" id="removeBucksBtn">- Remove Bucks</button>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="adjustmentReason">Reason for adjustment</label>
+            <input id="adjustmentReason" type="text" placeholder="Correction, reward, etc.">
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Adjustment History</h2>
+        <div id="adjustmentHistory">
+          <div class="empty">No adjustments recorded.</div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Check-in History</h2>
+        <div id="detailCheckinHistory">
+          <div class="empty">No check-in history.</div>
+        </div>
+      </div>
+      <div class="card">
+        <button class="danger-btn" id="toggleDisableBtn" style="width:100%;">Disable Account</button>
+      </div>
+    </section>
+
+    <section id="adminPage" class="hidden">
+      <h1>Admin Emails</h1>
+      <p class="subtitle">Manage administrator emails.</p>
+      <div class="card">
+        <div class="form-group">
+          <label for="adminEmailInput">Add admin email</label>
+          <div style="display:flex; gap:8px;">
+            <input id="adminEmailInput" type="email" placeholder="admin@domain.com" style="flex:1;">
+            <button class="primary-btn" id="addAdminBtn" style="width:auto; padding: 13px 20px;">Add</button>
+          </div>
+        </div>
+        <div id="adminList">
+          <div class="empty">Loading admins...</div>
+        </div>
       </div>
     </section>
 
     <section id="accountPage" class="hidden">
       <h1>Account</h1>
       <p class="subtitle">Your administrator account.</p>
-
       <div class="card account-card">
-        <img class="profile-pic" id="profilePicture" src=""
-          alt="Profile Picture">
-
+        <img class="profile-pic" id="profilePicture" src="" alt="Profile Picture">
         <div>
-          <div class="account-name" id="accountName">
-            Loading...
-          </div>
-
-          <div class="account-email" id="accountEmail">
-            Loading...
-          </div>
+          <div class="account-name" id="accountName">Loading...</div>
+          <div class="account-email" id="accountEmail">Loading...</div>
         </div>
       </div>
-
-      <button class="logout-btn" id="logoutBtn">
-        Sign Out
-      </button>
+      <button class="logout-btn" id="logoutBtn">Sign Out</button>
     </section>
 
+    <section id="eventsCheckinPage" class="hidden">
+      <h1>Event Check-ins</h1>
+      <p class="subtitle">View and manage check-ins for each event. Check-ins automatically open 3 hours before the event.</p>
+      <div class="card">
+        <div class="form-group">
+          <label for="checkinEventSelect">Event</label>
+          <select id="checkinEventSelect"><option value="">Select an event</option></select>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <button class="secondary-btn" id="refreshCheckinsBtn" style="flex:1;">Refresh</button>
+        </div>
+        <div style="margin-top:12px; display:flex; gap:12px; font-size:.85rem; flex-wrap:wrap;">
+          <span>Status: <span id="checkinStatusDisplay" class="chip closed">Closed</span></span>
+          <span>Count: <strong id="checkinCountDisplay">0</strong></span>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Checked-in Students</h2>
+        <div id="checkinList"><div class="empty">No students checked in.</div></div>
+      </div>
+    </section>
+
+    <section id="prizesPage" class="hidden">
+      <h1>Prize Management</h1>
+      <p class="subtitle">Configure quarterly prizes (1st–10th).</p>
+      <div class="card">
+        <div class="form-group">
+          <label for="prizeQuarterSelect">Quarter</label>
+          <select id="prizeQuarterSelect"><option value="">Select a quarter</option></select>
+        </div>
+        <button class="secondary-btn" id="initPrizesBtn" style="width:100%; margin-top:8px;">Initialize Prizes for Quarter</button>
+      </div>
+      <div class="card" id="prizesListCard">
+        <h2>Prizes</h2>
+        <div id="prizesList"><div class="empty">Select a quarter to view prizes.</div></div>
+      </div>
+    </section>
+
+    <section id="leaderboardPage" class="hidden">
+      <h1>Leaderboard</h1>
+      <p class="subtitle">View and manage leaderboards.</p>
+      <div class="card">
+        <div class="form-group">
+          <label for="lbQuarterSelect">Quarter</label>
+          <select id="lbQuarterSelect"><option value="">Select a quarter</option></select>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+          <button class="secondary-btn" id="refreshLeaderboardBtn">Refresh</button>
+          <button class="secondary-btn" id="togglePublicLeaderboardBtn">Hide from Public</button>
+          <button class="secondary-btn" id="exportLeaderboardBtn">Export CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Top 10</h2>
+        <div id="leaderboardTop"><div class="empty">No data.</div></div>
+      </div>
+      <div class="card">
+        <h2>Next 10</h2>
+        <div id="leaderboardNext"><div class="empty">No data.</div></div>
+      </div>
+    </section>
+
+    <section id="quartersPage" class="hidden">
+      <h1>Quarter Management</h1>
+      <p class="subtitle">Create, manage, and close quarters.</p>
+      <div class="section">
+        <button class="primary-btn" id="addQuarterBtn">Add Quarter</button>
+      </div>
+      <div class="section">
+        <h2>Quarters</h2>
+        <div id="quartersList"></div>
+      </div>
+    </section>
+
+    <section id="reportsPage" class="hidden">
+      <h1>Reports & Export</h1>
+      <p class="subtitle">Export data for analysis.</p>
+      <div class="card">
+        <div class="export-grid">
+          <button id="exportAttendanceBtn">Student Attendance</button>
+          <button id="exportBucksBtn">Bucks Earned</button>
+          <button id="exportLeaderboardBtn2">Leaderboard</button>
+          <button id="exportWinnersBtn">Quarter Winners</button>
+          <button id="exportEventAttendanceBtn">Event Attendance</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <div class="modal" id="eventModal">
     <div class="modal-card">
-
       <div class="modal-header">
         <h2 id="modalTitle">Add Event</h2>
-
-        <button class="modal-close" id="closeModalBtn">
-          <span class="material-symbols-outlined">
-            close
-          </span>
-        </button>
+        <button class="modal-close" id="closeModalBtn"><span class="material-symbols-outlined">close</span></button>
       </div>
-
+      <div class="form-group">
+        <label for="eventType">Event Type</label>
+        <select id="eventType">
+          <option value="Sports">Sports</option>
+          <option value="Band Concert">Band Concert</option>
+          <option value="Choir Concert">Choir Concert</option>
+          <option value="Orchestra Concert">Orchestra Concert</option>
+          <option value="Theater">Theater</option>
+          <option value="Academic">Academic</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
       <div class="form-group">
         <label for="eventName">Event Name</label>
-        <input id="eventName" type="text" placeholder="Football">
+        <input id="eventName" type="text" placeholder="Football Game">
       </div>
-
-      <div class="form-group">
-        <label for="eventMatchup">Matchup</label>
-        <input id="eventMatchup" type="text" placeholder="Home vs Hudson">
-      </div>
-
       <div class="form-grid">
-
+        <div class="form-group">
+          <label for="eventLocationType">Location Type</label>
+          <select id="eventLocationType">
+            <option value="Home">Home</option>
+            <option value="Away">Away</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="eventOpponent">Opponent</label>
+          <input id="eventOpponent" type="text" placeholder="Hudson">
+        </div>
+      </div>
+      <div class="form-grid">
         <div class="form-group">
           <label for="eventDate">Date</label>
           <input id="eventDate" type="date">
         </div>
-
         <div class="form-group">
           <label for="eventTime">Time</label>
           <input id="eventTime" type="time">
         </div>
-
       </div>
-
       <div class="form-group">
         <label for="eventLocation">Location</label>
         <input id="eventLocation" type="text" placeholder="Main Gym">
       </div>
-
       <div class="form-group">
         <label for="eventPoints">Wiley Bucks</label>
         <input id="eventPoints" type="number" min="0" value="25">
       </div>
-
-      <div class="modal-actions">
-        <button class="secondary-btn" id="cancelEventBtn">
-          Cancel
-        </button>
-
-        <button class="primary-btn" id="saveEventBtn">
-          Save Event
-        </button>
+      <div class="form-group">
+        <label for="eventTheme">Theme (optional)</label>
+        <input id="eventTheme" type="text" placeholder="Blackout, Pink Out, etc.">
       </div>
-
+      <div class="form-group">
+        <div class="checkbox-group">
+          <input id="eventTicketsRequired" type="checkbox">
+          <label for="eventTicketsRequired">Tickets Required</label>
+        </div>
+      </div>
+      <div class="form-group hidden" id="ticketLinkGroup">
+        <label for="eventTicketLink">Ticket Link</label>
+        <input id="eventTicketLink" type="url" placeholder="https://example.com/tickets">
+      </div>
+      <div class="modal-actions">
+        <button class="secondary-btn" id="cancelEventBtn">Cancel</button>
+        <button class="primary-btn" id="saveEventBtn">Save Event</button>
+      </div>
     </div>
-
   </div>
 
+  <div class="modal" id="quarterModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="quarterModalTitle">Add Quarter</h2>
+        <button class="modal-close" id="closeQuarterModalBtn"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <div class="form-group">
+        <label for="quarterNameInput">Quarter Name</label>
+        <input id="quarterNameInput" type="text" placeholder="Q1 2025">
+      </div>
+      <div class="form-group">
+        <label for="quarterStartInput">Start Date</label>
+        <input id="quarterStartInput" type="date">
+      </div>
+      <div class="form-group">
+        <label for="quarterEndInput">End Date</label>
+        <input id="quarterEndInput" type="date">
+      </div>
+      <div class="modal-actions">
+        <button class="secondary-btn" id="cancelQuarterBtn">Cancel</button>
+        <button class="primary-btn" id="saveQuarterBtn">Save Quarter</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <nav class="nav-bar">
-
-    <a href="#" class="nav-item active" data-page="eventsPage">
-      <span class="material-symbols-outlined">
-        event
-      </span>
-      <span>Events</span>
-    </a>
-
-    <a href="#" class="nav-item" data-page="checkinPage">
-      <span class="material-symbols-outlined">
-        qr_code_scanner
-      </span>
-      <span>Check In</span>
-    </a>
-
-    <a href="#" class="nav-item" data-page="accountPage">
-      <span class="material-symbols-outlined">
-        person
-      </span>
-      <span>Account</span>
-    </a>
+    <a href="#" class="nav-item active" data-page="eventsPage"><span class="material-symbols-outlined">event</span><span>Events</span></a>
+    <a href="#" class="nav-item" data-page="checkinPage"><span class="material-symbols-outlined">qr_code_scanner</span><span>Check In</span></a>
+    <a href="#" class="nav-item" data-page="eventsCheckinPage"><span class="material-symbols-outlined">checklist</span><span>Check-ins</span></a>
+    <a href="#" class="nav-item" data-page="studentsPage"><span class="material-symbols-outlined">people</span><span>Students</span></a>
+    <a href="#" class="nav-item" data-page="leaderboardPage"><span class="material-symbols-outlined">leaderboard</span><span>Leaderboard</span></a>
+    <a href="#" class="nav-item" data-page="prizesPage"><span class="material-symbols-outlined">card_giftcard</span><span>Prizes</span></a>
+    <a href="#" class="nav-item" data-page="quartersPage"><span class="material-symbols-outlined">calendar_month</span><span>Quarters</span></a>
+    <a href="#" class="nav-item" data-page="reportsPage"><span class="material-symbols-outlined">bar_chart</span><span>Reports</span></a>
+    <a href="#" class="nav-item" data-page="adminPage"><span class="material-symbols-outlined">admin_panel_settings</span><span>Admins</span></a>
+    <a href="#" class="nav-item" data-page="accountPage"><span class="material-symbols-outlined">person</span><span>Account</span></a>
   </nav>
 
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
   <script type="module">
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
-    import {
-      getAuth,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      getDocs,
-      doc,
-      updateDoc,
-      serverTimestamp,
-      runTransaction
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, serverTimestamp, runTransaction, deleteDoc, query, where, onSnapshot, getDoc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA4ZMuE3-l-PwTQlPvLpykFzUvk7QDF9Z0",
@@ -686,212 +1251,340 @@
     const db = getFirestore(app);
 
     const eventsCollection = collection(db, "events");
+    const adminCollection = collection(db, "adminEmails");
+    const usersCollection = collection(db, "users");
+    const quartersCollection = collection(db, "quarters");
+    const prizesCollection = collection(db, "prizes");
+    const leaderboardCollection = collection(db, "leaderboards");
 
     const eventsPage = document.getElementById("eventsPage");
     const checkinPage = document.getElementById("checkinPage");
     const accountPage = document.getElementById("accountPage");
-
+    const adminPage = document.getElementById("adminPage");
+    const studentsPage = document.getElementById("studentsPage");
+    const studentDetailPage = document.getElementById("studentDetailPage");
+    const eventsCheckinPage = document.getElementById("eventsCheckinPage");
+    const prizesPage = document.getElementById("prizesPage");
+    const leaderboardPage = document.getElementById("leaderboardPage");
+    const quartersPage = document.getElementById("quartersPage");
+    const reportsPage = document.getElementById("reportsPage");
     const navItems = document.querySelectorAll(".nav-item");
-
     const eventsList = document.getElementById("eventsList");
     const eventSelect = document.getElementById("eventSelect");
-
     const eventModal = document.getElementById("eventModal");
     const modalTitle = document.getElementById("modalTitle");
-
+    const eventType = document.getElementById("eventType");
     const eventName = document.getElementById("eventName");
-    const eventMatchup = document.getElementById("eventMatchup");
+    const eventLocationType = document.getElementById("eventLocationType");
+    const eventOpponent = document.getElementById("eventOpponent");
     const eventDate = document.getElementById("eventDate");
     const eventTime = document.getElementById("eventTime");
     const eventLocation = document.getElementById("eventLocation");
     const eventPoints = document.getElementById("eventPoints");
-
+    const eventTheme = document.getElementById("eventTheme");
+    const eventTicketsRequired = document.getElementById("eventTicketsRequired");
+    const eventTicketLink = document.getElementById("eventTicketLink");
+    const ticketLinkGroup = document.getElementById("ticketLinkGroup");
     const profilePicture = document.getElementById("profilePicture");
     const accountName = document.getElementById("accountName");
     const accountEmail = document.getElementById("accountEmail");
-
     const scannerCard = document.getElementById("scannerCard");
     const scannerStatus = document.getElementById("scannerStatus");
     const scannerPlaceholder = document.getElementById("scannerPlaceholder");
     const scannerEventName = document.getElementById("scannerEventName");
-
     const studentResult = document.getElementById("studentResult");
     const studentName = document.getElementById("studentName");
     const studentEmail = document.getElementById("studentEmail");
     const studentBucks = document.getElementById("studentBucks");
+    const adminEmailInput = document.getElementById("adminEmailInput");
+    const addAdminBtn = document.getElementById("addAdminBtn");
+    const adminList = document.getElementById("adminList");
+    const studentSearchInput = document.getElementById("studentSearchInput");
+    const studentSearchBtn = document.getElementById("studentSearchBtn");
+    const studentList = document.getElementById("studentList");
+    const backToStudentsBtn = document.getElementById("backToStudentsBtn");
+    const detailStudentName = document.getElementById("detailStudentName");
+    const detailStudentEmail = document.getElementById("detailStudentEmail");
+    const detailStudentBucks = document.getElementById("detailStudentBucks");
+    const detailStudentEvents = document.getElementById("detailStudentEvents");
+    const detailStudentStatus = document.getElementById("detailStudentStatus");
+    const detailCheckinHistory = document.getElementById("detailCheckinHistory");
+    const adjustmentHistory = document.getElementById("adjustmentHistory");
+    const bucksAdjustInput = document.getElementById("bucksAdjustInput");
+    const addBucksBtn = document.getElementById("addBucksBtn");
+    const removeBucksBtn = document.getElementById("removeBucksBtn");
+    const toggleDisableBtn = document.getElementById("toggleDisableBtn");
+    const adjustmentReason = document.getElementById("adjustmentReason");
+    const detailCard = document.getElementById("detailCard");
+    const toast = document.getElementById("toast");
+    const checkinEventSelect = document.getElementById("checkinEventSelect");
+    const refreshCheckinsBtn = document.getElementById("refreshCheckinsBtn");
+    const checkinStatusDisplay = document.getElementById("checkinStatusDisplay");
+    const checkinCountDisplay = document.getElementById("checkinCountDisplay");
+    const checkinList = document.getElementById("checkinList");
+    const prizeQuarterSelect = document.getElementById("prizeQuarterSelect");
+    const initPrizesBtn = document.getElementById("initPrizesBtn");
+    const prizesList = document.getElementById("prizesList");
+    const prizesListCard = document.getElementById("prizesListCard");
+    const lbQuarterSelect = document.getElementById("lbQuarterSelect");
+    const refreshLeaderboardBtn = document.getElementById("refreshLeaderboardBtn");
+    const togglePublicLeaderboardBtn = document.getElementById("togglePublicLeaderboardBtn");
+    const exportLeaderboardBtn = document.getElementById("exportLeaderboardBtn");
+    const leaderboardTop = document.getElementById("leaderboardTop");
+    const leaderboardNext = document.getElementById("leaderboardNext");
+    const quartersList = document.getElementById("quartersList");
+    const quarterModal = document.getElementById("quarterModal");
+    const quarterModalTitle = document.getElementById("quarterModalTitle");
+    const quarterNameInput = document.getElementById("quarterNameInput");
+    const quarterStartInput = document.getElementById("quarterStartInput");
+    const quarterEndInput = document.getElementById("quarterEndInput");
+    const closeQuarterModalBtn = document.getElementById("closeQuarterModalBtn");
+    const cancelQuarterBtn = document.getElementById("cancelQuarterBtn");
+    const saveQuarterBtn = document.getElementById("saveQuarterBtn");
+    const addQuarterBtn = document.getElementById("addQuarterBtn");
+    const exportAttendanceBtn = document.getElementById("exportAttendanceBtn");
+    const exportBucksBtn = document.getElementById("exportBucksBtn");
+    const exportLeaderboardBtn2 = document.getElementById("exportLeaderboardBtn2");
+    const exportWinnersBtn = document.getElementById("exportWinnersBtn");
+    const exportEventAttendanceBtn = document.getElementById("exportEventAttendanceBtn");
 
     let events = [];
     let editingEventId = null;
     let html5QrCode = null;
     let scannerRunning = false;
     let processingScan = false;
+    let allStudents = [];
+    let selectedStudentId = null;
+    let currentAdminEmail = "";
+    let toastTimeout = null;
+    let studentsUnsubscribe = null;
+    let eventsUnsubscribe = null;
+    let adminUnsubscribe = null;
+    let detailUnsubscribe = null;
+    let quarters = [];
+    let editingQuarterId = null;
+    let currentCheckinEventId = null;
+    let checkinRefreshInterval = null;
 
-    function showPage(pageId) {
-      eventsPage.classList.add("hidden");
-      checkinPage.classList.add("hidden");
-      accountPage.classList.add("hidden");
+    eventTicketsRequired.addEventListener("change", () => {
+      ticketLinkGroup.classList.toggle("hidden", !eventTicketsRequired.checked);
+    });
 
-      document.getElementById(pageId).classList.remove("hidden");
+    function showToast(message, type = "success") {
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toast.textContent = message;
+      toast.className = "toast " + type;
+      toast.classList.add("show");
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
 
-      navItems.forEach(item => {
-        item.classList.toggle(
-          "active",
-          item.dataset.page === pageId
-        );
-      });
-
-      if (pageId !== "checkinPage") {
-        stopScanner();
+    function setLoading(element, loading) {
+      if (loading) {
+        element.classList.add("loading");
+      } else {
+        element.classList.remove("loading");
       }
     }
 
+    function showPage(pageId) {
+      const pages = [eventsPage, checkinPage, accountPage, adminPage, studentsPage, studentDetailPage, eventsCheckinPage, prizesPage, leaderboardPage, quartersPage, reportsPage];
+      pages.forEach(p => p.classList.add("hidden"));
+      document.getElementById(pageId).classList.remove("hidden");
+      navItems.forEach(item => {
+        item.classList.toggle("active", item.dataset.page === pageId);
+      });
+      if (pageId !== "checkinPage") stopScanner();
+      if (pageId === "studentsPage" && !studentsUnsubscribe) {
+        setupStudentsListener();
+      }
+      if (pageId === "eventsCheckinPage") {
+        populateCheckinEventSelect();
+        if (checkinEventSelect.value) loadCheckins(checkinEventSelect.value);
+        if (checkinRefreshInterval) clearInterval(checkinRefreshInterval);
+        checkinRefreshInterval = setInterval(() => {
+          if (checkinEventSelect.value) loadCheckins(checkinEventSelect.value);
+        }, 30000);
+      } else {
+        if (checkinRefreshInterval) {
+          clearInterval(checkinRefreshInterval);
+          checkinRefreshInterval = null;
+        }
+      }
+      if (pageId === "prizesPage") populatePrizeQuarterSelect();
+      if (pageId === "leaderboardPage") populateLBQuarterSelect();
+      if (pageId === "checkinPage") populateCheckinEventSelect();
+    }
+
     navItems.forEach(item => {
-      item.addEventListener("click", event => {
-        event.preventDefault();
+      item.addEventListener("click", e => {
+        e.preventDefault();
         showPage(item.dataset.page);
       });
     });
 
-    function formatDate(dateString, timeString) {
-      if (!dateString) return "";
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
 
-      const date = new Date(
-        `${dateString}T${timeString || "00:00"}`
-      );
+    document.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+    });
 
-      return date.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric"
-      }) + " • " + date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit"
-      });
+    function formatEventDisplay(event) {
+      let display = event.name || "Event";
+      if (event.type) display = `${event.type}: ${display}`;
+      if (event.opponent) {
+        const loc = event.locationType === "Home" ? "vs" : "at";
+        display += ` ${loc} ${event.opponent}`;
+      }
+      return display;
     }
 
-    async function loadEvents() {
-      eventsList.innerHTML = `
-            <div class="card empty">
-                Loading events...
-            </div>
-        `;
+    function formatDate(dateString, timeString) {
+      if (!dateString) return "";
+      const date = new Date(`${dateString}T${timeString || "00:00"}`);
+      return date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) + " • " + date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    }
 
-      try {
-        const snapshot = await getDocs(eventsCollection);
+    function isCheckinOpen(event) {
+      if (!event || event.cancelled) return false;
+      const eventDateTime = new Date(`${event.date}T${event.time || "00:00"}`);
+      const now = new Date();
+      const threeHoursBefore = new Date(eventDateTime.getTime() - 3 * 60 * 60 * 1000);
+      return now >= threeHoursBefore && now <= eventDateTime;
+    }
 
-        events = snapshot.docs.map(item => ({
-          id: item.id,
-          ...item.data()
-        }));
+    function getStatusBadge(event) {
+      if (event.cancelled) return `<span class="event-status-badge cancelled">Cancelled</span>`;
+      if (isCheckinOpen(event)) {
+        return `<span class="event-status-badge active">Open</span>`;
+      }
+      return `<span class="event-status-badge ended">Closed</span>`;
+    }
 
-        events.sort((a, b) => {
-          const aDate = `${a.date || ""}T${a.time || ""}`;
-          const bDate = `${b.date || ""}T${b.time || ""}`;
-          return aDate.localeCompare(bDate);
-        });
-
+    function setupEventsListener() {
+      if (eventsUnsubscribe) eventsUnsubscribe();
+      eventsUnsubscribe = onSnapshot(eventsCollection, (snapshot) => {
+        events = snapshot.docs.map(item => ({ id: item.id, ...item.data() }));
+        events.sort((a, b) => `${a.date || ""}T${a.time || ""}`.localeCompare(`${b.date || ""}T${b.time || ""}`));
         renderEvents();
         populateEventSelect();
-
-      } catch (error) {
+        populateCheckinEventSelect();
+      }, (error) => {
         console.error(error);
-
-        eventsList.innerHTML = `
-                <div class="card empty">
-                    Could not load events.
-                </div>
-            `;
-      }
+        eventsList.innerHTML = `<div class="card empty">Could not load events.</div>`;
+      });
     }
 
     function renderEvents() {
       if (!events.length) {
-        eventsList.innerHTML = `
-                <div class="card empty">
-                    No events yet. Add your first event.
-                </div>
-            `;
+        eventsList.innerHTML = `<div class="card empty">No events yet. Add your first event.</div>`;
         return;
       }
-
       eventsList.innerHTML = events.map(event => `
-            <div class="card event-card">
-                <div class="event-main">
-                    <div class="event-title">
-                        ${escapeHtml(event.name || "Event")}
-                    </div>
-
-                    <div class="event-matchup">
-                        ${escapeHtml(event.matchup || "")}
-                    </div>
-
-                    <div class="event-info">
-                        ${escapeHtml(formatDate(event.date, event.time))}<br>
-                        ${escapeHtml(event.location || "")}
-                    </div>
-                </div>
-
-                <div class="event-actions">
-                    <div class="event-points">
-                        +${Number(event.points || 0)} Bucks
-                    </div>
-
-                    <button class="icon-btn edit-event" data-id="${event.id}">
-                        <span class="material-symbols-outlined">
-                            edit
-                        </span>
-                    </button>
-                </div>
+        <div class="card event-card">
+          <div class="event-main">
+            <div class="event-title">
+              ${escapeHtml(formatEventDisplay(event))}
+              ${getStatusBadge(event)}
             </div>
-        `).join("");
-
+            <div class="event-matchup">${escapeHtml(event.type || "")}${event.theme ? ` • Theme: ${escapeHtml(event.theme)}` : ""}</div>
+            <div class="event-info">
+              ${escapeHtml(formatDate(event.date, event.time))}<br>
+              ${escapeHtml(event.location || "")}
+              ${event.ticketsRequired ? ` • <a href="${escapeHtml(event.ticketLink || '#')}" target="_blank">Tickets</a>` : ""}
+            </div>
+          </div>
+          <div class="event-actions">
+            <div class="event-points">+${Number(event.points || 0)} Bucks</div>
+            ${!event.cancelled ? `<button class="secondary-btn cancel-event" data-id="${event.id}" style="padding:6px 10px; font-size:.7rem;">Cancel</button>` : `<button class="secondary-btn uncancel-event" data-id="${event.id}" style="padding:6px 10px; font-size:.7rem;">Restore</button>`}
+            <button class="icon-btn edit-event" data-id="${event.id}"><span class="material-symbols-outlined">edit</span></button>
+          </div>
+        </div>
+      `).join("");
       document.querySelectorAll(".edit-event").forEach(button => {
-        button.addEventListener("click", () => {
-          openEditEvent(button.dataset.id);
+        button.addEventListener("click", () => openEditEvent(button.dataset.id));
+      });
+      document.querySelectorAll(".cancel-event").forEach(button => {
+        button.addEventListener("click", async () => {
+          if (confirm("Cancel this event? Students will not be able to check in.")) {
+            await updateDoc(doc(db, "events", button.dataset.id), { cancelled: true });
+            showToast("Event cancelled.", "success");
+          }
+        });
+      });
+      document.querySelectorAll(".uncancel-event").forEach(button => {
+        button.addEventListener("click", async () => {
+          await updateDoc(doc(db, "events", button.dataset.id), { cancelled: false });
+          showToast("Event restored.", "success");
         });
       });
     }
 
     function populateEventSelect() {
-      eventSelect.innerHTML = `
-            <option value="">Select an event</option>
-            ${events.map(event => `
-                <option value="${event.id}">
-                    ${escapeHtml(event.name || "Event")} — ${escapeHtml(event.date || "")}
-                </option>
-            `).join("")}
-        `;
+      const now = new Date();
+      const openEvents = events.filter(e => {
+        if (e.cancelled) return false;
+        const eventDateTime = new Date(`${e.date}T${e.time || "00:00"}`);
+        const threeHoursBefore = new Date(eventDateTime.getTime() - 3 * 60 * 60 * 1000);
+        return now >= threeHoursBefore && now <= eventDateTime;
+      });
+      eventSelect.innerHTML = `<option value="">Select an event</option>${openEvents.map(event => `<option value="${event.id}">${escapeHtml(formatEventDisplay(event))} — ${escapeHtml(event.date || "")}</option>`).join("")}`;
+      if (openEvents.length === 0) {
+        eventSelect.innerHTML = `<option value="">No events currently open for check-in</option>`;
+      }
+    }
+
+    function populateCheckinEventSelect() {
+      const activeEvents = events.filter(e => !e.cancelled);
+      checkinEventSelect.innerHTML = `<option value="">Select an event</option>${activeEvents.map(event => `<option value="${event.id}">${escapeHtml(formatEventDisplay(event))}</option>`).join("")}`;
+    }
+
+    function populatePrizeQuarterSelect() {
+      prizeQuarterSelect.innerHTML = `<option value="">Select a quarter</option>${quarters.map(q => `<option value="${q.id}">${escapeHtml(q.name || "Quarter")}</option>`).join("")}`;
+    }
+
+    function populateLBQuarterSelect() {
+      lbQuarterSelect.innerHTML = `<option value="">Select a quarter</option>${quarters.map(q => `<option value="${q.id}">${escapeHtml(q.name || "Quarter")} ${q.closed ? '(Closed)' : '(Active)'}</option>`).join("")}`;
     }
 
     function openAddEvent() {
       editingEventId = null;
       modalTitle.textContent = "Add Event";
-
+      eventType.value = "Sports";
       eventName.value = "";
-      eventMatchup.value = "";
+      eventLocationType.value = "Home";
+      eventOpponent.value = "";
       eventDate.value = "";
       eventTime.value = "";
       eventLocation.value = "";
       eventPoints.value = "25";
-
+      eventTheme.value = "";
+      eventTicketsRequired.checked = false;
+      eventTicketLink.value = "";
+      ticketLinkGroup.classList.add("hidden");
       eventModal.classList.add("show");
     }
 
     function openEditEvent(id) {
       const event = events.find(item => item.id === id);
-
       if (!event) return;
-
       editingEventId = id;
       modalTitle.textContent = "Edit Event";
-
+      eventType.value = event.type || "Sports";
       eventName.value = event.name || "";
-      eventMatchup.value = event.matchup || "";
+      eventLocationType.value = event.locationType || "Home";
+      eventOpponent.value = event.opponent || "";
       eventDate.value = event.date || "";
       eventTime.value = event.time || "";
       eventLocation.value = event.location || "";
       eventPoints.value = event.points ?? 25;
-
+      eventTheme.value = event.theme || "";
+      eventTicketsRequired.checked = event.ticketsRequired || false;
+      eventTicketLink.value = event.ticketLink || "";
+      ticketLinkGroup.classList.toggle("hidden", !event.ticketsRequired);
       eventModal.classList.add("show");
     }
 
@@ -900,54 +1593,56 @@
     }
 
     async function saveEvent() {
+      const type = eventType.value;
       const name = eventName.value.trim();
-      const matchup = eventMatchup.value.trim();
+      const locationType = eventLocationType.value;
+      const opponent = eventOpponent.value.trim();
       const date = eventDate.value;
       const time = eventTime.value;
       const location = eventLocation.value.trim();
       const points = Number(eventPoints.value);
+      const theme = eventTheme.value.trim();
+      const ticketsRequired = eventTicketsRequired.checked;
+      const ticketLink = eventTicketLink.value.trim();
 
       if (!name || !date || !time || !location || points < 0) {
-        alert("Please complete all event fields.");
+        showToast("Please complete all required fields.", "error");
+        return;
+      }
+      if (ticketsRequired && !ticketLink) {
+        showToast("Please provide a ticket link.", "error");
         return;
       }
 
       const saveButton = document.getElementById("saveEventBtn");
-
       saveButton.disabled = true;
-      saveButton.textContent = "Saving...";
-
+      saveButton.innerHTML = '<span class="spinner"></span>Saving...';
       try {
         const eventData = {
+          type,
           name,
-          matchup,
+          locationType,
+          opponent,
           date,
           time,
           location,
           points,
+          theme: theme || null,
+          ticketsRequired,
+          ticketLink: ticketLink || null,
           updatedAt: serverTimestamp()
         };
-
         if (editingEventId) {
-          await updateDoc(
-            doc(db, "events", editingEventId),
-            eventData
-          );
+          await updateDoc(doc(db, "events", editingEventId), eventData);
+          showToast("Event updated successfully!", "success");
         } else {
-          await addDoc(
-            eventsCollection, {
-              ...eventData,
-              createdAt: serverTimestamp()
-            }
-          );
+          await addDoc(eventsCollection, { ...eventData, createdAt: serverTimestamp(), cancelled: false });
+          showToast("Event created successfully!", "success");
         }
-
         closeEventModal();
-        await loadEvents();
-
       } catch (error) {
         console.error(error);
-        alert("Could not save the event.");
+        showToast("Could not save the event.", "error");
       } finally {
         saveButton.disabled = false;
         saveButton.textContent = "Save Event";
@@ -956,82 +1651,38 @@
 
     async function startScanner() {
       const eventId = eventSelect.value;
-
-      if (!eventId) {
-        alert("Select an event first.");
-        return;
-      }
-
-      const selectedEvent = events.find(
-        event => event.id === eventId
-      );
-
-      if (!selectedEvent) {
-        alert("Event not found.");
-        return;
-      }
-
-      scannerEventName.textContent =
-        `Scan for ${selectedEvent.name}`;
-
+      if (!eventId) { showToast("Select an event first.", "error"); return; }
+      const selectedEvent = events.find(event => event.id === eventId);
+      if (!selectedEvent) { showToast("Event not found.", "error"); return; }
+      if (selectedEvent.cancelled) { showToast("This event is cancelled.", "error"); return; }
+      if (!isCheckinOpen(selectedEvent)) { showToast("Check-ins are not yet open for this event. They open 3 hours before the event.", "error"); return; }
+      scannerEventName.textContent = `Scan for ${formatEventDisplay(selectedEvent)}`;
       scannerCard.classList.remove("hidden");
-
-      scannerStatus.className = "scanner-status";
-      scannerStatus.textContent = "Starting camera...";
-
+      scannerStatus.className = "scanner-status loading";
+      scannerStatus.innerHTML = '<span class="spinner"></span>Starting camera...';
       studentResult.classList.remove("show");
-
-      if (html5QrCode) {
-        await stopScanner();
-      }
-
+      if (html5QrCode) await stopScanner();
       html5QrCode = new Html5Qrcode("reader");
-
       try {
-        await html5QrCode.start({
-            facingMode: "environment"
-          }, {
-            fps: 10,
-            qrbox: {
-              width: 250,
-              height: 250
-            }
-          },
-          handleQrCode,
-          () => {}
-        );
-
+        await html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, handleQrCode, () => {});
         scannerRunning = true;
         scannerPlaceholder.style.display = "none";
-
         scannerStatus.className = "scanner-status";
-        scannerStatus.textContent =
-          "Ready — scan a student's QR code.";
-
+        scannerStatus.textContent = "Ready — scan a student's QR code.";
       } catch (error) {
         console.error(error);
-
-        scannerStatus.className =
-          "scanner-status error";
-
-        scannerStatus.textContent =
-          "Camera could not start. Check camera permissions.";
+        scannerStatus.className = "scanner-status error";
+        scannerStatus.textContent = "Camera could not start. Check camera permissions.";
+        showToast("Camera access denied.", "error");
       }
     }
 
     async function stopScanner() {
-      if (!html5QrCode || !scannerRunning) {
-        scannerCard.classList.add("hidden");
-        return;
-      }
-
+      if (!html5QrCode || !scannerRunning) { scannerCard.classList.add("hidden"); return; }
       try {
         await html5QrCode.stop();
         await html5QrCode.clear();
-      } catch (error) {
-        console.error(error);
-      }
-
+      } catch (error) { console.error(error); }
       scannerRunning = false;
       scannerPlaceholder.style.display = "flex";
       html5QrCode = null;
@@ -1040,295 +1691,820 @@
 
     async function handleQrCode(decodedText) {
       if (processingScan) return;
-
       processingScan = true;
-
+      scannerStatus.className = "scanner-status loading";
+      scannerStatus.innerHTML = '<span class="spinner"></span>Processing...';
       try {
         const qrValue = decodedText.trim();
-
-        if (!qrValue.startsWith("WILEY:")) {
-          throw new Error("Invalid Wiley Bucks QR code.");
-        }
-
+        if (!qrValue.startsWith("WILEY:")) throw new Error("Invalid Wiley Bucks QR code.");
         const studentUid = qrValue.substring(6).trim();
-
-        if (!studentUid) {
-          throw new Error("Invalid student QR code.");
-        }
-
+        if (!studentUid) throw new Error("Invalid student QR code.");
         const eventId = eventSelect.value;
-
-        if (!eventId) {
-          throw new Error("No event selected.");
-        }
-
-        const selectedEvent = events.find(
-          event => event.id === eventId
-        );
-
-        if (!selectedEvent) {
-          throw new Error(
-            "Selected event no longer exists."
-          );
-        }
-
-        scannerStatus.className = "scanner-status";
-        scannerStatus.textContent = "Checking student...";
-
-        const studentRef = doc(
-          db,
-          "users",
-          studentUid
-        );
-
+        if (!eventId) throw new Error("No event selected.");
+        const selectedEvent = events.find(event => event.id === eventId);
+        if (!selectedEvent) throw new Error("Selected event no longer exists.");
+        if (selectedEvent.cancelled) throw new Error("This event is cancelled.");
+        if (!isCheckinOpen(selectedEvent)) throw new Error("Check-ins are not open for this event.");
+        const studentRef = doc(db, "users", studentUid);
         let result = null;
-
         await runTransaction(db, async transaction => {
-
-          const studentSnapshot =
-            await transaction.get(studentRef);
-
-          if (!studentSnapshot.exists()) {
-            throw new Error(
-              "Student account not found."
-            );
-          }
-
-          const student =
-            studentSnapshot.data();
-
-          const checkedInEvents =
-            Array.isArray(student.checkedInEvents) ?
-            student.checkedInEvents :
-            [];
-
-          const alreadyCheckedIn =
-            checkedInEvents.some(item => {
-
-              if (typeof item === "string") {
-                return item === eventId;
-              }
-
-              return item &&
-                (
-                  item.eventId === eventId ||
-                  item.id === eventId
-                );
-            });
-
-          const currentBucks =
-            Number(student.bucks || 0);
-
-          const currentEventsAttended =
-            Number(student.eventsAttended || 0);
-
-          result = {
-            name: student.displayName ||
-              "Student",
-
-            email: student.email ||
-              "",
-
-            bucks: currentBucks,
-
-            alreadyCheckedIn
-          };
-
-          if (alreadyCheckedIn) {
-            return;
-          }
-
-          const checkIn = {
-            eventId,
-            eventName: selectedEvent.name || "Event",
-            points: Number(selectedEvent.points || 0),
-            checkedInAt: new Date().toISOString()
-          };
-
-          transaction.update(
-            studentRef, {
-              checkedInEvents: [
-                ...checkedInEvents,
-                checkIn
-              ],
-
-              bucks: currentBucks +
-                Number(selectedEvent.points || 0),
-
-              eventsAttended: currentEventsAttended + 1,
-
-              lastCheckIn: serverTimestamp()
-            }
-          );
-
-          result.newBucks =
-            currentBucks +
-            Number(selectedEvent.points || 0);
+          const studentSnapshot = await transaction.get(studentRef);
+          if (!studentSnapshot.exists()) throw new Error("Student account not found.");
+          const student = studentSnapshot.data();
+          if (student.disabled) throw new Error("This account is disabled.");
+          const checkedInEvents = Array.isArray(student.checkedInEvents) ? student.checkedInEvents : [];
+          const alreadyCheckedIn = checkedInEvents.some(item => {
+            if (typeof item === "string") return item === eventId;
+            return item && (item.eventId === eventId || item.id === eventId);
+          });
+          const currentBucks = Number(student.bucks || 0);
+          const currentEventsAttended = Number(student.eventsAttended || 0);
+          result = { name: student.displayName || "Student", email: student.email || "", bucks: currentBucks, alreadyCheckedIn };
+          if (alreadyCheckedIn) return;
+          const checkIn = { eventId, eventName: formatEventDisplay(selectedEvent), points: Number(selectedEvent.points || 0), checkedInAt: new Date().toISOString() };
+          transaction.update(studentRef, {
+            checkedInEvents: [...checkedInEvents, checkIn],
+            bucks: currentBucks + Number(selectedEvent.points || 0),
+            eventsAttended: currentEventsAttended + 1,
+            lastCheckIn: serverTimestamp()
+          });
+          result.newBucks = currentBucks + Number(selectedEvent.points || 0);
         });
-
-        studentName.textContent =
-          result.name;
-
-        studentEmail.textContent =
-          result.email;
-
-        studentBucks.textContent =
-          `${result.alreadyCheckedIn
-                    ? result.bucks
-                    : result.newBucks
-                } Wiley Bucks`;
-
+        studentName.textContent = result.name;
+        studentEmail.textContent = result.email;
+        studentBucks.textContent = `${result.alreadyCheckedIn ? result.bucks : result.newBucks} Wiley Bucks`;
         studentResult.classList.add("show");
-
         if (result.alreadyCheckedIn) {
-
-          scannerStatus.className =
-            "scanner-status error";
-
-          scannerStatus.textContent =
-            `${result.name} is already checked in.`;
-
+          scannerStatus.className = "scanner-status error";
+          scannerStatus.textContent = `${result.name} is already checked in.`;
+          showToast(`${result.name} already checked in.`, "error");
           return;
         }
-
-        scannerStatus.className =
-          "scanner-status success";
-
-        scannerStatus.textContent =
-          `${result.name} checked in successfully! +${Number(selectedEvent.points || 0)} Bucks`;
-
+        scannerStatus.className = "scanner-status success";
+        scannerStatus.textContent = `${result.name} checked in successfully! +${Number(selectedEvent.points || 0)} Bucks`;
+        showToast(`${result.name} checked in! +${Number(selectedEvent.points || 0)} Bucks`, "success");
+        if (currentCheckinEventId === eventId) loadCheckins(eventId);
       } catch (error) {
         console.error(error);
-
-        scannerStatus.className =
-          "scanner-status error";
-
-        scannerStatus.textContent =
-          error.message ||
-          "Check-in failed.";
-
+        scannerStatus.className = "scanner-status error";
+        scannerStatus.textContent = error.message || "Check-in failed.";
+        showToast(error.message || "Check-in failed.", "error");
       } finally {
-        setTimeout(() => {
-          processingScan = false;
-        }, 1500);
+        setTimeout(() => { processingScan = false; }, 1500);
       }
     }
 
     function escapeHtml(value) {
-      return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+      return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     }
 
-    document
-      .getElementById("addEventBtn")
-      .addEventListener(
-        "click",
-        openAddEvent
-      );
+    document.getElementById("addEventBtn").addEventListener("click", openAddEvent);
+    document.getElementById("closeModalBtn").addEventListener("click", closeEventModal);
+    document.getElementById("cancelEventBtn").addEventListener("click", closeEventModal);
+    document.getElementById("saveEventBtn").addEventListener("click", saveEvent);
+    document.getElementById("startScannerBtn").addEventListener("click", startScanner);
+    document.getElementById("stopScannerBtn").addEventListener("click", stopScanner);
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      try { 
+        await signOut(auth); 
+        window.location.replace("/index.html"); 
+      } catch (error) { console.error(error); }
+    });
 
-    document
-      .getElementById("closeModalBtn")
-      .addEventListener(
-        "click",
-        closeEventModal
-      );
+    function setupAdminListener() {
+      if (adminUnsubscribe) adminUnsubscribe();
+      adminUnsubscribe = onSnapshot(adminCollection, (snapshot) => {
+        if (snapshot.empty) {
+          adminList.innerHTML = `<div class="empty">No admin emails added.</div>`;
+          return;
+        }
+        adminList.innerHTML = snapshot.docs.map(doc => `
+          <div class="admin-list-item" data-id="${doc.id}">
+            <span class="admin-email-text">${escapeHtml(doc.data().email)}</span>
+            <button class="remove-admin-btn" data-id="${doc.id}">Remove</button>
+          </div>
+        `).join("");
+        document.querySelectorAll(".remove-admin-btn").forEach(btn => {
+          btn.addEventListener("click", async (e) => {
+            const id = e.target.dataset.id;
+            if (confirm("Remove this admin email?")) {
+              try {
+                await deleteDoc(doc(db, "adminEmails", id));
+                showToast("Admin removed.", "success");
+              } catch (error) {
+                showToast("Error removing admin.", "error");
+              }
+            }
+          });
+        });
+      }, (error) => {
+        console.error(error);
+        adminList.innerHTML = `<div class="empty">Could not load admins.</div>`;
+      });
+    }
 
-    document
-      .getElementById("cancelEventBtn")
-      .addEventListener(
-        "click",
-        closeEventModal
-      );
+    addAdminBtn.addEventListener("click", async () => {
+      const email = adminEmailInput.value.trim();
+      if (!email || !email.includes("@")) { showToast("Enter a valid email.", "error"); return; }
+      try {
+        const q = query(adminCollection, where("email", "==", email));
+        const existing = await getDocs(q);
+        if (!existing.empty) { showToast("Email already in admin list.", "error"); return; }
+        await addDoc(adminCollection, { email, addedAt: serverTimestamp() });
+        adminEmailInput.value = "";
+        showToast("Admin added successfully!", "success");
+      } catch (error) {
+        console.error(error);
+        showToast("Could not add admin email.", "error");
+      }
+    });
 
-    document
-      .getElementById("saveEventBtn")
-      .addEventListener(
-        "click",
-        saveEvent
-      );
+    function setupStudentsListener() {
+      if (studentsUnsubscribe) studentsUnsubscribe();
+      studentList.innerHTML = `<div class="empty">Loading students...</div>`;
+      studentsUnsubscribe = onSnapshot(usersCollection, (snapshot) => {
+        allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderStudents(studentSearchInput.value);
+      }, (error) => {
+        console.error(error);
+        studentList.innerHTML = `<div class="empty">Could not load students.</div>`;
+      });
+    }
 
-    document
-      .getElementById("startScannerBtn")
-      .addEventListener(
-        "click",
-        startScanner
-      );
+    function renderStudents(searchTerm = "") {
+      let filtered = allStudents;
+      if (searchTerm.trim()) {
+        const term = searchTerm.trim().toLowerCase();
+        filtered = allStudents.filter(s => 
+          (s.displayName || "").toLowerCase().includes(term) || 
+          (s.email || "").toLowerCase().includes(term)
+        );
+      }
+      if (!filtered.length) {
+        studentList.innerHTML = `<div class="empty">No students found.</div>`;
+        return;
+      }
+      studentList.innerHTML = filtered.map(student => `
+        <div class="student-list-item">
+          <div class="student-info">
+            <div class="student-name-display">${escapeHtml(student.displayName || "Unknown")}</div>
+            <div class="student-email-display">${escapeHtml(student.email || "")}</div>
+          </div>
+          <div class="student-bucks-display">${Number(student.bucks || 0)} Bucks</div>
+          <div class="student-actions">
+            <button class="view-student-btn" data-id="${student.id}">View</button>
+            ${student.disabled ? 
+              `<button class="enable-student-btn toggle-disable" data-id="${student.id}">Enable</button>` :
+              `<button class="disable-student-btn toggle-disable" data-id="${student.id}">Disable</button>`
+            }
+          </div>
+        </div>
+      `).join("");
+      document.querySelectorAll(".view-student-btn").forEach(btn => {
+        btn.addEventListener("click", () => viewStudent(btn.dataset.id));
+      });
+      document.querySelectorAll(".toggle-disable").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const id = btn.dataset.id;
+          const student = allStudents.find(s => s.id === id);
+          if (!student) return;
+          const action = student.disabled ? "enable" : "disable";
+          if (confirm(`${action} this student's account?`)) {
+            try {
+              await updateDoc(doc(db, "users", id), { disabled: !student.disabled });
+              showToast(`Account ${action}d.`, "success");
+            } catch (error) {
+              showToast("Error updating account.", "error");
+            }
+          }
+        });
+      });
+    }
 
-    document
-      .getElementById("stopScannerBtn")
-      .addEventListener(
-        "click",
-        stopScanner
-      );
+    studentSearchBtn.addEventListener("click", () => {
+      renderStudents(studentSearchInput.value);
+    });
+    studentSearchInput.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") renderStudents(studentSearchInput.value);
+    });
 
-    document
-      .getElementById("logoutBtn")
-      .addEventListener(
-        "click",
-        async () => {
-          try {
-            await signOut(auth);
-            window.location.replace(
-              "/index.html"
-            );
-          } catch (error) {
-            console.error(error);
+    function setupDetailListener(studentId) {
+      if (detailUnsubscribe) detailUnsubscribe();
+      detailUnsubscribe = onSnapshot(doc(db, "users", studentId), (docSnap) => {
+        if (!docSnap.exists()) return;
+        const student = { id: docSnap.id, ...docSnap.data() };
+        detailStudentName.textContent = student.displayName || "Unknown";
+        detailStudentEmail.textContent = student.email || "";
+        detailStudentBucks.textContent = Number(student.bucks || 0);
+        detailStudentEvents.textContent = Number(student.eventsAttended || 0);
+        detailStudentStatus.textContent = student.disabled ? "Disabled" : "Active";
+        detailStudentStatus.style.color = student.disabled ? "#c62828" : "#2e7d32";
+        toggleDisableBtn.textContent = student.disabled ? "Enable Account" : "Disable Account";
+        toggleDisableBtn.className = student.disabled ? "secondary-btn" : "danger-btn";
+        toggleDisableBtn.style.width = "100%";
+        
+        const adjustments = Array.isArray(student.bucksAdjustments) ? student.bucksAdjustments : [];
+        if (!adjustments.length) {
+          adjustmentHistory.innerHTML = `<div class="empty">No adjustments recorded.</div>`;
+        } else {
+          adjustmentHistory.innerHTML = adjustments.slice().reverse().map(adj => `
+            <div class="adjustment-history-item">
+              <span>
+                <span class="adjustment-amount ${adj.amount >= 0 ? 'positive' : 'negative'}">${adj.amount >= 0 ? '+' : ''}${adj.amount} Bucks</span>
+                <span class="adjustment-detail">${escapeHtml(adj.reason || "No reason")}</span>
+              </span>
+              <span class="adjustment-detail">${adj.admin || "Admin"} • ${adj.timestamp ? new Date(adj.timestamp).toLocaleString() : ""}</span>
+            </div>
+          `).join("");
+        }
+
+        const history = Array.isArray(student.checkedInEvents) ? student.checkedInEvents : [];
+        if (!history.length) {
+          detailCheckinHistory.innerHTML = `<div class="empty">No check-in history.</div>`;
+        } else {
+          detailCheckinHistory.innerHTML = history.slice().reverse().map(item => `
+            <div class="checkin-history-item">
+              <div class="checkin-history-event">${escapeHtml(item.eventName || "Event")}</div>
+              <div class="checkin-history-points">+${Number(item.points || 0)} Bucks</div>
+              <div class="checkin-history-date">${item.checkedInAt ? new Date(item.checkedInAt).toLocaleString() : ""}</div>
+            </div>
+          `).join("");
+        }
+        setLoading(detailCard, false);
+      }, (error) => {
+        console.error(error);
+        setLoading(detailCard, false);
+        showToast("Error loading student details.", "error");
+      });
+    }
+
+    async function viewStudent(id) {
+      selectedStudentId = id;
+      const student = allStudents.find(s => s.id === id);
+      if (!student) return;
+      showPage("studentDetailPage");
+      setLoading(detailCard, true);
+      detailStudentName.textContent = student.displayName || "Unknown";
+      detailStudentEmail.textContent = student.email || "";
+      setupDetailListener(id);
+    }
+
+    backToStudentsBtn.addEventListener("click", () => {
+      if (detailUnsubscribe) detailUnsubscribe();
+      showPage("studentsPage");
+      renderStudents(studentSearchInput.value);
+    });
+
+    async function adjustBucks(amount) {
+      const adjAmount = Number(bucksAdjustInput.value);
+      if (!adjAmount || adjAmount < 1) { showToast("Enter a valid amount.", "error"); return; }
+      const reason = adjustmentReason.value.trim() || "Manual adjustment";
+      const student = allStudents.find(s => s.id === selectedStudentId);
+      if (!student) return;
+      setLoading(detailCard, true);
+      try {
+        const newBucks = Math.max(0, Number(student.bucks || 0) + (amount * adjAmount));
+        const adjustment = {
+          amount: amount * adjAmount,
+          reason: reason,
+          admin: currentAdminEmail || "Admin",
+          timestamp: new Date().toISOString()
+        };
+        const adjustments = Array.isArray(student.bucksAdjustments) ? student.bucksAdjustments : [];
+        await updateDoc(doc(db, "users", selectedStudentId), {
+          bucks: newBucks,
+          bucksAdjustments: [...adjustments, adjustment]
+        });
+        adjustmentReason.value = "";
+        showToast(`${amount > 0 ? 'Added' : 'Removed'} ${adjAmount} Bucks`, "success");
+      } catch (error) {
+        console.error(error);
+        showToast("Error adjusting bucks.", "error");
+      } finally {
+        setLoading(detailCard, false);
+      }
+    }
+
+    addBucksBtn.addEventListener("click", () => adjustBucks(1));
+    removeBucksBtn.addEventListener("click", () => adjustBucks(-1));
+
+    toggleDisableBtn.addEventListener("click", async () => {
+      const student = allStudents.find(s => s.id === selectedStudentId);
+      if (!student) return;
+      const action = student.disabled ? "Enable" : "Disable";
+      if (confirm(`${action} this student's account?`)) {
+        setLoading(detailCard, true);
+        try {
+          await updateDoc(doc(db, "users", selectedStudentId), { disabled: !student.disabled });
+          showToast(`Account ${action}d.`, "success");
+        } catch (error) {
+          showToast("Error updating account.", "error");
+        } finally {
+          setLoading(detailCard, false);
+        }
+      }
+    });
+
+    function setupQuartersListener() {
+      onSnapshot(quartersCollection, (snapshot) => {
+        quarters = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        quarters.sort((a, b) => (a.startDate || "").localeCompare(b.startDate || ""));
+        renderQuarters();
+        populatePrizeQuarterSelect();
+        populateLBQuarterSelect();
+      }, (error) => {
+        console.error(error);
+        quartersList.innerHTML = `<div class="empty">Could not load quarters.</div>`;
+      });
+    }
+
+    function renderQuarters() {
+      if (!quarters.length) {
+        quartersList.innerHTML = `<div class="empty">No quarters created yet.</div>`;
+        return;
+      }
+      quartersList.innerHTML = quarters.map(q => `
+        <div class="quarter-item">
+          <div class="quarter-info">
+            <div class="quarter-name">${escapeHtml(q.name || "Unnamed")}</div>
+            <div class="quarter-dates">${q.startDate || ""} — ${q.endDate || ""}</div>
+          </div>
+          <div>
+            <span class="quarter-status ${q.closed ? 'closed' : 'active'}">${q.closed ? 'Closed' : 'Active'}</span>
+            ${!q.closed ? `<button class="secondary-btn close-quarter-btn" data-id="${q.id}" style="margin-left:8px; padding:6px 12px; font-size:.7rem;">Close</button>` : ''}
+            <button class="secondary-btn edit-quarter-btn" data-id="${q.id}" style="margin-left:4px; padding:6px 12px; font-size:.7rem;">Edit</button>
+          </div>
+        </div>
+      `).join("");
+      document.querySelectorAll(".close-quarter-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (confirm("Close this quarter? This will finalize the leaderboard.")) {
+            try {
+              const qId = btn.dataset.id;
+              await updateDoc(doc(db, "quarters", qId), { closed: true });
+              showToast("Quarter closed.", "success");
+            } catch (error) {
+              showToast("Error closing quarter.", "error");
+            }
+          }
+        });
+      });
+      document.querySelectorAll(".edit-quarter-btn").forEach(btn => {
+        btn.addEventListener("click", () => openEditQuarter(btn.dataset.id));
+      });
+    }
+
+    function openAddQuarter() {
+      editingQuarterId = null;
+      quarterModalTitle.textContent = "Add Quarter";
+      quarterNameInput.value = "";
+      quarterStartInput.value = "";
+      quarterEndInput.value = "";
+      quarterModal.classList.add("show");
+    }
+
+    function openEditQuarter(id) {
+      const q = quarters.find(q => q.id === id);
+      if (!q) return;
+      editingQuarterId = id;
+      quarterModalTitle.textContent = "Edit Quarter";
+      quarterNameInput.value = q.name || "";
+      quarterStartInput.value = q.startDate || "";
+      quarterEndInput.value = q.endDate || "";
+      quarterModal.classList.add("show");
+    }
+
+    function closeQuarterModal() {
+      quarterModal.classList.remove("show");
+    }
+
+    async function saveQuarter() {
+      const name = quarterNameInput.value.trim();
+      const startDate = quarterStartInput.value;
+      const endDate = quarterEndInput.value;
+      if (!name || !startDate || !endDate) {
+        showToast("Please complete all fields.", "error");
+        return;
+      }
+      const saveBtn = document.getElementById("saveQuarterBtn");
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner"></span>Saving...';
+      try {
+        const data = { name, startDate, endDate, updatedAt: serverTimestamp() };
+        if (editingQuarterId) {
+          await updateDoc(doc(db, "quarters", editingQuarterId), data);
+          showToast("Quarter updated!", "success");
+        } else {
+          await addDoc(quartersCollection, { ...data, createdAt: serverTimestamp(), closed: false });
+          showToast("Quarter created!", "success");
+        }
+        closeQuarterModal();
+      } catch (error) {
+        console.error(error);
+        showToast("Error saving quarter.", "error");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Quarter";
+      }
+    }
+
+    document.getElementById("addQuarterBtn").addEventListener("click", openAddQuarter);
+    closeQuarterModalBtn.addEventListener("click", closeQuarterModal);
+    cancelQuarterBtn.addEventListener("click", closeQuarterModal);
+    saveQuarterBtn.addEventListener("click", saveQuarter);
+
+    async function loadCheckins(eventId) {
+      currentCheckinEventId = eventId;
+      if (!eventId) {
+        checkinList.innerHTML = `<div class="empty">Select an event to view check-ins.</div>`;
+        checkinCountDisplay.textContent = "0";
+        checkinStatusDisplay.textContent = "Closed";
+        checkinStatusDisplay.className = "chip closed";
+        return;
+      }
+      try {
+        const eventRef = doc(db, "events", eventId);
+        const eventSnap = await getDoc(eventRef);
+        let eventData = null;
+        let checkinStatus = { open: false, label: 'Closed', class: 'closed' };
+        
+        if (eventSnap.exists()) {
+          eventData = { id: eventSnap.id, ...eventSnap.data() };
+          if (eventData.cancelled) {
+            checkinStatus = { open: false, label: 'Cancelled', class: 'cancelled' };
+          } else if (isCheckinOpen(eventData)) {
+            checkinStatus = { open: true, label: 'Open', class: 'open' };
+          } else {
+            checkinStatus = { open: false, label: 'Closed', class: 'closed' };
           }
         }
-      );
+        
+        checkinStatusDisplay.textContent = checkinStatus.label;
+        checkinStatusDisplay.className = `chip ${checkinStatus.class}`;
 
-    onAuthStateChanged(
-      auth,
-      async user => {
-
-        if (!user) {
-          window.location.replace(
-            "/index.html"
-          );
+        const students = allStudents.filter(s => {
+          const checkins = Array.isArray(s.checkedInEvents) ? s.checkedInEvents : [];
+          return checkins.some(c => c.eventId === eventId || c.id === eventId);
+        });
+        checkinCountDisplay.textContent = students.length;
+        if (!students.length) {
+          checkinList.innerHTML = `<div class="empty">No students checked in.</div>`;
           return;
         }
-
-        const email =
-          (user.email || "")
-          .trim()
-          .toLowerCase();
-
-        if (
-          !email.endsWith("@gmail.com") &&
-          !email.endsWith("@rfsd.k12.wi.us")
-        ) {
-          await signOut(auth);
-
-          window.location.replace(
-            "/index.html"
-          );
-
-          return;
-        }
-
-        const name =
-          user.displayName ||
-          "Administrator";
-
-        accountName.textContent =
-          name;
-
-        accountEmail.textContent =
-          user.email || "";
-
-        profilePicture.src =
-          user.photoURL ||
-          `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5B2D90&color=fff&size=200`;
-
-        await loadEvents();
+        checkinList.innerHTML = students.map(s => {
+          const checkin = (Array.isArray(s.checkedInEvents) ? s.checkedInEvents : []).find(c => c.eventId === eventId || c.id === eventId);
+          return `
+            <div class="checkin-item">
+              <span><strong>${escapeHtml(s.displayName || "Unknown")}</strong> ${escapeHtml(s.email || "")}</span>
+              <span style="display:flex; gap:8px; align-items:center;">
+                <span class="checkin-history-points">+${checkin?.points || 0}</span>
+                <button class="remove-checkin-btn" data-student="${s.id}" data-event="${eventId}">Remove</button>
+              </span>
+            </div>
+          `;
+        }).join("");
+        document.querySelectorAll(".remove-checkin-btn").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const studentId = btn.dataset.student;
+            const evId = btn.dataset.event;
+            if (confirm("Remove this check-in? This will also deduct the Bucks.")) {
+              try {
+                const studentRef = doc(db, "users", studentId);
+                await runTransaction(db, async (transaction) => {
+                  const snap = await transaction.get(studentRef);
+                  if (!snap.exists()) return;
+                  const data = snap.data();
+                  const checkins = Array.isArray(data.checkedInEvents) ? data.checkedInEvents : [];
+                  const newCheckins = checkins.filter(c => c.eventId !== evId && c.id !== evId);
+                  const removed = checkins.find(c => c.eventId === evId || c.id === evId);
+                  const points = removed?.points || 0;
+                  transaction.update(studentRef, {
+                    checkedInEvents: newCheckins,
+                    bucks: Math.max(0, Number(data.bucks || 0) - points),
+                    eventsAttended: Math.max(0, Number(data.eventsAttended || 0) - 1)
+                  });
+                });
+                showToast("Check-in removed.", "success");
+                loadCheckins(eventId);
+              } catch (error) {
+                console.error(error);
+                showToast("Error removing check-in.", "error");
+              }
+            }
+          });
+        });
+      } catch (error) {
+        console.error(error);
+        checkinList.innerHTML = `<div class="empty">Error loading check-ins.</div>`;
       }
-    );
+    }
+
+    checkinEventSelect.addEventListener("change", () => {
+      if (checkinRefreshInterval) {
+        clearInterval(checkinRefreshInterval);
+        checkinRefreshInterval = null;
+      }
+      loadCheckins(checkinEventSelect.value);
+      if (checkinEventSelect.value) {
+        checkinRefreshInterval = setInterval(() => {
+          loadCheckins(checkinEventSelect.value);
+        }, 30000);
+      }
+    });
+
+    refreshCheckinsBtn.addEventListener("click", () => {
+      if (checkinEventSelect.value) loadCheckins(checkinEventSelect.value);
+    });
+
+    initPrizesBtn.addEventListener("click", async () => {
+      const quarterId = prizeQuarterSelect.value;
+      if (!quarterId) { showToast("Select a quarter.", "error"); return; }
+      if (!confirm("Initialize prizes for this quarter? This will create 1st-10th place prizes.")) return;
+      try {
+        const existing = await getDocs(query(prizesCollection, where("quarterId", "==", quarterId)));
+        if (!existing.empty) {
+          if (!confirm("Prizes already exist. Replace them?")) return;
+          const batch = writeBatch(db);
+          existing.docs.forEach(d => batch.delete(d.ref));
+          await batch.commit();
+        }
+        const prizeNames = ["1st Place", "2nd Place", "3rd Place", "4th Place", "5th Place", "6th Place", "7th Place", "8th Place", "9th Place", "10th Place"];
+        for (const name of prizeNames) {
+          await addDoc(prizesCollection, {
+            quarterId,
+            rank: name,
+            description: "",
+            awarded: false,
+            createdAt: serverTimestamp()
+          });
+        }
+        showToast("Prizes initialized!", "success");
+        loadPrizes(quarterId);
+      } catch (error) {
+        console.error(error);
+        showToast("Error initializing prizes.", "error");
+      }
+    });
+
+    prizeQuarterSelect.addEventListener("change", () => {
+      if (prizeQuarterSelect.value) loadPrizes(prizeQuarterSelect.value);
+    });
+
+    async function loadPrizes(quarterId) {
+      try {
+        const snapshot = await getDocs(query(prizesCollection, where("quarterId", "==", quarterId)));
+        if (snapshot.empty) {
+          prizesList.innerHTML = `<div class="empty">No prizes. Click "Initialize Prizes" to create them.</div>`;
+          return;
+        }
+        const prizeDocs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const rankOrder = ["1st Place", "2nd Place", "3rd Place", "4th Place", "5th Place", "6th Place", "7th Place", "8th Place", "9th Place", "10th Place"];
+        prizeDocs.sort((a, b) => rankOrder.indexOf(a.rank) - rankOrder.indexOf(b.rank));
+        prizesList.innerHTML = prizeDocs.map(doc => {
+          const p = doc;
+          return `
+            <div class="prize-item">
+              <span class="prize-rank">${escapeHtml(p.rank || "")}</span>
+              <input class="prize-desc" value="${escapeHtml(p.description || "")}" placeholder="Prize description" data-id="${doc.id}" style="padding:8px; border-radius:8px; border:1px solid #ddd; font-size:.85rem;">
+              <span class="prize-status">
+                <label style="font-size:.75rem;">
+                  <input type="checkbox" ${p.awarded ? 'checked' : ''} class="prize-awarded" data-id="${doc.id}"> Awarded
+                </label>
+              </span>
+            </div>
+          `;
+        }).join("");
+        document.querySelectorAll(".prize-desc").forEach(input => {
+          input.addEventListener("change", async () => {
+            const id = input.dataset.id;
+            await updateDoc(doc(db, "prizes", id), { description: input.value });
+            showToast("Prize updated.", "success");
+          });
+        });
+        document.querySelectorAll(".prize-awarded").forEach(cb => {
+          cb.addEventListener("change", async () => {
+            const id = cb.dataset.id;
+            await updateDoc(doc(db, "prizes", id), { awarded: cb.checked });
+            showToast("Prize updated.", "success");
+          });
+        });
+      } catch (error) {
+        console.error(error);
+        prizesList.innerHTML = `<div class="empty">Error loading prizes.</div>`;
+      }
+    }
+
+    async function loadLeaderboard(quarterId) {
+      if (!quarterId) {
+        leaderboardTop.innerHTML = `<div class="empty">Select a quarter.</div>`;
+        leaderboardNext.innerHTML = `<div class="empty">Select a quarter.</div>`;
+        return;
+      }
+      try {
+        const q = query(leaderboardCollection, where("quarterId", "==", quarterId));
+        const snapshot = await getDocs(q);
+        let data = [];
+        if (!snapshot.empty) {
+          const docData = snapshot.docs[0].data();
+          data = docData.entries || [];
+        } else {
+          const sorted = [...allStudents].sort((a, b) => (b.bucks || 0) - (a.bucks || 0));
+          data = sorted.map((s, i) => ({
+            rank: i + 1,
+            studentId: s.id,
+            name: s.displayName || "Unknown",
+            email: s.email || "",
+            bucks: s.bucks || 0
+          }));
+        }
+        const top = data.slice(0, 10);
+        const next = data.slice(10, 20);
+        if (!top.length) {
+          leaderboardTop.innerHTML = `<div class="empty">No data.</div>`;
+          leaderboardNext.innerHTML = `<div class="empty">No data.</div>`;
+          return;
+        }
+        leaderboardTop.innerHTML = top.map((item, i) => `
+          <div class="leaderboard-item leaderboard-top">
+            <span class="leaderboard-rank">#${i + 1}</span>
+            <span class="leaderboard-name">${escapeHtml(item.name)}</span>
+            <span class="leaderboard-bucks">${item.bucks} Bucks</span>
+          </div>
+        `).join("");
+        if (!next.length) {
+          leaderboardNext.innerHTML = `<div class="empty">No more entries.</div>`;
+        } else {
+          leaderboardNext.innerHTML = next.map((item, i) => `
+            <div class="leaderboard-item">
+              <span class="leaderboard-rank">#${i + 11}</span>
+              <span class="leaderboard-name">${escapeHtml(item.name)}</span>
+              <span class="leaderboard-bucks">${item.bucks} Bucks</span>
+            </div>
+          `).join("");
+        }
+      } catch (error) {
+        console.error(error);
+        leaderboardTop.innerHTML = `<div class="empty">Error loading leaderboard.</div>`;
+        leaderboardNext.innerHTML = `<div class="empty">Error loading leaderboard.</div>`;
+      }
+    }
+
+    lbQuarterSelect.addEventListener("change", () => {
+      if (lbQuarterSelect.value) loadLeaderboard(lbQuarterSelect.value);
+    });
+
+    refreshLeaderboardBtn.addEventListener("click", async () => {
+      const quarterId = lbQuarterSelect.value;
+      if (!quarterId) { showToast("Select a quarter.", "error"); return; }
+      try {
+        const sorted = [...allStudents].sort((a, b) => (b.bucks || 0) - (a.bucks || 0));
+        const entries = sorted.map((s, i) => ({
+          rank: i + 1,
+          studentId: s.id,
+          name: s.displayName || "Unknown",
+          email: s.email || "",
+          bucks: s.bucks || 0
+        }));
+        const existing = await getDocs(query(leaderboardCollection, where("quarterId", "==", quarterId)));
+        if (!existing.empty) {
+          await updateDoc(doc(db, "leaderboards", existing.docs[0].id), { entries, updatedAt: serverTimestamp() });
+        } else {
+          await addDoc(leaderboardCollection, { quarterId, entries, createdAt: serverTimestamp() });
+        }
+        showToast("Leaderboard updated!", "success");
+        loadLeaderboard(quarterId);
+      } catch (error) {
+        console.error(error);
+        showToast("Error updating leaderboard.", "error");
+      }
+    });
+
+    togglePublicLeaderboardBtn.addEventListener("click", async () => {
+      const quarterId = lbQuarterSelect.value;
+      if (!quarterId) { showToast("Select a quarter.", "error"); return; }
+      try {
+        const existing = await getDocs(query(leaderboardCollection, where("quarterId", "==", quarterId)));
+        if (existing.empty) { showToast("No leaderboard found. Refresh first.", "error"); return; }
+        const ref = doc(db, "leaderboards", existing.docs[0].id);
+        const snap = await getDoc(ref);
+        const current = snap.data().public || false;
+        await updateDoc(ref, { public: !current });
+        showToast(`Leaderboard ${!current ? 'shown' : 'hidden'} to public.`, "success");
+      } catch (error) {
+        console.error(error);
+        showToast("Error updating visibility.", "error");
+      }
+    });
+
+    exportLeaderboardBtn.addEventListener("click", () => {
+      const quarterId = lbQuarterSelect.value;
+      if (!quarterId) { showToast("Select a quarter.", "error"); return; }
+      const q = quarters.find(q => q.id === quarterId);
+      const name = q ? q.name : "Quarter";
+      const data = allStudents.map(s => ({ name: s.displayName || "Unknown", email: s.email || "", bucks: s.bucks || 0 }));
+      data.sort((a, b) => b.bucks - a.bucks);
+      let csv = "Rank,Name,Email,Bucks\n";
+      data.forEach((s, i) => csv += `${i + 1},"${s.name}","${s.email}",${s.bucks}\n`);
+      downloadCSV(csv, `leaderboard_${name}.csv`);
+    });
+
+    function downloadCSV(csv, filename) {
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    exportAttendanceBtn.addEventListener("click", () => {
+      let csv = "Name,Email,Events Attended,Total Bucks\n";
+      allStudents.forEach(s => {
+        csv += `"${s.displayName || "Unknown"}","${s.email || ""}",${s.eventsAttended || 0},${s.bucks || 0}\n`;
+      });
+      downloadCSV(csv, "student_attendance.csv");
+    });
+
+    exportBucksBtn.addEventListener("click", () => {
+      let csv = "Name,Email,Total Bucks,Adjustments\n";
+      allStudents.forEach(s => {
+        const adj = Array.isArray(s.bucksAdjustments) ? s.bucksAdjustments.length : 0;
+        csv += `"${s.displayName || "Unknown"}","${s.email || ""}",${s.bucks || 0},${adj}\n`;
+      });
+      downloadCSV(csv, "bucks_earned.csv");
+    });
+
+    exportLeaderboardBtn2.addEventListener("click", () => {
+      const sorted = [...allStudents].sort((a, b) => (b.bucks || 0) - (a.bucks || 0));
+      let csv = "Rank,Name,Email,Bucks\n";
+      sorted.forEach((s, i) => csv += `${i + 1},"${s.displayName || "Unknown"}","${s.email || ""}",${s.bucks || 0}\n`);
+      downloadCSV(csv, "full_leaderboard.csv");
+    });
+
+    exportWinnersBtn.addEventListener("click", async () => {
+      const q = quarters.find(q => q.closed);
+      if (!q) { showToast("No closed quarters found.", "error"); return; }
+      const snap = await getDocs(query(prizesCollection, where("quarterId", "==", q.id)));
+      let csv = "Rank,Prize,Description,Awarded\n";
+      snap.docs.forEach(d => {
+        const p = d.data();
+        csv += `"${p.rank || ""}","","${p.description || ""}",${p.awarded ? "Yes" : "No"}\n`;
+      });
+      downloadCSV(csv, `winners_${q.name}.csv`);
+    });
+
+    exportEventAttendanceBtn.addEventListener("click", () => {
+      let csv = "Event,Date,Student Name,Student Email\n";
+      events.forEach(e => {
+        const students = allStudents.filter(s => {
+          const checkins = Array.isArray(s.checkedInEvents) ? s.checkedInEvents : [];
+          return checkins.some(c => c.eventId === e.id || c.id === e.id);
+        });
+        students.forEach(s => {
+          csv += `"${formatEventDisplay(e)}","${e.date || ""}","${s.displayName || "Unknown"}","${s.email || ""}"\n`;
+        });
+      });
+      downloadCSV(csv, "event_attendance.csv");
+    });
+
+    // Auto-refresh checkin page event select every minute
+    setInterval(() => {
+      if (document.getElementById('checkinPage').classList.contains('hidden') === false) {
+        populateEventSelect();
+      }
+    }, 60000);
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.replace("/index.html"); return; }
+      const email = (user.email || "").trim().toLowerCase();
+      currentAdminEmail = email;
+      try {
+        const q = query(adminCollection, where("email", "==", email));
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) {
+          await signOut(auth);
+          window.location.replace("/index.html");
+          return;
+        }
+      } catch (e) {
+        console.error(e);
+        await signOut(auth);
+        window.location.replace("/index.html");
+        return;
+      }
+      const name = user.displayName || "Administrator";
+      accountName.textContent = name;
+      accountEmail.textContent = user.email || "";
+      profilePicture.src = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=5B2D90&color=fff&size=200`;
+      
+      setupEventsListener();
+      setupAdminListener();
+      setupStudentsListener();
+      setupQuartersListener();
+    });
   </script>
-
 </body>
-
 </html>

@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Wiley Bucks</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Wiley Bucks">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#5B2D90">
+  <title>Wiley Bucks - Leaderboard</title>
   <link rel="manifest" href="manifest.json">
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
   <style>
     * {
@@ -23,6 +20,10 @@
       padding: 0;
       box-sizing: border-box;
       font-family: Inter, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     body {
@@ -30,6 +31,7 @@
       color: #222;
       min-height: 100vh;
       padding: 32px 20px calc(90px + env(safe-area-inset-bottom));
+      touch-action: manipulation;
     }
 
     h1 {
@@ -58,15 +60,27 @@
       min-width: 0;
     }
 
+    .rank-card .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e9e9e9;
+      margin-bottom: 8px;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+
     .rank-card h2 {
       font-size: 28px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .rank-card .name {
       font-weight: 700;
       font-size: .95rem;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -106,16 +120,31 @@
     .leaderboard-item {
       background: #fff;
       border-radius: 14px;
-      padding: 16px;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
+      gap: 12px;
       box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+      touch-action: manipulation;
+    }
+
+    .leaderboard-item .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #e9e9e9;
+      flex-shrink: 0;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
     }
 
     .rank-number {
       width: 35px;
       font-weight: 700;
       color: #777;
+      flex-shrink: 0;
     }
 
     .user-info {
@@ -177,6 +206,8 @@
       justify-content: space-around;
       align-items: center;
       box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
+      z-index: 100;
+      touch-action: manipulation;
     }
 
     .nav-item {
@@ -189,6 +220,10 @@
       gap: 2px;
       text-decoration: none;
       color: #777;
+      touch-action: manipulation;
+      cursor: pointer;
+      background: none;
+      border: none;
     }
 
     .nav-item:hover,
@@ -198,11 +233,28 @@
 
     .nav-item .material-symbols-outlined {
       font-size: 24px;
+      pointer-events: none;
     }
 
     .nav-item span:last-child {
       font-size: .72rem;
       font-weight: 600;
+      pointer-events: none;
+    }
+
+    a {
+      text-decoration: none;
+      touch-action: manipulation;
+    }
+
+    img {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+
+    button {
+      touch-action: manipulation;
     }
 
     @media (max-width: 480px) {
@@ -216,7 +268,12 @@
       }
 
       .rank-card {
-        padding: 18px 6px;
+        padding: 14px 6px;
+      }
+
+      .rank-card .avatar {
+        width: 40px;
+        height: 40px;
       }
 
       .rank-card .name {
@@ -225,6 +282,16 @@
 
       .rank-card .bucks {
         font-size: .75rem;
+      }
+
+      .leaderboard-item {
+        padding: 12px 14px;
+        gap: 10px;
+      }
+
+      .leaderboard-item .avatar {
+        width: 34px;
+        height: 34px;
       }
     }
   </style>
@@ -237,76 +304,60 @@
 
   <div class="top-3-container">
     <div class="rank-card second">
+      <img class="avatar" id="secondAvatar" src="" alt="">
       <h2 id="secondRank">2</h2>
       <div class="name" id="secondName">—</div>
       <div class="bucks" id="secondBucks">0 Bucks</div>
     </div>
 
     <div class="rank-card first">
+      <img class="avatar" id="firstAvatar" src="" alt="">
       <h2 id="firstRank">1</h2>
       <div class="name" id="firstName">—</div>
       <div class="bucks" id="firstBucks">0 Bucks</div>
     </div>
 
     <div class="rank-card third">
+      <img class="avatar" id="thirdAvatar" src="" alt="">
       <h2 id="thirdRank">3</h2>
       <div class="name" id="thirdName">—</div>
       <div class="bucks" id="thirdBucks">0 Bucks</div>
     </div>
   </div>
 
-  <h3>Leaderboard</h3>
+  <h3>All Rankings</h3>
 
   <div class="leaderboard-list" id="leaderboardList">
-    <div class="loading">
-      Loading leaderboard...
-    </div>
+    <div class="loading">Loading leaderboard...</div>
   </div>
 
   <nav class="nav-bar">
-
     <a href="index.html" class="nav-item">
       <span class="material-symbols-outlined">home</span>
       <span>Home</span>
     </a>
-
     <a href="prizes.html" class="nav-item">
       <span class="material-symbols-outlined">shopping_bag</span>
       <span>Prizes</span>
     </a>
-
     <a href="checkin.html" class="nav-item">
       <span class="material-symbols-outlined">qr_code_scanner</span>
       <span>Check In</span>
     </a>
-
     <a href="leaderboard.html" class="nav-item active">
       <span class="material-symbols-outlined">leaderboard</span>
       <span>Leaderboard</span>
     </a>
-
     <a href="account.html" class="nav-item">
       <span class="material-symbols-outlined">person</span>
       <span>Account</span>
     </a>
-
   </nav>
 
   <script type="module">
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
-    import {
-      getAuth,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-
-    import {
-      getFirestore,
-      collection,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA4ZMuE3-l-PwTQlPvLpykFzUvk7QDF9Z0",
@@ -323,71 +374,84 @@
     const db = getFirestore(app);
 
     const leaderboardList = document.getElementById("leaderboardList");
-
     const firstName = document.getElementById("firstName");
     const firstBucks = document.getElementById("firstBucks");
-
+    const firstAvatar = document.getElementById("firstAvatar");
     const secondName = document.getElementById("secondName");
     const secondBucks = document.getElementById("secondBucks");
-
+    const secondAvatar = document.getElementById("secondAvatar");
     const thirdName = document.getElementById("thirdName");
     const thirdBucks = document.getElementById("thirdBucks");
+    const thirdAvatar = document.getElementById("thirdAvatar");
+
+    function getInitials(name) {
+      if (!name) return '?';
+      const parts = name.trim().split(' ');
+      if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+      return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    }
+
+    function getAvatarUrl(user) {
+      if (user.photoURL) {
+        return user.photoURL;
+      }
+      const name = user.displayName || 'Student';
+      const initials = getInitials(name);
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=5B2D90&color=fff&size=128&font-size=0.5&bold=true`;
+    }
 
     function formatBucks(amount) {
       return `${Number(amount || 0).toLocaleString()} Bucks`;
     }
 
-    function updateTopCard(elementName, elementBucks, user) {
+    function updateTopCard(elementName, elementBucks, elementAvatar, user) {
       if (!user) {
         elementName.textContent = "—";
         elementBucks.textContent = "0 Bucks";
+        elementAvatar.src = "";
+        elementAvatar.style.display = "none";
         return;
       }
-
       elementName.textContent = user.displayName || "Wildcat";
       elementBucks.textContent = formatBucks(user.bucks);
+      elementAvatar.src = getAvatarUrl(user);
+      elementAvatar.style.display = "block";
     }
 
     function renderLeaderboard(users) {
-
       users.sort((a, b) => {
         return Number(b.bucks || 0) - Number(a.bucks || 0);
       });
 
-      updateTopCard(
-        firstName,
-        firstBucks,
-        users[0]
-      );
-
-      updateTopCard(
-        secondName,
-        secondBucks,
-        users[1]
-      );
-
-      updateTopCard(
-        thirdName,
-        thirdBucks,
-        users[2]
-      );
+      updateTopCard(firstName, firstBucks, firstAvatar, users[0] || null);
+      updateTopCard(secondName, secondBucks, secondAvatar, users[1] || null);
+      updateTopCard(thirdName, thirdBucks, thirdAvatar, users[2] || null);
 
       leaderboardList.innerHTML = "";
 
+      if (users.length === 0) {
+        leaderboardList.innerHTML = `<div class="empty">No students found.</div>`;
+        return;
+      }
+
       if (users.length <= 3) {
+        leaderboardList.innerHTML = `<div class="empty">More students will appear as they earn Bucks.</div>`;
         return;
       }
 
       users.slice(3).forEach((user, index) => {
-
         const rank = index + 4;
-
         const item = document.createElement("div");
         item.className = "leaderboard-item";
 
         const rankNumber = document.createElement("div");
         rankNumber.className = "rank-number";
         rankNumber.textContent = rank;
+
+        const avatar = document.createElement("img");
+        avatar.className = "avatar";
+        avatar.src = getAvatarUrl(user);
+        avatar.alt = "";
 
         const userInfo = document.createElement("div");
         userInfo.className = "user-info";
@@ -401,67 +465,59 @@
         userBucks.textContent = formatBucks(user.bucks);
 
         userInfo.appendChild(userName);
-
         item.appendChild(rankNumber);
+        item.appendChild(avatar);
         item.appendChild(userInfo);
         item.appendChild(userBucks);
-
         leaderboardList.appendChild(item);
       });
     }
 
-    onAuthStateChanged(auth, user => {
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
 
+    document.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+    });
+
+    onAuthStateChanged(auth, user => {
       if (!user) {
-        window.location.replace("/student.html");
+        window.location.replace("/index.html");
         return;
       }
 
       const email = (user.email || "").trim().toLowerCase();
 
-      if (!email.endsWith("@students.rfsd.k12.wi.us")) {
+      if (email.endsWith("@gmail.com") || email.endsWith("@rfsd.k12.wi.us")) {
         window.location.replace("/admin.html");
         return;
       }
 
-      onSnapshot(
-        collection(db, "users"),
-        snapshot => {
+      if (!email.endsWith("@students.rfsd.k12.wi.us")) {
+        window.location.replace("/index.html");
+        return;
+      }
 
-          const users = [];
-
-          snapshot.forEach(doc => {
-
-            const data = doc.data();
-
-            users.push({
-              id: doc.id,
-              displayName: data.displayName || "Wildcat",
-              bucks: Number(data.bucks || 0),
-              eventsAttended: Number(data.eventsAttended || 0)
-            });
-
+      onSnapshot(collection(db, "users"), snapshot => {
+        const users = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          users.push({
+            id: doc.id,
+            displayName: data.displayName || "Wildcat",
+            photoURL: data.photoURL || "",
+            bucks: Number(data.bucks || 0),
+            eventsAttended: Number(data.eventsAttended || 0)
           });
-
-          renderLeaderboard(users);
-
-        },
-        error => {
-
-          console.error(
-            "Leaderboard error:",
-            error
-          );
-
-          leaderboardList.innerHTML = `
-                    <div class="error">
-                        Unable to load the leaderboard. Please try again.
-                    </div>
-                `;
-
-        }
-      );
-
+        });
+        renderLeaderboard(users);
+      }, error => {
+        console.error("Leaderboard error:", error);
+        leaderboardList.innerHTML = `
+          <div class="error">Unable to load the leaderboard. Please try again.</div>
+        `;
+      });
     });
   </script>
 
