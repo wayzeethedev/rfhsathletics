@@ -63,39 +63,129 @@
     }
     .event-card {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
+      align-items: stretch;
+      gap: 14px;
+      padding: 14px;
     }
-    .event-main {
-      min-width: 0;
+    .event-icon-box {
+      width: 56px;
+      min-height: 56px;
+      background: #f0eef4;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #002E57;
+    }
+    .event-icon-box .material-symbols-outlined {
+      font-size: 28px;
+    }
+    .event-content {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+    .event-date-box {
+      background: #f6f7fb;
+      border-radius: 10px;
+      padding: 6px 12px;
+      display: inline-block;
+      align-self: flex-start;
+      font-size: .75rem;
+      font-weight: 600;
+      color: #555;
+    }
+    .event-title-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     .event-title {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
+      line-height: 1.3;
     }
-    .event-matchup {
-      color: #666;
+    .event-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+      color: #555;
       font-size: .85rem;
-      margin-top: 3px;
     }
-    .event-info {
+    .event-details span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .event-details .material-symbols-outlined {
+      font-size: 16px;
       color: #777;
-      font-size: .8rem;
-      line-height: 1.5;
-      margin-top: 7px;
+    }
+    .event-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 4px;
+      flex-wrap: wrap;
+      gap: 8px;
     }
     .event-points {
       color: #002E57;
-      font-size: .85rem;
       font-weight: 700;
-      white-space: nowrap;
+      font-size: .9rem;
+      background: #eef4fc;
+      padding: 4px 14px;
+      border-radius: 20px;
     }
     .event-actions {
       display: flex;
-      gap: 7px;
-      flex-shrink: 0;
+      gap: 6px;
+    }
+    .event-actions button {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: .75rem;
+      background: #f0eef4;
+      color: #002E57;
+    }
+    .event-actions .danger-btn-sm {
+      background: #fff0f0;
+      color: #c62828;
+    }
+    .event-actions .icon-btn-sm {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: #f0eef4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .event-actions .icon-btn-sm .material-symbols-outlined {
+      font-size: 18px;
+    }
+    .event-status-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: .7rem;
+      font-weight: 600;
+    }
+    .event-status-badge.active {
+      background: #eef8f0;
+      color: #2e7d32;
+    }
+    .event-status-badge.cancelled {
+      background: #fff3e0;
+      color: #e65100;
+    }
+    .event-status-badge.ended {
+      background: #f0f0f0;
+      color: #666;
     }
     button {
       border: none;
@@ -142,22 +232,6 @@
     }
     .danger-btn:hover:not(:disabled) {
       background: #ffe0e0;
-    }
-    .icon-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 11px;
-      background: #f0eef4;
-      color: #002E57;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .icon-btn:hover:not(:disabled) {
-      background: #e5e2ec;
-    }
-    .icon-btn .material-symbols-outlined {
-      font-size: 21px;
     }
     .empty {
       text-align: center;
@@ -261,16 +335,52 @@
     }
     .scanner-card {
       text-align: center;
+      padding: 0;
+      background: #111;
+      border-radius: 0;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      margin: 0;
+      max-width: 100%;
+      box-shadow: none;
+      display: none;
+      flex-direction: column;
+      padding-top: env(safe-area-inset-top);
+    }
+    .scanner-card.active {
+      display: flex;
+    }
+    .scanner-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      flex-shrink: 0;
+      backdrop-filter: blur(8px);
+    }
+    .scanner-top-bar h2 {
+      font-size: 16px;
+      margin: 0;
+      color: #fff;
+      flex: 1;
+      text-align: center;
+    }
+    .scanner-top-bar .close-scanner {
+      background: none;
+      color: #fff;
+      font-size: 24px;
+      padding: 4px 8px;
     }
     .scanner-wrapper {
+      flex: 1;
       width: 100%;
-      max-width: 430px;
-      aspect-ratio: 1;
-      margin: 0 auto 18px;
-      background: #111;
-      border-radius: 20px;
-      overflow: hidden;
+      background: #000;
       position: relative;
+      overflow: hidden;
+      min-height: 0;
     }
     #reader {
       width: 100%;
@@ -302,52 +412,199 @@
       font-size: .85rem;
       opacity: .75;
     }
-    .scanner-status {
-      border-radius: 12px;
-      padding: 12px;
-      background: #f6f7fb;
-      color: #666;
+    .scanner-bottom {
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      padding: 12px 16px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 50vh;
+      overflow-y: auto;
+      color: #fff;
+    }
+    .scanner-bottom .scanner-status {
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.08);
+      color: #ccc;
       font-size: .85rem;
-      margin-bottom: 14px;
-      transition: all 0.2s;
+      margin: 0;
     }
-    .scanner-status.success {
-      background: #eef8f0;
-      color: #2e7d32;
+    .scanner-bottom .scanner-status.success {
+      background: rgba(46, 125, 50, 0.3);
+      color: #81c784;
     }
-    .scanner-status.error {
-      background: #fff0f0;
-      color: #c62828;
+    .scanner-bottom .scanner-status.error {
+      background: rgba(198, 40, 40, 0.3);
+      color: #ef9a9a;
     }
-    .scanner-status.loading {
-      background: #fff8e1;
-      color: #f57f17;
+    .scanner-bottom .scanner-status.loading {
+      background: rgba(245, 127, 23, 0.2);
+      color: #ffcc80;
     }
     .student-result {
       display: none;
-      text-align: left;
-      background: #f6f7fb;
-      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
       padding: 14px;
-      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
     .student-result.show {
       display: block;
     }
-    .student-name {
+    .student-result .student-name {
       font-weight: 700;
-      font-size: 16px;
+      font-size: 18px;
+      color: #fff;
     }
-    .student-email {
-      color: #777;
+    .student-result .student-email {
+      color: #aaa;
       font-size: .8rem;
-      margin-top: 3px;
+      margin-top: 2px;
     }
-    .student-bucks {
-      color: #002E57;
+    .student-result .student-bucks {
+      color: #81c784;
       font-weight: 700;
+      font-size: .9rem;
+      margin-top: 6px;
+    }
+    .scanner-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .scanner-actions button {
+      flex: 1;
+      min-width: 80px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
       font-size: .85rem;
-      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .scanner-actions button .material-symbols-outlined {
+      font-size: 20px;
+    }
+    .scanner-actions button:active {
+      background: rgba(255,255,255,0.25);
+    }
+    .scanner-popup-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 3500;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 20px;
+    }
+    .scanner-popup-overlay.show {
+      display: flex;
+    }
+    .scanner-popup {
+      background: #1e1e1e;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      padding: 20px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .scanner-popup .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .scanner-popup .popup-header h3 {
+      font-size: 18px;
+    }
+    .scanner-popup .popup-close {
+      background: none;
+      color: #aaa;
+      font-size: 24px;
+      padding: 4px 8px;
+    }
+    .scanner-popup .popup-search-box {
+      display: flex;
+      gap: 8px;
+    }
+    .scanner-popup .popup-search-box input {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: .9rem;
+    }
+    .scanner-popup .popup-search-box input::placeholder {
+      color: #888;
+    }
+    .scanner-popup .popup-search-box button {
+      background: #002E57;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: .85rem;
+    }
+    .scanner-popup .popup-results {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 50vh;
+    }
+    .scanner-popup .popup-results .popup-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: .85rem;
+    }
+    .scanner-popup .popup-results .popup-item:last-child {
+      border-bottom: none;
+    }
+    .scanner-popup .popup-results .popup-item .item-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .scanner-popup .popup-results .popup-item .item-info .name {
+      font-weight: 600;
+    }
+    .scanner-popup .popup-results .popup-item .item-info .email {
+      color: #888;
+      font-size: .75rem;
+    }
+    .scanner-popup .popup-results .popup-item .item-info .bucks-display {
+      color: #81c784;
+      font-size: .75rem;
+      margin-top: 2px;
+    }
+    .scanner-popup .popup-results .popup-item button {
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: .75rem;
+      background: #002E57;
+      color: #fff;
+    }
+    .scanner-popup .popup-results .popup-item button.remove-btn {
+      background: rgba(198, 40, 40, 0.3);
+      color: #ef9a9a;
+    }
+    .scanner-popup .empty-state {
+      text-align: center;
+      color: #888;
+      padding: 30px 0;
+      font-size: .9rem;
     }
     .account-card {
       display: flex;
@@ -399,10 +656,13 @@
       box-shadow: 0 -2px 12px rgba(0, 0, 0, .06);
       z-index: 4000;
       touch-action: manipulation;
+      overflow-x: auto;
+      gap: 0;
     }
     .nav-item {
-      flex: 1;
+      flex: 0 0 auto;
       height: 72px;
+      min-width: 56px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -415,18 +675,21 @@
       cursor: pointer;
       background: none;
       border: none;
+      padding: 0 6px;
+      position: relative;
     }
     .nav-item.active {
       color: #002E57;
     }
     .nav-item .material-symbols-outlined {
-      font-size: 24px;
+      font-size: 22px;
       pointer-events: none;
     }
     .nav-item span:last-child {
-      font-size: .72rem;
+      font-size: .6rem;
       font-weight: 600;
       pointer-events: none;
+      white-space: nowrap;
     }
     .hidden {
       display: none !important;
@@ -816,26 +1079,6 @@
     .export-grid button:hover {
       background: #e5e2ec;
     }
-    .event-status-badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: .7rem;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-    .event-status-badge.active {
-      background: #eef8f0;
-      color: #2e7d32;
-    }
-    .event-status-badge.cancelled {
-      background: #fff3e0;
-      color: #e65100;
-    }
-    .event-status-badge.ended {
-      background: #f0f0f0;
-      color: #666;
-    }
     .checkbox-group {
       display: flex;
       align-items: center;
@@ -860,6 +1103,50 @@
       -webkit-user-drag: none;
       user-drag: none;
     }
+    .more-menu {
+      position: fixed;
+      bottom: 70px;
+      right: 16px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      padding: 8px 0;
+      z-index: 4500;
+      min-width: 160px;
+      display: none;
+      flex-direction: column;
+    }
+    .more-menu.show {
+      display: flex;
+    }
+    .more-menu button {
+      background: none;
+      padding: 12px 18px;
+      font-size: .85rem;
+      color: #222;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      border-radius: 0;
+    }
+    .more-menu button:hover {
+      background: #f5f5f5;
+    }
+    .more-menu button .material-symbols-outlined {
+      font-size: 20px;
+      color: #555;
+    }
+    .more-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 4499;
+      display: none;
+    }
+    .more-overlay.show {
+      display: block;
+    }
     @media (max-width: 520px) {
       body {
         padding-left: 16px;
@@ -870,10 +1157,15 @@
         gap: 0;
       }
       .event-card {
-        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 10px;
       }
-      .event-actions {
-        flex-direction: column;
+      .event-icon-box {
+        width: 48px;
+        min-height: 48px;
+      }
+      .event-icon-box .material-symbols-outlined {
+        font-size: 24px;
       }
       .student-list-item {
         flex-wrap: wrap;
@@ -889,6 +1181,29 @@
       .export-grid {
         grid-template-columns: 1fr;
       }
+      .nav-item {
+        min-width: 44px;
+        padding: 0 4px;
+      }
+      .nav-item span:last-child {
+        font-size: .5rem;
+      }
+      .nav-item .material-symbols-outlined {
+        font-size: 20px;
+      }
+      .scanner-bottom {
+        max-height: 55vh;
+        padding: 10px 12px;
+      }
+      .scanner-actions button {
+        font-size: .75rem;
+        padding: 10px 12px;
+        min-width: 60px;
+      }
+      .scanner-popup {
+        padding: 16px;
+        max-height: 85vh;
+      }
     }
   </style>
 </head>
@@ -901,37 +1216,20 @@
         <button class="primary-btn" id="addEventBtn">Add Event</button>
       </div>
       <div class="section">
-        <h2>Events</h2>
+        <h2>Upcoming & Active Events</h2>
         <div id="eventsList"></div>
       </div>
     </section>
 
     <section id="checkinPage" class="hidden">
       <h1>Check In</h1>
-      <p class="subtitle">Select an event and scan student QR codes. Only events open for check-in (within 3 hours of start) are shown.</p>
+      <p class="subtitle">Select an event and scan student QR codes. Check-in opens 3h before, closes 5h after.</p>
       <div class="card">
         <div class="form-group">
           <label for="eventSelect">Event</label>
           <select id="eventSelect"><option value="">Select an event</option></select>
         </div>
         <button class="primary-btn" id="startScannerBtn">Start Scanner</button>
-      </div>
-      <div class="card scanner-card hidden" id="scannerCard">
-        <h2 id="scannerEventName">Scan Student</h2>
-        <div class="scanner-wrapper">
-          <div id="reader"></div>
-          <div class="scanner-placeholder" id="scannerPlaceholder">
-            <span class="material-symbols-outlined">qr_code_scanner</span>
-            <p>Point the camera at a student's QR code</p>
-          </div>
-        </div>
-        <div class="scanner-status" id="scannerStatus">Waiting for scan...</div>
-        <div class="student-result" id="studentResult">
-          <div class="student-name" id="studentName"></div>
-          <div class="student-email" id="studentEmail"></div>
-          <div class="student-bucks" id="studentBucks"></div>
-        </div>
-        <button class="secondary-btn" id="stopScannerBtn">Stop Scanner</button>
       </div>
     </section>
 
@@ -1029,7 +1327,7 @@
 
     <section id="eventsCheckinPage" class="hidden">
       <h1>Event Check-ins</h1>
-      <p class="subtitle">View and manage check-ins for each event. Check-ins automatically open 3 hours before the event.</p>
+      <p class="subtitle">View and manage check-ins for each event.</p>
       <div class="card">
         <div class="form-group">
           <label for="checkinEventSelect">Event</label>
@@ -1125,10 +1423,17 @@
       <div class="form-group">
         <label for="eventType">Event Type</label>
         <select id="eventType">
-          <option value="Sports">Sports</option>
-          <option value="Band Concert">Band Concert</option>
-          <option value="Choir Concert">Choir Concert</option>
-          <option value="Orchestra Concert">Orchestra Concert</option>
+          <option value="Football">Football</option>
+          <option value="Soccer">Soccer</option>
+          <option value="Basketball">Basketball</option>
+          <option value="Volleyball">Volleyball</option>
+          <option value="Baseball">Baseball</option>
+          <option value="Softball">Softball</option>
+          <option value="Track">Track</option>
+          <option value="Swim">Swim</option>
+          <option value="Band">Band</option>
+          <option value="Choir">Choir</option>
+          <option value="Orchestra">Orchestra</option>
           <option value="Theater">Theater</option>
           <option value="Academic">Academic</option>
           <option value="Other">Other</option>
@@ -1217,17 +1522,80 @@
 
   <div class="toast" id="toast"></div>
 
+  <div class="more-overlay" id="moreOverlay"></div>
+  <div class="more-menu" id="moreMenu">
+    <button data-page="eventsCheckinPage"><span class="material-symbols-outlined">checklist</span> Check-ins</button>
+    <button data-page="prizesPage"><span class="material-symbols-outlined">card_giftcard</span> Prizes</button>
+    <button data-page="quartersPage"><span class="material-symbols-outlined">calendar_month</span> Quarters</button>
+    <button data-page="reportsPage"><span class="material-symbols-outlined">bar_chart</span> Reports</button>
+    <button data-page="adminPage"><span class="material-symbols-outlined">admin_panel_settings</span> Admins</button>
+    <button data-page="accountPage"><span class="material-symbols-outlined">person</span> Account</button>
+  </div>
+
+  <!-- Full Screen Scanner -->
+  <div class="scanner-card" id="scannerCard">
+    <div class="scanner-top-bar">
+      <button class="close-scanner" id="closeScannerBtn"><span class="material-symbols-outlined">close</span></button>
+      <h2 id="scannerEventName">Scan Student</h2>
+      <div style="width:36px;"></div>
+    </div>
+    <div class="scanner-wrapper">
+      <div id="reader"></div>
+      <div class="scanner-placeholder" id="scannerPlaceholder">
+        <span class="material-symbols-outlined">qr_code_scanner</span>
+        <p>Point the camera at a student's QR code</p>
+      </div>
+    </div>
+    <div class="scanner-bottom">
+      <div class="scanner-status" id="scannerStatus">Waiting for scan...</div>
+      <div class="student-result" id="studentResult">
+        <div class="student-name" id="studentName"></div>
+        <div class="student-email" id="studentEmail"></div>
+        <div class="student-bucks" id="studentBucks"></div>
+      </div>
+      <div class="scanner-actions">
+        <button id="scannerSearchBtn"><span class="material-symbols-outlined">search</span> Search</button>
+        <button id="scannerCheckinsBtn"><span class="material-symbols-outlined">list</span> Check-ins</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Popup -->
+  <div class="scanner-popup-overlay" id="searchPopupOverlay">
+    <div class="scanner-popup">
+      <div class="popup-header">
+        <h3>Search Students</h3>
+        <button class="popup-close" id="searchPopupClose"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <div class="popup-search-box">
+        <input id="popupSearchInput" type="text" placeholder="Search by name or email...">
+        <button id="popupSearchBtn">Search</button>
+      </div>
+      <div class="popup-results" id="popupSearchResults">
+        <div class="empty-state">Type a name to search</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check-ins Popup -->
+  <div class="scanner-popup-overlay" id="checkinsPopupOverlay">
+    <div class="scanner-popup">
+      <div class="popup-header">
+        <h3>Checked-in Students</h3>
+        <button class="popup-close" id="checkinsPopupClose"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <div class="popup-results" id="popupCheckinsResults">
+        <div class="empty-state">Loading check-ins...</div>
+      </div>
+    </div>
+  </div>
+
   <nav class="nav-bar">
-    <a href="#" class="nav-item active" data-page="eventsPage"><span class="material-symbols-outlined">event</span><span>Events</span></a>
-    <a href="#" class="nav-item" data-page="checkinPage"><span class="material-symbols-outlined">qr_code_scanner</span><span>Check In</span></a>
-    <a href="#" class="nav-item" data-page="eventsCheckinPage"><span class="material-symbols-outlined">checklist</span><span>Check-ins</span></a>
-    <a href="#" class="nav-item" data-page="studentsPage"><span class="material-symbols-outlined">people</span><span>Students</span></a>
-    <a href="#" class="nav-item" data-page="leaderboardPage"><span class="material-symbols-outlined">leaderboard</span><span>Leaderboard</span></a>
-    <a href="#" class="nav-item" data-page="prizesPage"><span class="material-symbols-outlined">card_giftcard</span><span>Prizes</span></a>
-    <a href="#" class="nav-item" data-page="quartersPage"><span class="material-symbols-outlined">calendar_month</span><span>Quarters</span></a>
-    <a href="#" class="nav-item" data-page="reportsPage"><span class="material-symbols-outlined">bar_chart</span><span>Reports</span></a>
-    <a href="#" class="nav-item" data-page="adminPage"><span class="material-symbols-outlined">admin_panel_settings</span><span>Admins</span></a>
-    <a href="#" class="nav-item" data-page="accountPage"><span class="material-symbols-outlined">person</span><span>Account</span></a>
+    <button class="nav-item active" data-page="eventsPage"><span class="material-symbols-outlined">event</span><span>Events</span></button>
+    <button class="nav-item" data-page="checkinPage"><span class="material-symbols-outlined">qr_code_scanner</span><span>Check In</span></button>
+    <button class="nav-item" data-page="studentsPage"><span class="material-symbols-outlined">people</span><span>Students</span></button>
+    <button class="nav-item" data-page="leaderboardPage"><span class="material-symbols-outlined">leaderboard</span><span>Leaderboard</span></button>
+    <button class="nav-item" id="moreNavBtn"><span class="material-symbols-outlined">more_horiz</span><span>More</span></button>
   </nav>
 
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -1268,7 +1636,11 @@
     const leaderboardPage = document.getElementById("leaderboardPage");
     const quartersPage = document.getElementById("quartersPage");
     const reportsPage = document.getElementById("reportsPage");
-    const navItems = document.querySelectorAll(".nav-item");
+    const navItems = document.querySelectorAll(".nav-item:not(#moreNavBtn)");
+    const moreNavBtn = document.getElementById("moreNavBtn");
+    const moreMenu = document.getElementById("moreMenu");
+    const moreOverlay = document.getElementById("moreOverlay");
+    const moreMenuItems = moreMenu.querySelectorAll("button");
     const eventsList = document.getElementById("eventsList");
     const eventSelect = document.getElementById("eventSelect");
     const eventModal = document.getElementById("eventModal");
@@ -1347,6 +1719,17 @@
     const exportLeaderboardBtn2 = document.getElementById("exportLeaderboardBtn2");
     const exportWinnersBtn = document.getElementById("exportWinnersBtn");
     const exportEventAttendanceBtn = document.getElementById("exportEventAttendanceBtn");
+    const closeScannerBtn = document.getElementById("closeScannerBtn");
+    const scannerSearchBtn = document.getElementById("scannerSearchBtn");
+    const scannerCheckinsBtn = document.getElementById("scannerCheckinsBtn");
+    const searchPopupOverlay = document.getElementById("searchPopupOverlay");
+    const searchPopupClose = document.getElementById("searchPopupClose");
+    const popupSearchInput = document.getElementById("popupSearchInput");
+    const popupSearchBtn = document.getElementById("popupSearchBtn");
+    const popupSearchResults = document.getElementById("popupSearchResults");
+    const checkinsPopupOverlay = document.getElementById("checkinsPopupOverlay");
+    const checkinsPopupClose = document.getElementById("checkinsPopupClose");
+    const popupCheckinsResults = document.getElementById("popupCheckinsResults");
 
     let events = [];
     let editingEventId = null;
@@ -1365,6 +1748,7 @@
     let editingQuarterId = null;
     let currentCheckinEventId = null;
     let checkinRefreshInterval = null;
+    let scannerEventId = null;
 
     eventTicketsRequired.addEventListener("change", () => {
       ticketLinkGroup.classList.toggle("hidden", !eventTicketsRequired.checked);
@@ -1395,7 +1779,9 @@
       navItems.forEach(item => {
         item.classList.toggle("active", item.dataset.page === pageId);
       });
-      if (pageId !== "checkinPage") stopScanner();
+      moreNavBtn.classList.remove("active");
+      closeMoreMenu();
+      if (pageId !== "checkinPage") closeScannerFullscreen();
       if (pageId === "studentsPage" && !studentsUnsubscribe) {
         setupStudentsListener();
       }
@@ -1424,6 +1810,32 @@
       });
     });
 
+    function toggleMoreMenu() {
+      const isOpen = moreMenu.classList.contains("show");
+      if (isOpen) {
+        closeMoreMenu();
+      } else {
+        moreMenu.classList.add("show");
+        moreOverlay.classList.add("show");
+      }
+    }
+
+    function closeMoreMenu() {
+      moreMenu.classList.remove("show");
+      moreOverlay.classList.remove("show");
+    }
+
+    moreNavBtn.addEventListener("click", toggleMoreMenu);
+    moreOverlay.addEventListener("click", closeMoreMenu);
+
+    moreMenuItems.forEach(item => {
+      item.addEventListener("click", () => {
+        const page = item.dataset.page;
+        if (page) showPage(page);
+        closeMoreMenu();
+      });
+    });
+
     document.addEventListener('gesturestart', function(e) {
       e.preventDefault();
     });
@@ -1434,7 +1846,6 @@
 
     function formatEventDisplay(event) {
       let display = event.name || "Event";
-      if (event.type) display = `${event.type}: ${display}`;
       if (event.opponent) {
         const loc = event.locationType === "Home" ? "vs" : "at";
         display += ` ${loc} ${event.opponent}`;
@@ -1453,7 +1864,8 @@
       const eventDateTime = new Date(`${event.date}T${event.time || "00:00"}`);
       const now = new Date();
       const threeHoursBefore = new Date(eventDateTime.getTime() - 3 * 60 * 60 * 1000);
-      return now >= threeHoursBefore && now <= eventDateTime;
+      const fiveHoursAfter = new Date(eventDateTime.getTime() + 5 * 60 * 60 * 1000);
+      return now >= threeHoursBefore && now <= fiveHoursAfter;
     }
 
     function getStatusBadge(event) {
@@ -1462,6 +1874,26 @@
         return `<span class="event-status-badge active">Open</span>`;
       }
       return `<span class="event-status-badge ended">Closed</span>`;
+    }
+
+    function getEventIcon(type) {
+      const map = {
+        'Football': 'sports_football',
+        'Soccer': 'sports_soccer',
+        'Basketball': 'sports_basketball',
+        'Volleyball': 'sports_volleyball',
+        'Baseball': 'sports_baseball',
+        'Softball': 'sports_softball',
+        'Track': 'directions_run',
+        'Swim': 'pool',
+        'Band': 'music_note',
+        'Choir': 'mic',
+        'Orchestra': 'music_note',
+        'Theater': 'theater_comedy',
+        'Academic': 'school',
+        'Other': 'more_horiz'
+      };
+      return map[type] || 'event';
     }
 
     function setupEventsListener() {
@@ -1479,31 +1911,48 @@
     }
 
     function renderEvents() {
-      if (!events.length) {
-        eventsList.innerHTML = `<div class="card empty">No events yet. Add your first event.</div>`;
+      const now = new Date();
+      const filtered = events.filter(e => {
+        if (e.cancelled) return false;
+        const eventDateTime = new Date(`${e.date}T${e.time || "00:00"}`);
+        const fiveHoursAfter = new Date(eventDateTime.getTime() + 5 * 60 * 60 * 1000);
+        return now <= fiveHoursAfter;
+      });
+      if (!filtered.length) {
+        eventsList.innerHTML = `<div class="card empty">No upcoming or active events.</div>`;
         return;
       }
-      eventsList.innerHTML = events.map(event => `
+      eventsList.innerHTML = filtered.map(event => {
+        const isOpen = isCheckinOpen(event);
+        const dateStr = formatDate(event.date, event.time);
+        const icon = getEventIcon(event.type);
+        const displayName = formatEventDisplay(event);
+        return `
         <div class="card event-card">
-          <div class="event-main">
-            <div class="event-title">
-              ${escapeHtml(formatEventDisplay(event))}
+          <div class="event-icon-box">
+            <span class="material-symbols-outlined">${icon}</span>
+          </div>
+          <div class="event-content">
+            <div class="event-date-box">${event.date ? new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''} • ${event.time || ''}</div>
+            <div class="event-title-row">
+              <span class="event-title">${escapeHtml(displayName)}</span>
               ${getStatusBadge(event)}
             </div>
-            <div class="event-matchup">${escapeHtml(event.type || "")}${event.theme ? ` • Theme: ${escapeHtml(event.theme)}` : ""}</div>
-            <div class="event-info">
-              ${escapeHtml(formatDate(event.date, event.time))}<br>
-              ${escapeHtml(event.location || "")}
-              ${event.ticketsRequired ? ` • <a href="${escapeHtml(event.ticketLink || '#')}" target="_blank">Tickets</a>` : ""}
+            <div class="event-details">
+              ${event.location ? `<span><span class="material-symbols-outlined">location_on</span> ${escapeHtml(event.location)}</span>` : ''}
+              ${event.theme ? `<span><span class="material-symbols-outlined">style</span> ${escapeHtml(event.theme)}</span>` : ''}
+            </div>
+            <div class="event-bottom">
+              <span class="event-points">+${Number(event.points || 0)} Wiley Bucks</span>
+              <div class="event-actions">
+                ${event.ticketsRequired ? `<a href="${escapeHtml(event.ticketLink || '#')}" target="_blank" style="padding:6px 12px; border-radius:8px; font-size:.75rem; background:#eef4fc; color:#002E57; text-decoration:none; display:inline-block;">🎟️ Tickets</a>` : ''}
+                ${!event.cancelled ? `<button class="danger-btn-sm cancel-event" data-id="${event.id}">Cancel</button>` : `<button class="secondary-btn uncancel-event" data-id="${event.id}" style="padding:6px 12px; font-size:.75rem;">Restore</button>`}
+                <button class="icon-btn-sm edit-event" data-id="${event.id}"><span class="material-symbols-outlined">edit</span></button>
+              </div>
             </div>
           </div>
-          <div class="event-actions">
-            <div class="event-points">+${Number(event.points || 0)} Bucks</div>
-            ${!event.cancelled ? `<button class="secondary-btn cancel-event" data-id="${event.id}" style="padding:6px 10px; font-size:.7rem;">Cancel</button>` : `<button class="secondary-btn uncancel-event" data-id="${event.id}" style="padding:6px 10px; font-size:.7rem;">Restore</button>`}
-            <button class="icon-btn edit-event" data-id="${event.id}"><span class="material-symbols-outlined">edit</span></button>
-          </div>
         </div>
-      `).join("");
+      `}).join("");
       document.querySelectorAll(".edit-event").forEach(button => {
         button.addEventListener("click", () => openEditEvent(button.dataset.id));
       });
@@ -1529,7 +1978,8 @@
         if (e.cancelled) return false;
         const eventDateTime = new Date(`${e.date}T${e.time || "00:00"}`);
         const threeHoursBefore = new Date(eventDateTime.getTime() - 3 * 60 * 60 * 1000);
-        return now >= threeHoursBefore && now <= eventDateTime;
+        const fiveHoursAfter = new Date(eventDateTime.getTime() + 5 * 60 * 60 * 1000);
+        return now >= threeHoursBefore && now <= fiveHoursAfter;
       });
       eventSelect.innerHTML = `<option value="">Select an event</option>${openEvents.map(event => `<option value="${event.id}">${escapeHtml(formatEventDisplay(event))} — ${escapeHtml(event.date || "")}</option>`).join("")}`;
       if (openEvents.length === 0) {
@@ -1553,7 +2003,7 @@
     function openAddEvent() {
       editingEventId = null;
       modalTitle.textContent = "Add Event";
-      eventType.value = "Sports";
+      eventType.value = "Football";
       eventName.value = "";
       eventLocationType.value = "Home";
       eventOpponent.value = "";
@@ -1573,7 +2023,7 @@
       if (!event) return;
       editingEventId = id;
       modalTitle.textContent = "Edit Event";
-      eventType.value = event.type || "Sports";
+      eventType.value = event.type || "Football";
       eventName.value = event.name || "";
       eventLocationType.value = event.locationType || "Home";
       eventOpponent.value = event.opponent || "";
@@ -1649,18 +2099,28 @@
       }
     }
 
-    async function startScanner() {
+    function closeScannerFullscreen() {
+      scannerCard.classList.remove("active");
+      stopScanner();
+      searchPopupOverlay.classList.remove("show");
+      checkinsPopupOverlay.classList.remove("show");
+    }
+
+    async function openScannerFullscreen() {
       const eventId = eventSelect.value;
       if (!eventId) { showToast("Select an event first.", "error"); return; }
       const selectedEvent = events.find(event => event.id === eventId);
       if (!selectedEvent) { showToast("Event not found.", "error"); return; }
       if (selectedEvent.cancelled) { showToast("This event is cancelled.", "error"); return; }
-      if (!isCheckinOpen(selectedEvent)) { showToast("Check-ins are not yet open for this event. They open 3 hours before the event.", "error"); return; }
-      scannerEventName.textContent = `Scan for ${formatEventDisplay(selectedEvent)}`;
-      scannerCard.classList.remove("hidden");
+      if (!isCheckinOpen(selectedEvent)) { showToast("Check-ins are not open for this event.", "error"); return; }
+      
+      scannerEventId = eventId;
+      scannerEventName.textContent = formatEventDisplay(selectedEvent);
+      scannerCard.classList.add("active");
       scannerStatus.className = "scanner-status loading";
       scannerStatus.innerHTML = '<span class="spinner"></span>Starting camera...';
       studentResult.classList.remove("show");
+      
       if (html5QrCode) await stopScanner();
       html5QrCode = new Html5Qrcode("reader");
       try {
@@ -1678,7 +2138,7 @@
     }
 
     async function stopScanner() {
-      if (!html5QrCode || !scannerRunning) { scannerCard.classList.add("hidden"); return; }
+      if (!html5QrCode || !scannerRunning) return;
       try {
         await html5QrCode.stop();
         await html5QrCode.clear();
@@ -1699,9 +2159,8 @@
         if (!qrValue.startsWith("WILEY:")) throw new Error("Invalid Wiley Bucks QR code.");
         const studentUid = qrValue.substring(6).trim();
         if (!studentUid) throw new Error("Invalid student QR code.");
-        const eventId = eventSelect.value;
-        if (!eventId) throw new Error("No event selected.");
-        const selectedEvent = events.find(event => event.id === eventId);
+        if (!scannerEventId) throw new Error("No event selected.");
+        const selectedEvent = events.find(event => event.id === scannerEventId);
         if (!selectedEvent) throw new Error("Selected event no longer exists.");
         if (selectedEvent.cancelled) throw new Error("This event is cancelled.");
         if (!isCheckinOpen(selectedEvent)) throw new Error("Check-ins are not open for this event.");
@@ -1714,14 +2173,14 @@
           if (student.disabled) throw new Error("This account is disabled.");
           const checkedInEvents = Array.isArray(student.checkedInEvents) ? student.checkedInEvents : [];
           const alreadyCheckedIn = checkedInEvents.some(item => {
-            if (typeof item === "string") return item === eventId;
-            return item && (item.eventId === eventId || item.id === eventId);
+            if (typeof item === "string") return item === scannerEventId;
+            return item && (item.eventId === scannerEventId || item.id === scannerEventId);
           });
           const currentBucks = Number(student.bucks || 0);
           const currentEventsAttended = Number(student.eventsAttended || 0);
           result = { name: student.displayName || "Student", email: student.email || "", bucks: currentBucks, alreadyCheckedIn };
           if (alreadyCheckedIn) return;
-          const checkIn = { eventId, eventName: formatEventDisplay(selectedEvent), points: Number(selectedEvent.points || 0), checkedInAt: new Date().toISOString() };
+          const checkIn = { eventId: scannerEventId, eventName: formatEventDisplay(selectedEvent), points: Number(selectedEvent.points || 0), checkedInAt: new Date().toISOString() };
           transaction.update(studentRef, {
             checkedInEvents: [...checkedInEvents, checkIn],
             bucks: currentBucks + Number(selectedEvent.points || 0),
@@ -1743,7 +2202,10 @@
         scannerStatus.className = "scanner-status success";
         scannerStatus.textContent = `${result.name} checked in successfully! +${Number(selectedEvent.points || 0)} Bucks`;
         showToast(`${result.name} checked in! +${Number(selectedEvent.points || 0)} Bucks`, "success");
-        if (currentCheckinEventId === eventId) loadCheckins(eventId);
+        if (checkinsPopupOverlay.classList.contains("show")) {
+          loadCheckinsPopup();
+        }
+        if (currentCheckinEventId === scannerEventId) loadCheckins(scannerEventId);
       } catch (error) {
         console.error(error);
         scannerStatus.className = "scanner-status error";
@@ -1754,6 +2216,135 @@
       }
     }
 
+    async function loadCheckinsPopup() {
+      if (!scannerEventId) {
+        popupCheckinsResults.innerHTML = `<div class="empty-state">No event selected</div>`;
+        return;
+      }
+      const students = allStudents.filter(s => {
+        const checkins = Array.isArray(s.checkedInEvents) ? s.checkedInEvents : [];
+        return checkins.some(c => c.eventId === scannerEventId || c.id === scannerEventId);
+      });
+      if (!students.length) {
+        popupCheckinsResults.innerHTML = `<div class="empty-state">No students checked in yet</div>`;
+        return;
+      }
+      popupCheckinsResults.innerHTML = students.map(s => {
+        const checkin = (Array.isArray(s.checkedInEvents) ? s.checkedInEvents : []).find(c => c.eventId === scannerEventId || c.id === scannerEventId);
+        return `
+          <div class="popup-item">
+            <div class="item-info">
+              <span class="name">${escapeHtml(s.displayName || "Unknown")}</span>
+              <span class="email">${escapeHtml(s.email || "")}</span>
+            </div>
+            <span style="color:#81c784;font-weight:600;margin-right:8px;">+${checkin?.points || 0}</span>
+            <button class="remove-btn" data-student="${s.id}">Remove</button>
+          </div>
+        `;
+      }).join("");
+      document.querySelectorAll("#popupCheckinsResults .remove-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const studentId = btn.dataset.student;
+          if (confirm("Remove this check-in? This will deduct the Bucks.")) {
+            try {
+              const studentRef = doc(db, "users", studentId);
+              await runTransaction(db, async (transaction) => {
+                const snap = await transaction.get(studentRef);
+                if (!snap.exists()) return;
+                const data = snap.data();
+                const checkins = Array.isArray(data.checkedInEvents) ? data.checkedInEvents : [];
+                const newCheckins = checkins.filter(c => c.eventId !== scannerEventId && c.id !== scannerEventId);
+                const removed = checkins.find(c => c.eventId === scannerEventId || c.id === scannerEventId);
+                const points = removed?.points || 0;
+                transaction.update(studentRef, {
+                  checkedInEvents: newCheckins,
+                  bucks: Math.max(0, Number(data.bucks || 0) - points),
+                  eventsAttended: Math.max(0, Number(data.eventsAttended || 0) - 1)
+                });
+              });
+              showToast("Check-in removed.", "success");
+              loadCheckinsPopup();
+              if (currentCheckinEventId === scannerEventId) loadCheckins(scannerEventId);
+            } catch (error) {
+              console.error(error);
+              showToast("Error removing check-in.", "error");
+            }
+          }
+        });
+      });
+    }
+
+    async function searchPopupStudents() {
+      const term = popupSearchInput.value.trim().toLowerCase();
+      if (!term) {
+        popupSearchResults.innerHTML = `<div class="empty-state">Type a name to search</div>`;
+        return;
+      }
+      const results = allStudents.filter(s => 
+        (s.displayName || "").toLowerCase().includes(term) || 
+        (s.email || "").toLowerCase().includes(term)
+      );
+      if (!results.length) {
+        popupSearchResults.innerHTML = `<div class="empty-state">No students found</div>`;
+        return;
+      }
+      popupSearchResults.innerHTML = results.slice(0, 30).map(s => `
+        <div class="popup-item">
+          <div class="item-info">
+            <span class="name">${escapeHtml(s.displayName || "Unknown")}</span>
+            <span class="email">${escapeHtml(s.email || "")}</span>
+            <span class="bucks-display">${Number(s.bucks || 0)} Bucks</span>
+          </div>
+          <button data-id="${s.id}" class="checkin-btn">Check In</button>
+        </div>
+      `).join("");
+      document.querySelectorAll("#popupSearchResults .checkin-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const studentId = btn.dataset.id;
+          if (!scannerEventId) { showToast("No event selected.", "error"); return; }
+          const selectedEvent = events.find(event => event.id === scannerEventId);
+          if (!selectedEvent) { showToast("Event not found.", "error"); return; }
+          if (selectedEvent.cancelled) { showToast("Event cancelled.", "error"); return; }
+          if (!isCheckinOpen(selectedEvent)) { showToast("Check-ins not open.", "error"); return; }
+          try {
+            const studentRef = doc(db, "users", studentId);
+            let result = null;
+            await runTransaction(db, async transaction => {
+              const snap = await transaction.get(studentRef);
+              if (!snap.exists()) throw new Error("Student not found.");
+              const student = snap.data();
+              if (student.disabled) throw new Error("Account disabled.");
+              const checkedInEvents = Array.isArray(student.checkedInEvents) ? student.checkedInEvents : [];
+              const alreadyCheckedIn = checkedInEvents.some(c => c.eventId === scannerEventId || c.id === scannerEventId);
+              if (alreadyCheckedIn) throw new Error("Already checked in.");
+              const checkIn = { eventId: scannerEventId, eventName: formatEventDisplay(selectedEvent), points: Number(selectedEvent.points || 0), checkedInAt: new Date().toISOString() };
+              transaction.update(studentRef, {
+                checkedInEvents: [...checkedInEvents, checkIn],
+                bucks: Number(student.bucks || 0) + Number(selectedEvent.points || 0),
+                eventsAttended: Number(student.eventsAttended || 0) + 1,
+                lastCheckIn: serverTimestamp()
+              });
+              result = { name: student.displayName || "Student", email: student.email || "", points: selectedEvent.points };
+            });
+            showToast(`${result.name} checked in! +${result.points} Bucks`, "success");
+            popupSearchInput.value = "";
+            popupSearchResults.innerHTML = `<div class="empty-state">Type a name to search</div>`;
+            if (checkinsPopupOverlay.classList.contains("show")) loadCheckinsPopup();
+            if (currentCheckinEventId === scannerEventId) loadCheckins(scannerEventId);
+            // Update the scanner status display
+            scannerStatus.className = "scanner-status success";
+            scannerStatus.textContent = `${result.name} checked in! +${result.points} Bucks`;
+            studentName.textContent = result.name;
+            studentEmail.textContent = result.email || "";
+            studentBucks.textContent = `${Number(allStudents.find(s => s.id === studentId)?.bucks || 0) + Number(result.points)} Wiley Bucks`;
+            studentResult.classList.add("show");
+          } catch (error) {
+            showToast(error.message || "Check-in failed.", "error");
+          }
+        });
+      });
+    }
+
     function escapeHtml(value) {
       return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     }
@@ -1762,13 +2353,43 @@
     document.getElementById("closeModalBtn").addEventListener("click", closeEventModal);
     document.getElementById("cancelEventBtn").addEventListener("click", closeEventModal);
     document.getElementById("saveEventBtn").addEventListener("click", saveEvent);
-    document.getElementById("startScannerBtn").addEventListener("click", startScanner);
-    document.getElementById("stopScannerBtn").addEventListener("click", stopScanner);
+    document.getElementById("startScannerBtn").addEventListener("click", openScannerFullscreen);
+    document.getElementById("closeScannerBtn").addEventListener("click", closeScannerFullscreen);
     document.getElementById("logoutBtn").addEventListener("click", async () => {
       try { 
         await signOut(auth); 
         window.location.replace("/index.html"); 
       } catch (error) { console.error(error); }
+    });
+
+    // Search popup
+    scannerSearchBtn.addEventListener("click", () => {
+      searchPopupOverlay.classList.add("show");
+      popupSearchInput.value = "";
+      popupSearchResults.innerHTML = `<div class="empty-state">Type a name to search</div>`;
+      setTimeout(() => popupSearchInput.focus(), 300);
+    });
+    searchPopupClose.addEventListener("click", () => {
+      searchPopupOverlay.classList.remove("show");
+    });
+    searchPopupOverlay.addEventListener("click", (e) => {
+      if (e.target === searchPopupOverlay) searchPopupOverlay.classList.remove("show");
+    });
+    popupSearchBtn.addEventListener("click", searchPopupStudents);
+    popupSearchInput.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") searchPopupStudents();
+    });
+
+    // Check-ins popup
+    scannerCheckinsBtn.addEventListener("click", () => {
+      checkinsPopupOverlay.classList.add("show");
+      loadCheckinsPopup();
+    });
+    checkinsPopupClose.addEventListener("click", () => {
+      checkinsPopupOverlay.classList.remove("show");
+    });
+    checkinsPopupOverlay.addEventListener("click", (e) => {
+      if (e.target === checkinsPopupOverlay) checkinsPopupOverlay.classList.remove("show");
     });
 
     function setupAdminListener() {
@@ -2470,7 +3091,6 @@
       downloadCSV(csv, "event_attendance.csv");
     });
 
-    // Auto-refresh checkin page event select every minute
     setInterval(() => {
       if (document.getElementById('checkinPage').classList.contains('hidden') === false) {
         populateEventSelect();
