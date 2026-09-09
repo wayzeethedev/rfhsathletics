@@ -224,6 +224,17 @@
     .scanner-popup .popup-results .popup-item button{padding:6px 14px;border-radius:8px;font-size:.75rem;background:#002E57;color:#fff}
     .scanner-popup .popup-results .popup-item button.remove-btn{background:rgba(198,40,40,.3);color:#ef9a9a}
     .scanner-popup .empty-state{text-align:center;color:#888;padding:30px 0;font-size:.9rem}
+    .checkin-list-container{max-height:400px;overflow-y:auto}
+    .checkin-list-container .checkin-item{padding:10px 0;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;font-size:.85rem}
+    .checkin-list-container .checkin-item:last-child{border-bottom:none}
+    .checkin-list-container .checkin-item .checkin-info{display:flex;flex-direction:column}
+    .checkin-list-container .checkin-item .checkin-info .name{font-weight:600}
+    .checkin-list-container .checkin-item .checkin-info .email{color:#888;font-size:.75rem}
+    .checkin-list-container .checkin-item .checkin-points{color:#002E57;font-weight:700}
+    .checkin-list-container .checkin-item .remove-btn{background:#fff0f0;color:#c62828;padding:4px 10px;border-radius:6px;font-size:.7rem}
+    .event-checkin-search{display:flex;gap:8px;margin-bottom:12px}
+    .event-checkin-search input{flex:1}
+    .event-checkin-search button{padding:10px 16px;border-radius:10px;background:#002E57;color:#fff;font-size:.8rem;white-space:nowrap}
     @media(max-width:520px){body{padding-left:16px;padding-right:16px}
     .form-grid{grid-template-columns:1fr;gap:0}
     .event-card{flex-wrap:wrap;gap:10px}
@@ -240,7 +251,8 @@
     .scanner-bottom{max-height:45vh;padding:6px 12px 10px}
     .scanner-top-bar .scanner-top-actions button{font-size:.6rem;padding:4px 8px}
     .scanner-top-bar .scanner-top-actions button .material-symbols-outlined{font-size:16px}
-    .scanner-popup{padding:16px;max-height:85vh;margin-bottom:env(safe-area-inset-bottom)}}
+    .scanner-popup{padding:16px;max-height:85vh;margin-bottom:env(safe-area-inset-bottom)}
+    .checkin-list-container{max-height:300px}}
   </style>
 </head>
 <body>
@@ -300,13 +312,26 @@
     </section>
     <section id="eventsCheckinPage" class="hidden">
       <h1>Event Check-ins</h1>
-      <p class="subtitle">View and manage check-ins for each event.</p>
+      <p class="subtitle">View and manage check-ins for each event. Search and manually check in students.</p>
       <div class="card">
         <div class="form-group"><label for="checkinEventSelect">Event</label><select id="checkinEventSelect"><option value="">Select an event</option></select></div>
-        <div style="display:flex;gap:8px;margin-top:8px;"><button class="secondary-btn" id="refreshCheckinsBtn" style="flex:1;">Refresh</button></div>
-        <div style="margin-top:12px;display:flex;gap:12px;font-size:.85rem;flex-wrap:wrap;"><span>Status: <span id="checkinStatusDisplay" class="chip closed">Closed</span></span><span>Count: <strong id="checkinCountDisplay">0</strong></span></div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button class="secondary-btn" id="refreshCheckinsBtn" style="flex:1;">Refresh</button>
+          <button class="secondary-btn" id="manualCheckinBtn" style="flex:1;">Manual Check-in</button>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:12px;font-size:.85rem;flex-wrap:wrap;">
+          <span>Status: <span id="checkinStatusDisplay" class="chip closed">Closed</span></span>
+          <span>Count: <strong id="checkinCountDisplay">0</strong></span>
+        </div>
+        <div class="event-checkin-search" style="margin-top:12px;">
+          <input id="checkinSearchInput" type="text" placeholder="Search checked-in students...">
+          <button id="checkinSearchBtn">Search</button>
+        </div>
       </div>
-      <div class="card"><h2>Checked-in Students</h2><div id="checkinList"><div class="empty">No students checked in.</div></div></div>
+      <div class="card">
+        <h2>Checked-in Students</h2>
+        <div class="checkin-list-container" id="checkinList"><div class="empty">No students checked in.</div></div>
+      </div>
     </section>
     <section id="prizesPage" class="hidden">
       <h1>Prize Management</h1>
@@ -322,14 +347,17 @@
       <p class="subtitle">View and manage leaderboards.</p>
       <div class="card">
         <div class="form-group"><label for="lbQuarterSelect">Quarter</label><select id="lbQuarterSelect"><option value="">Select a quarter</option></select></div>
-        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;"><button class="secondary-btn" id="refreshLeaderboardBtn">Refresh</button><button class="secondary-btn" id="togglePublicLeaderboardBtn">Hide from Public</button><button class="secondary-btn" id="exportLeaderboardBtn">Export CSV</button></div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+          <button class="secondary-btn" id="refreshLeaderboardBtn">Refresh</button>
+          <button class="secondary-btn" id="exportLeaderboardBtn">Export CSV</button>
+        </div>
       </div>
       <div class="card"><h2>Top 10</h2><div id="leaderboardTop"><div class="empty">No data.</div></div></div>
       <div class="card"><h2>Next 10</h2><div id="leaderboardNext"><div class="empty">No data.</div></div></div>
     </section>
     <section id="quartersPage" class="hidden">
       <h1>Quarter Management</h1>
-      <p class="subtitle">Create, manage, and close quarters.</p>
+      <p class="subtitle">Create, manage, and close athletic quarters (Fall, Winter, Spring, Summer).</p>
       <div class="section"><button class="primary-btn" id="addQuarterBtn">Add Quarter</button></div>
       <div class="section"><h2>Quarters</h2><div id="quartersList"></div></div>
     </section>
@@ -361,10 +389,19 @@
   <div class="modal" id="quarterModal">
     <div class="modal-card">
       <div class="modal-header"><h2 id="quarterModalTitle">Add Quarter</h2><button class="modal-close" id="closeQuarterModalBtn"><span class="material-symbols-outlined">close</span></button></div>
-      <div class="form-group"><label for="quarterNameInput">Quarter Name</label><input id="quarterNameInput" type="text" placeholder="Q1 2025"></div>
+      <div class="form-group"><label for="quarterNameInput">Quarter Name</label><input id="quarterNameInput" type="text" placeholder="Fall 2025"></div>
       <div class="form-group"><label for="quarterStartInput">Start Date</label><input id="quarterStartInput" type="date"></div>
       <div class="form-group"><label for="quarterEndInput">End Date</label><input id="quarterEndInput" type="date"></div>
       <div class="modal-actions"><button class="secondary-btn" id="cancelQuarterBtn">Cancel</button><button class="primary-btn" id="saveQuarterBtn">Save Quarter</button></div>
+    </div>
+  </div>
+
+  <div class="modal" id="manualCheckinModal">
+    <div class="modal-card">
+      <div class="modal-header"><h2>Manual Check-in</h2><button class="modal-close" id="closeManualModal"><span class="material-symbols-outlined">close</span></button></div>
+      <div class="form-group"><label for="manualSearchInput">Search Student</label><input id="manualSearchInput" type="text" placeholder="Type name or email..."></div>
+      <button class="primary-btn" id="manualSearchBtn" style="margin-bottom:12px;">Search</button>
+      <div id="manualResults"><div class="empty">Search for a student to check in.</div></div>
     </div>
   </div>
 
@@ -442,16 +479,17 @@
     const studentSearchInput=document.getElementById("studentSearchInput");const studentSearchBtn=document.getElementById("studentSearchBtn");const studentList=document.getElementById("studentList");
     const backToStudentsBtn=document.getElementById("backToStudentsBtn");const detailStudentName=document.getElementById("detailStudentName");const detailStudentEmail=document.getElementById("detailStudentEmail");const detailStudentBucks=document.getElementById("detailStudentBucks");const detailStudentEvents=document.getElementById("detailStudentEvents");const detailStudentStatus=document.getElementById("detailStudentStatus");const detailCheckinHistory=document.getElementById("detailCheckinHistory");const adjustmentHistory=document.getElementById("adjustmentHistory");const bucksAdjustInput=document.getElementById("bucksAdjustInput");const addBucksBtn=document.getElementById("addBucksBtn");const removeBucksBtn=document.getElementById("removeBucksBtn");const toggleDisableBtn=document.getElementById("toggleDisableBtn");const adjustmentReason=document.getElementById("adjustmentReason");const detailCard=document.getElementById("detailCard");
     const toast=document.getElementById("toast");
-    const checkinEventSelect=document.getElementById("checkinEventSelect");const refreshCheckinsBtn=document.getElementById("refreshCheckinsBtn");const checkinStatusDisplay=document.getElementById("checkinStatusDisplay");const checkinCountDisplay=document.getElementById("checkinCountDisplay");const checkinList=document.getElementById("checkinList");
+    const checkinEventSelect=document.getElementById("checkinEventSelect");const refreshCheckinsBtn=document.getElementById("refreshCheckinsBtn");const checkinStatusDisplay=document.getElementById("checkinStatusDisplay");const checkinCountDisplay=document.getElementById("checkinCountDisplay");const checkinList=document.getElementById("checkinList");const checkinSearchInput=document.getElementById("checkinSearchInput");const checkinSearchBtn=document.getElementById("checkinSearchBtn");
+    const manualCheckinBtn=document.getElementById("manualCheckinBtn");const manualCheckinModal=document.getElementById("manualCheckinModal");const closeManualModal=document.getElementById("closeManualModal");const manualSearchInput=document.getElementById("manualSearchInput");const manualSearchBtn=document.getElementById("manualSearchBtn");const manualResults=document.getElementById("manualResults");
     const prizeQuarterSelect=document.getElementById("prizeQuarterSelect");const initPrizesBtn=document.getElementById("initPrizesBtn");const prizesList=document.getElementById("prizesList");
-    const lbQuarterSelect=document.getElementById("lbQuarterSelect");const refreshLeaderboardBtn=document.getElementById("refreshLeaderboardBtn");const togglePublicLeaderboardBtn=document.getElementById("togglePublicLeaderboardBtn");const exportLeaderboardBtn=document.getElementById("exportLeaderboardBtn");const leaderboardTop=document.getElementById("leaderboardTop");const leaderboardNext=document.getElementById("leaderboardNext");
+    const lbQuarterSelect=document.getElementById("lbQuarterSelect");const refreshLeaderboardBtn=document.getElementById("refreshLeaderboardBtn");const exportLeaderboardBtn=document.getElementById("exportLeaderboardBtn");const leaderboardTop=document.getElementById("leaderboardTop");const leaderboardNext=document.getElementById("leaderboardNext");
     const quartersList=document.getElementById("quartersList");const quarterModal=document.getElementById("quarterModal");const quarterModalTitle=document.getElementById("quarterModalTitle");const quarterNameInput=document.getElementById("quarterNameInput");const quarterStartInput=document.getElementById("quarterStartInput");const quarterEndInput=document.getElementById("quarterEndInput");const closeQuarterModalBtn=document.getElementById("closeQuarterModalBtn");const cancelQuarterBtn=document.getElementById("cancelQuarterBtn");const saveQuarterBtn=document.getElementById("saveQuarterBtn");const addQuarterBtn=document.getElementById("addQuarterBtn");
     const exportAttendanceBtn=document.getElementById("exportAttendanceBtn");const exportBucksBtn=document.getElementById("exportBucksBtn");const exportLeaderboardBtn2=document.getElementById("exportLeaderboardBtn2");const exportWinnersBtn=document.getElementById("exportWinnersBtn");const exportEventAttendanceBtn=document.getElementById("exportEventAttendanceBtn");
     const closeScannerBtn=document.getElementById("closeScannerBtn");const scannerSearchBtn=document.getElementById("scannerSearchBtn");const scannerCheckinsBtn=document.getElementById("scannerCheckinsBtn");
     const searchPopupOverlay=document.getElementById("searchPopupOverlay");const searchPopupClose=document.getElementById("searchPopupClose");const popupSearchInput=document.getElementById("popupSearchInput");const popupSearchBtn=document.getElementById("popupSearchBtn");const popupSearchResults=document.getElementById("popupSearchResults");
     const checkinsPopupOverlay=document.getElementById("checkinsPopupOverlay");const checkinsPopupClose=document.getElementById("checkinsPopupClose");const popupCheckinsResults=document.getElementById("popupCheckinsResults");
 
-    let events=[];let editingEventId=null;let html5QrCode=null;let scannerRunning=false;let processingScan=false;let allStudents=[];let selectedStudentId=null;let currentAdminEmail="";let toastTimeout=null;let studentsUnsubscribe=null;let eventsUnsubscribe=null;let adminUnsubscribe=null;let detailUnsubscribe=null;let quarters=[];let editingQuarterId=null;let currentCheckinEventId=null;let checkinRefreshInterval=null;let scannerEventId=null;
+    let events=[];let editingEventId=null;let html5QrCode=null;let scannerRunning=false;let processingScan=false;let allStudents=[];let selectedStudentId=null;let currentAdminEmail="";let toastTimeout=null;let studentsUnsubscribe=null;let eventsUnsubscribe=null;let adminUnsubscribe=null;let detailUnsubscribe=null;let quarters=[];let editingQuarterId=null;let currentCheckinEventId=null;let checkinRefreshInterval=null;let scannerEventId=null;let checkinSearchTerm="";
 
     eventTicketsRequired.addEventListener("change",()=>{ticketLinkGroup.classList.toggle("hidden",!eventTicketsRequired.checked);});
 
@@ -470,19 +508,26 @@
     document.addEventListener('gesturestart',function(e){e.preventDefault();});document.addEventListener('dblclick',function(e){e.preventDefault();});
 
     function formatEventDisplay(event){let display=event.name||"Event";if(event.opponent){const loc=event.locationType==="Home"?"vs":"at";display+=` ${loc} ${event.opponent}`;}return display;}
-    function formatDate(dateString,timeString){if(!dateString)return"";const date=new Date(`${dateString}T${timeString||"00:00"}`);return date.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})+" • "+date.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});}
+
+    function formatDisplayDate(dateString,timeString){if(!dateString)return"Date unavailable";try{let dateObj;if(dateString&&typeof dateString.toDate==="function"){dateObj=dateString.toDate();}else{const dateStr=String(dateString).trim();const timeStr=timeString&&/^\d{2}:\d{2}$/.test(String(timeString))?String(timeString):"00:00";if(/^\d{4}-\d{2}-\d{2}$/.test(dateStr)){const[year,month,day]=dateStr.split("-").map(Number);const[hours,minutes]=timeStr.split(":").map(Number);dateObj=new Date(year,month-1,day,hours,minutes);}else{dateObj=new Date(`${dateStr}T${timeStr}`);}}if(!dateObj||isNaN(dateObj.getTime()))return"Date unavailable";return dateObj.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})+", "+
+    dateObj.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});}catch(e){return"Date unavailable";}}
+
+    function getShortDate(dateString,timeString){if(!dateString)return"";try{let dateObj;if(dateString&&typeof dateString.toDate==="function"){dateObj=dateString.toDate();}else{const dateStr=String(dateString).trim();const timeStr=timeString&&/^\d{2}:\d{2}$/.test(String(timeString))?String(timeString):"00:00";if(/^\d{4}-\d{2}-\d{2}$/.test(dateStr)){const[year,month,day]=dateStr.split("-").map(Number);const[hours,minutes]=timeStr.split(":").map(Number);dateObj=new Date(year,month-1,day,hours,minutes);}else{dateObj=new Date(`${dateStr}T${timeStr}`);}}if(!dateObj||isNaN(dateObj.getTime()))return"";return dateObj.toLocaleDateString("en-US",{month:"short",day:"numeric"})+" • "+
+    dateObj.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});}catch(e){return"";}}
+
     function isCheckinOpen(event){if(!event||event.cancelled)return false;const eventDateTime=new Date(`${event.date}T${event.time||"00:00"}`);const now=new Date();const threeHoursBefore=new Date(eventDateTime.getTime()-3*60*60*1000);const fiveHoursAfter=new Date(eventDateTime.getTime()+5*60*60*1000);return now>=threeHoursBefore&&now<=fiveHoursAfter;}
     function getStatusBadge(event){if(event.cancelled)return `<span class="event-status-badge cancelled">Cancelled</span>`;if(isCheckinOpen(event)){return `<span class="event-status-badge active">Open</span>`;}return `<span class="event-status-badge ended">Closed</span>`;}
     function getEventIcon(type){const map={Football:'sports_football',Soccer:'sports_soccer',Basketball:'sports_basketball',Volleyball:'sports_volleyball',Baseball:'sports_baseball',Softball:'sports_softball',Track:'directions_run',Swim:'pool',Band:'music_note',Choir:'mic',Orchestra:'music_note',Theater:'theater_comedy',Academic:'school',Other:'more_horiz'};return map[type]||'event';}
+    function parseEventDate(dateValue,timeValue){if(!dateValue)return null;try{let dateObj;if(dateValue&&typeof dateValue.toDate==="function"){dateObj=dateValue.toDate();}else{const dateStr=String(dateValue).trim();const timeStr=timeValue&&/^\d{2}:\d{2}$/.test(String(timeValue))?String(timeValue):"00:00";if(/^\d{4}-\d{2}-\d{2}$/.test(dateStr)){const[year,month,day]=dateStr.split("-").map(Number);const[hours,minutes]=timeStr.split(":").map(Number);dateObj=new Date(year,month-1,day,hours,minutes);}else{dateObj=new Date(`${dateStr}T${timeStr}`);}}if(!dateObj||isNaN(dateObj.getTime()))return null;return dateObj;}catch(e){return null;}}
 
-    function setupEventsListener(){if(eventsUnsubscribe)eventsUnsubscribe();eventsUnsubscribe=onSnapshot(eventsCollection,(snapshot)=>{events=snapshot.docs.map(item=>({id:item.id,...item.data()}));events.sort((a,b)=>`${a.date||""}T${a.time||""}`.localeCompare(`${b.date||""}T${b.time||""}`));renderEvents();populateEventSelect();populateCheckinEventSelect();},(error)=>{console.error(error);eventsList.innerHTML=`<div class="card empty">Could not load events.</div>`;});}
+    function setupEventsListener(){if(eventsUnsubscribe)eventsUnsubscribe();eventsUnsubscribe=onSnapshot(eventsCollection,(snapshot)=>{events=snapshot.docs.map(item=>{const data=item.data();const parsedDate=parseEventDate(data.date,data.time);return{id:item.id,...data,parsedDate};});events.sort((a,b)=>(a.parsedDate?.getTime()||0)-(b.parsedDate?.getTime()||0));renderEvents();populateEventSelect();populateCheckinEventSelect();},(error)=>{console.error(error);eventsList.innerHTML=`<div class="card empty">Could not load events.</div>`;});}
 
-    function renderEvents(){const now=new Date();const filtered=events.filter(e=>{if(e.cancelled)return false;const eventDateTime=new Date(`${e.date}T${e.time||"00:00"}`);const fiveHoursAfter=new Date(eventDateTime.getTime()+5*60*60*1000);return now<=fiveHoursAfter;});if(!filtered.length){eventsList.innerHTML=`<div class="card empty">No upcoming or active events.</div>`;return;}
-    eventsList.innerHTML=filtered.map(event=>{const isOpen=isCheckinOpen(event);const dateStr=formatDate(event.date,event.time);const icon=getEventIcon(event.type);const displayName=formatEventDisplay(event);return `
+    function renderEvents(){const now=new Date();const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());const filtered=events.filter(e=>{if(e.cancelled)return false;if(!e.parsedDate)return false;return e.parsedDate>=today;});if(!filtered.length){eventsList.innerHTML=`<div class="card empty">No upcoming or active events.</div>`;return;}
+    eventsList.innerHTML=filtered.map(event=>{const isOpen=isCheckinOpen(event);const icon=getEventIcon(event.type);const displayName=formatEventDisplay(event);const dateDisplay=getShortDate(event.date,event.time);return `
         <div class="card event-card">
           <div class="event-icon-box"><span class="material-symbols-outlined">${icon}</span></div>
           <div class="event-content">
-            <div class="event-date-box">${event.date?new Date(event.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):''} • ${event.time||''}</div>
+            <div class="event-date-box">${dateDisplay}</div>
             <div class="event-title-row"><span class="event-title">${escapeHtml(displayName)}</span>${getStatusBadge(event)}</div>
             <div class="event-details">
               ${event.location?`<span><span class="material-symbols-outlined">location_on</span> ${escapeHtml(event.location)}</span>`:''}
@@ -503,7 +548,7 @@
     document.querySelectorAll(".cancel-event").forEach(button=>{button.addEventListener("click",async()=>{if(confirm("Cancel this event? Students will not be able to check in.")){await updateDoc(doc(db,"events",button.dataset.id),{cancelled:true});showToast("Event cancelled.","success");}});});
     document.querySelectorAll(".uncancel-event").forEach(button=>{button.addEventListener("click",async()=>{await updateDoc(doc(db,"events",button.dataset.id),{cancelled:false});showToast("Event restored.","success");});});}
 
-    function populateEventSelect(){const now=new Date();const openEvents=events.filter(e=>{if(e.cancelled)return false;const eventDateTime=new Date(`${e.date}T${e.time||"00:00"}`);const threeHoursBefore=new Date(eventDateTime.getTime()-3*60*60*1000);const fiveHoursAfter=new Date(eventDateTime.getTime()+5*60*60*1000);return now>=threeHoursBefore&&now<=fiveHoursAfter;});eventSelect.innerHTML=`<option value="">Select an event</option>${openEvents.map(event=>`<option value="${event.id}">${escapeHtml(formatEventDisplay(event))} — ${escapeHtml(event.date||"")}</option>`).join("")}`;if(openEvents.length===0){eventSelect.innerHTML=`<option value="">No events currently open for check-in</option>`;}}
+    function populateEventSelect(){const now=new Date();const openEvents=events.filter(e=>{if(e.cancelled)return false;const eventDateTime=parseEventDate(e.date,e.time);if(!eventDateTime)return false;const threeHoursBefore=new Date(eventDateTime.getTime()-3*60*60*1000);const fiveHoursAfter=new Date(eventDateTime.getTime()+5*60*60*1000);return now>=threeHoursBefore&&now<=fiveHoursAfter;});eventSelect.innerHTML=`<option value="">Select an event</option>${openEvents.map(event=>`<option value="${event.id}">${escapeHtml(formatEventDisplay(event))} — ${event.date||""}</option>`).join("")}`;if(openEvents.length===0){eventSelect.innerHTML=`<option value="">No events currently open for check-in</option>`;}}
     function populateCheckinEventSelect(){const activeEvents=events.filter(e=>!e.cancelled);checkinEventSelect.innerHTML=`<option value="">Select an event</option>${activeEvents.map(event=>`<option value="${event.id}">${escapeHtml(formatEventDisplay(event))}</option>`).join("")}`;}
     function populatePrizeQuarterSelect(){prizeQuarterSelect.innerHTML=`<option value="">Select a quarter</option>${quarters.map(q=>`<option value="${q.id}">${escapeHtml(q.name||"Quarter")}</option>`).join("")}`;}
     function populateLBQuarterSelect(){lbQuarterSelect.innerHTML=`<option value="">Select a quarter</option>${quarters.map(q=>`<option value="${q.id}">${escapeHtml(q.name||"Quarter")} ${q.closed?'(Closed)':'(Active)'}</option>`).join("")}`;}
@@ -579,10 +624,20 @@
     cancelQuarterBtn.addEventListener("click",closeQuarterModal);
     saveQuarterBtn.addEventListener("click",saveQuarter);
 
-    async function loadCheckins(eventId){currentCheckinEventId=eventId;if(!eventId){checkinList.innerHTML=`<div class="empty">Select an event to view check-ins.</div>`;checkinCountDisplay.textContent="0";checkinStatusDisplay.textContent="Closed";checkinStatusDisplay.className="chip closed";return;}try{const eventRef=doc(db,"events",eventId);const eventSnap=await getDoc(eventRef);let eventData=null;let checkinStatus={open:false,label:'Closed',class:'closed'};if(eventSnap.exists()){eventData={id:eventSnap.id,...eventSnap.data()};if(eventData.cancelled){checkinStatus={open:false,label:'Cancelled',class:'cancelled'};}else if(isCheckinOpen(eventData)){checkinStatus={open:true,label:'Open',class:'open'};}else{checkinStatus={open:false,label:'Closed',class:'closed'};}}checkinStatusDisplay.textContent=checkinStatus.label;checkinStatusDisplay.className=`chip ${checkinStatus.class}`;const students=allStudents.filter(s=>{const checkins=Array.isArray(s.checkedInEvents)?s.checkedInEvents:[];return checkins.some(c=>c.eventId===eventId||c.id===eventId);});checkinCountDisplay.textContent=students.length;if(!students.length){checkinList.innerHTML=`<div class="empty">No students checked in.</div>`;return;}checkinList.innerHTML=students.map(s=>{const checkin=(Array.isArray(s.checkedInEvents)?s.checkedInEvents:[]).find(c=>c.eventId===eventId||c.id===eventId);return `<div class="checkin-item"><span><strong>${escapeHtml(s.displayName||"Unknown")}</strong> ${escapeHtml(s.email||"")}</span><span style="display:flex;gap:8px;align-items:center;"><span class="checkin-history-points">+${checkin?.points||0}</span><button class="remove-checkin-btn" data-student="${s.id}" data-event="${eventId}">Remove</button></span></div>`;}).join("");document.querySelectorAll(".remove-checkin-btn").forEach(btn=>{btn.addEventListener("click",async()=>{const studentId=btn.dataset.student;const evId=btn.dataset.event;if(confirm("Remove this check-in? This will also deduct the Bucks.")){try{const studentRef=doc(db,"users",studentId);await runTransaction(db,async transaction=>{const snap=await transaction.get(studentRef);if(!snap.exists())return;const data=snap.data();const checkins=Array.isArray(data.checkedInEvents)?data.checkedInEvents:[];const newCheckins=checkins.filter(c=>c.eventId!==evId&&c.id!==evId);const removed=checkins.find(c=>c.eventId===evId||c.id===evId);const points=removed?.points||0;transaction.update(studentRef,{checkedInEvents:newCheckins,bucks:Math.max(0,Number(data.bucks||0)-points),eventsAttended:Math.max(0,Number(data.eventsAttended||0)-1)});});showToast("Check-in removed.","success");loadCheckins(eventId);}catch(error){console.error(error);showToast("Error removing check-in.","error");}}});});}catch(error){console.error(error);checkinList.innerHTML=`<div class="empty">Error loading check-ins.</div>`;}}
+    async function loadCheckins(eventId){currentCheckinEventId=eventId;if(!eventId){checkinList.innerHTML=`<div class="empty">Select an event to view check-ins.</div>`;checkinCountDisplay.textContent="0";checkinStatusDisplay.textContent="Closed";checkinStatusDisplay.className="chip closed";return;}try{const eventRef=doc(db,"events",eventId);const eventSnap=await getDoc(eventRef);let eventData=null;let checkinStatus={open:false,label:'Closed',class:'closed'};if(eventSnap.exists()){eventData={id:eventSnap.id,...eventSnap.data()};if(eventData.cancelled){checkinStatus={open:false,label:'Cancelled',class:'cancelled'};}else if(isCheckinOpen(eventData)){checkinStatus={open:true,label:'Open',class:'open'};}else{checkinStatus={open:false,label:'Closed',class:'closed'};}}checkinStatusDisplay.textContent=checkinStatus.label;checkinStatusDisplay.className=`chip ${checkinStatus.class}`;let students=allStudents.filter(s=>{const checkins=Array.isArray(s.checkedInEvents)?s.checkedInEvents:[];return checkins.some(c=>c.eventId===eventId||c.id===eventId);});if(checkinSearchTerm.trim()){const term=checkinSearchTerm.trim().toLowerCase();students=students.filter(s=>(s.displayName||"").toLowerCase().includes(term)||(s.email||"").toLowerCase().includes(term));}checkinCountDisplay.textContent=students.length;if(!students.length){checkinList.innerHTML=checkinSearchTerm.trim()?`<div class="empty">No matching students found.</div>`:`<div class="empty">No students checked in.</div>`;return;}checkinList.innerHTML=students.map(s=>{const checkin=(Array.isArray(s.checkedInEvents)?s.checkedInEvents:[]).find(c=>c.eventId===eventId||c.id===eventId);return `<div class="checkin-item"><div class="checkin-info"><span class="name">${escapeHtml(s.displayName||"Unknown")}</span><span class="email">${escapeHtml(s.email||"")}</span></div><span style="display:flex;align-items:center;gap:8px;"><span class="checkin-points">+${checkin?.points||0}</span><button class="remove-btn remove-checkin-btn" data-student="${s.id}" data-event="${eventId}">Remove</button></span></div>`;}).join("");document.querySelectorAll(".remove-checkin-btn").forEach(btn=>{btn.addEventListener("click",async()=>{const studentId=btn.dataset.student;const evId=btn.dataset.event;if(confirm("Remove this check-in? This will also deduct the Bucks.")){try{const studentRef=doc(db,"users",studentId);await runTransaction(db,async transaction=>{const snap=await transaction.get(studentRef);if(!snap.exists())return;const data=snap.data();const checkins=Array.isArray(data.checkedInEvents)?data.checkedInEvents:[];const newCheckins=checkins.filter(c=>c.eventId!==evId&&c.id!==evId);const removed=checkins.find(c=>c.eventId===evId||c.id===evId);const points=removed?.points||0;transaction.update(studentRef,{checkedInEvents:newCheckins,bucks:Math.max(0,Number(data.bucks||0)-points),eventsAttended:Math.max(0,Number(data.eventsAttended||0)-1)});});showToast("Check-in removed.","success");loadCheckins(eventId);}catch(error){console.error(error);showToast("Error removing check-in.","error");}}});});}catch(error){console.error(error);checkinList.innerHTML=`<div class="empty">Error loading check-ins.</div>`;}}
 
-    checkinEventSelect.addEventListener("change",()=>{if(checkinRefreshInterval){clearInterval(checkinRefreshInterval);checkinRefreshInterval=null;}loadCheckins(checkinEventSelect.value);if(checkinEventSelect.value){checkinRefreshInterval=setInterval(()=>{loadCheckins(checkinEventSelect.value);},30000);}});
+    checkinSearchBtn.addEventListener("click",()=>{checkinSearchTerm=checkinSearchInput.value;if(checkinEventSelect.value)loadCheckins(checkinEventSelect.value);});
+    checkinSearchInput.addEventListener("keyup",(e)=>{if(e.key==="Enter"){checkinSearchTerm=checkinSearchInput.value;if(checkinEventSelect.value)loadCheckins(checkinEventSelect.value);}});
+
+    checkinEventSelect.addEventListener("change",()=>{if(checkinRefreshInterval){clearInterval(checkinRefreshInterval);checkinRefreshInterval=null;}checkinSearchTerm="";checkinSearchInput.value="";loadCheckins(checkinEventSelect.value);if(checkinEventSelect.value){checkinRefreshInterval=setInterval(()=>{loadCheckins(checkinEventSelect.value);},30000);}});
     refreshCheckinsBtn.addEventListener("click",()=>{if(checkinEventSelect.value)loadCheckins(checkinEventSelect.value);});
+
+    manualCheckinBtn.addEventListener("click",()=>{manualCheckinModal.classList.add("show");manualSearchInput.value="";manualResults.innerHTML=`<div class="empty">Search for a student to check in.</div>`;setTimeout(()=>manualSearchInput.focus(),300);});
+    closeManualModal.addEventListener("click",()=>{manualCheckinModal.classList.remove("show");});
+    manualCheckinModal.addEventListener("click",(e)=>{if(e.target===manualCheckinModal)manualCheckinModal.classList.remove("show");});
+
+    manualSearchBtn.addEventListener("click",async()=>{const term=manualSearchInput.value.trim().toLowerCase();if(!term){manualResults.innerHTML=`<div class="empty">Type a name or email to search.</div>`;return;}const results=allStudents.filter(s=>(s.displayName||"").toLowerCase().includes(term)||(s.email||"").toLowerCase().includes(term));if(!results.length){manualResults.innerHTML=`<div class="empty">No students found.</div>`;return;}manualResults.innerHTML=results.slice(0,20).map(s=>`<div class="popup-item"><div class="item-info"><span class="name">${escapeHtml(s.displayName||"Unknown")}</span><span class="email">${escapeHtml(s.email||"")}</span><span class="bucks-display">${Number(s.bucks||0)} Bucks</span></div><button data-id="${s.id}" class="manual-checkin-confirm">Check In</button></div>`).join("");document.querySelectorAll(".manual-checkin-confirm").forEach(btn=>{btn.addEventListener("click",async()=>{const studentId=btn.dataset.id;const eventId=checkinEventSelect.value;if(!eventId){showToast("Select an event first.","error");return;}const selectedEvent=events.find(e=>e.id===eventId);if(!selectedEvent){showToast("Event not found.","error");return;}if(selectedEvent.cancelled){showToast("Event is cancelled.","error");return;}if(!isCheckinOpen(selectedEvent)){showToast("Check-ins are not open for this event.","error");return;}try{const studentRef=doc(db,"users",studentId);let result=null;await runTransaction(db,async transaction=>{const snap=await transaction.get(studentRef);if(!snap.exists())throw new Error("Student not found.");const student=snap.data();if(student.disabled)throw new Error("Account disabled.");const checkedInEvents=Array.isArray(student.checkedInEvents)?student.checkedInEvents:[];const alreadyCheckedIn=checkedInEvents.some(c=>c.eventId===eventId||c.id===eventId);if(alreadyCheckedIn)throw new Error("Already checked in.");const checkIn={eventId:eventId,eventName:formatEventDisplay(selectedEvent),points:Number(selectedEvent.points||0),checkedInAt:new Date().toISOString()};transaction.update(studentRef,{checkedInEvents:[...checkedInEvents,checkIn],bucks:Number(student.bucks||0)+Number(selectedEvent.points||0),eventsAttended:Number(student.eventsAttended||0)+1,lastCheckIn:serverTimestamp()});result={name:student.displayName||"Student",points:selectedEvent.points};});showToast(`${result.name} checked in! +${result.points} Bucks`,"success");manualSearchInput.value="";manualResults.innerHTML=`<div class="empty">Search for a student to check in.</div>`;loadCheckins(eventId);}catch(error){showToast(error.message||"Check-in failed.","error");}});});});
+    manualSearchInput.addEventListener("keyup",(e)=>{if(e.key==="Enter")manualSearchBtn.click();});
 
     initPrizesBtn.addEventListener("click",async()=>{const quarterId=prizeQuarterSelect.value;if(!quarterId){showToast("Select a quarter.","error");return;}if(!confirm("Initialize prizes for this quarter? This will create 1st-10th place prizes."))return;try{const existing=await getDocs(query(prizesCollection,where("quarterId","==",quarterId)));if(!existing.empty){if(!confirm("Prizes already exist. Replace them?"))return;const batch=writeBatch(db);existing.docs.forEach(d=>batch.delete(d.ref));await batch.commit();}const prizeNames=["1st Place","2nd Place","3rd Place","4th Place","5th Place","6th Place","7th Place","8th Place","9th Place","10th Place"];for(const name of prizeNames){await addDoc(prizesCollection,{quarterId,rank:name,description:"",awarded:false,createdAt:serverTimestamp()});}showToast("Prizes initialized!","success");loadPrizes(quarterId);}catch(error){console.error(error);showToast("Error initializing prizes.","error");}});
 
@@ -595,8 +650,6 @@
     lbQuarterSelect.addEventListener("change",()=>{if(lbQuarterSelect.value)loadLeaderboard(lbQuarterSelect.value);});
 
     refreshLeaderboardBtn.addEventListener("click",async()=>{const quarterId=lbQuarterSelect.value;if(!quarterId){showToast("Select a quarter.","error");return;}try{const sorted=[...allStudents].sort((a,b)=>(b.bucks||0)-(a.bucks||0));const entries=sorted.map((s,i)=>({rank:i+1,studentId:s.id,name:s.displayName||"Unknown",email:s.email||"",bucks:s.bucks||0}));const existing=await getDocs(query(leaderboardCollection,where("quarterId","==",quarterId)));if(!existing.empty){await updateDoc(doc(db,"leaderboards",existing.docs[0].id),{entries,updatedAt:serverTimestamp()});}else{await addDoc(leaderboardCollection,{quarterId,entries,createdAt:serverTimestamp()});}showToast("Leaderboard updated!","success");loadLeaderboard(quarterId);}catch(error){console.error(error);showToast("Error updating leaderboard.","error");}});
-
-    togglePublicLeaderboardBtn.addEventListener("click",async()=>{const quarterId=lbQuarterSelect.value;if(!quarterId){showToast("Select a quarter.","error");return;}try{const existing=await getDocs(query(leaderboardCollection,where("quarterId","==",quarterId)));if(existing.empty){showToast("No leaderboard found. Refresh first.","error");return;}const ref=doc(db,"leaderboards",existing.docs[0].id);const snap=await getDoc(ref);const current=snap.data().public||false;await updateDoc(ref,{public:!current});showToast(`Leaderboard ${!current?'shown':'hidden'} to public.`,"success");}catch(error){console.error(error);showToast("Error updating visibility.","error");}});
 
     exportLeaderboardBtn.addEventListener("click",()=>{const quarterId=lbQuarterSelect.value;if(!quarterId){showToast("Select a quarter.","error");return;}const q=quarters.find(q=>q.id===quarterId);const name=q?q.name:"Quarter";const data=allStudents.map(s=>({name:s.displayName||"Unknown",email:s.email||"",bucks:s.bucks||0}));data.sort((a,b)=>b.bucks-a.bucks);let csv="Rank,Name,Email,Bucks\n";data.forEach((s,i)=>csv+=`${i+1},"${s.name}","${s.email}",${s.bucks}\n`);downloadCSV(csv,`leaderboard_${name}.csv`);});
 

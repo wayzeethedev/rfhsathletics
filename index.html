@@ -646,9 +646,9 @@
         displayName: user.displayName || "Student",
         photoURL: user.photoURL || "",
         bucks: 0,
-        wileyBucks: 0,
         eventsAttended: 0,
         checkedInEvents: [],
+        disabled: false,
         createdAt: new Date()
       };
       await setDoc(studentRef, studentData);
@@ -719,11 +719,17 @@
       currentStudent = student;
       const name = student.displayName || currentUser?.displayName || "Wildcat";
       welcomeMessage.textContent = `Welcome, ${name}!`;
+      
       const checkedInEvents = Array.isArray(student.checkedInEvents) ? student.checkedInEvents : [];
-      const attended = Number(student.eventsAttended);
-      eventsAttended.textContent = Number.isFinite(attended) ? attended : checkedInEvents.length;
-      const bucks = Number(student.wileyBucks ?? student.bucks ?? 0);
+      let attended = Number(student.eventsAttended);
+      if (!Number.isFinite(attended) || attended === 0) {
+        attended = checkedInEvents.length;
+      }
+      eventsAttended.textContent = attended;
+      
+      const bucks = Number(student.bucks ?? 0);
       wileyBucks.textContent = Number.isFinite(bucks) ? bucks : 0;
+      
       renderEvents();
       subscribeToRank();
     }
@@ -738,15 +744,22 @@
         return;
       }
       usersUnsubscribe = onSnapshot(collection(db, "users"), snapshot => {
-        const studentBucks = Number(currentStudent.wileyBucks ?? currentStudent.bucks ?? 0);
+        const studentBucks = Number(currentStudent.bucks ?? 0);
         const scores = [];
         snapshot.forEach(userDoc => {
           const data = userDoc.data();
-          const bucks = Number(data.wileyBucks ?? data.bucks ?? 0);
+          if (data.disabled === true) return;
+          const bucks = Number(data.bucks ?? 0);
           if (Number.isFinite(bucks)) scores.push(bucks);
         });
         scores.sort((a, b) => b - a);
-        const rank = scores.findIndex(score => score <= studentBucks) + 1;
+        let rank = 1;
+        for (let i = 0; i < scores.length; i++) {
+          if (scores[i] <= studentBucks) {
+            rank = i + 1;
+            break;
+          }
+        }
         rankDisplay.textContent = rank > 0 ? `#${rank}` : "#-";
       }, error => {
         console.error("Rank error:", error);
@@ -763,10 +776,17 @@
 
     function getEventIcon(type) {
       const map = {
-        'Sports': 'sports_football',
-        'Band Concert': 'music_note',
-        'Choir Concert': 'music_note',
-        'Orchestra Concert': 'music_note',
+        'Football': 'sports_football',
+        'Soccer': 'sports_soccer',
+        'Basketball': 'sports_basketball',
+        'Volleyball': 'sports_volleyball',
+        'Baseball': 'sports_baseball',
+        'Softball': 'sports_softball',
+        'Track': 'directions_run',
+        'Swim': 'pool',
+        'Band': 'music_note',
+        'Choir': 'mic',
+        'Orchestra': 'music_note',
         'Theater': 'theater_comedy',
         'Academic': 'school',
         'Other': 'more_horiz'
@@ -780,7 +800,8 @@
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const upcomingEvents = events.filter(event => {
         if (event.cancelled) return false;
-        return (event.parsedDate && event.parsedDate >= today);
+        if (!event.parsedDate) return false;
+        return event.parsedDate >= today;
       }).sort((a, b) => a.parsedDate - b.parsedDate);
 
       if (upcomingEvents.length === 0) {
@@ -876,7 +897,15 @@
           }
           return;
         }
-        updateStudentStats(snapshot.data());
+        const studentData = snapshot.data();
+        if (studentData.disabled === true) {
+          loginError.textContent = "Your account has been disabled. Please contact an administrator.";
+          loginError.classList.add("show");
+          loginOverlay.classList.remove("hidden");
+          await signOut(auth);
+          return;
+        }
+        updateStudentStats(studentData);
       }, error => {
         console.error("Student listener error:", error);
         loginError.textContent = "Could not load your student account.";
