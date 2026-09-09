@@ -562,7 +562,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA4ZMuE3-l-PwTQlPvLpykFzUvk7QDF9Z0",
@@ -591,10 +591,9 @@
 
     let currentUser = null;
     let currentStudent = null;
-    let eventsUnsubscribe = null;
-    let studentUnsubscribe = null;
-    let usersUnsubscribe = null;
     let events = [];
+    let pollInterval = null;
+    let rankInterval = null;
 
     googleSignInBtn.addEventListener("click", async () => {
       googleSignInBtn.disabled = true;
@@ -629,9 +628,16 @@
       return String(email || "").trim().toLowerCase().endsWith("@students.rfsd.k12.wi.us");
     }
 
-    function isAdminEmail(email) {
-      const normalized = String(email || "").trim().toLowerCase();
-      return (normalized.endsWith("@gmail.com") || normalized.endsWith("@rfsd.k12.wi.us"));
+    async function checkAdminEmail(email) {
+      try {
+        const adminRef = collection(db, "adminEmails");
+        const q = query(adminRef, where("email", "==", email.trim().toLowerCase()));
+        const snapshot = await getDocs(q);
+        return !snapshot.empty;
+      } catch (error) {
+        console.error("Error checking admin email:", error);
+        return false;
+      }
     }
 
     async function createStudentAccount(user) {
@@ -679,30 +685,12 @@
     }
 
     function formatEventDisplay(event) {
-      let display = event.name || "Event";
-      if (event.type) display = `${event.type}: ${display}`;
+      let display = event.type || "Event";
       if (event.opponent) {
         const loc = event.locationType === "Home" ? "vs" : "at";
         display += ` ${loc} ${event.opponent}`;
       }
       return display;
-    }
-
-    function formatEventDate(date) {
-      if (!date || Number.isNaN(date.getTime())) return "Date unavailable";
-      return date.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric"
-      });
-    }
-
-    function formatEventTime(date) {
-      if (!date || Number.isNaN(date.getTime())) return "";
-      return date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit"
-      });
     }
 
     function isEventCheckedIn(event) {
@@ -731,19 +719,16 @@
       wileyBucks.textContent = Number.isFinite(bucks) ? bucks : 0;
       
       renderEvents();
-      subscribeToRank();
+      fetchRank();
     }
 
-    function subscribeToRank() {
-      if (usersUnsubscribe) {
-        usersUnsubscribe();
-        usersUnsubscribe = null;
-      }
+    async function fetchRank() {
       if (!currentStudent) {
         rankDisplay.textContent = "#-";
         return;
       }
-      usersUnsubscribe = onSnapshot(collection(db, "users"), snapshot => {
+      try {
+        const snapshot = await getDocs(collection(db, "users"));
         const studentBucks = Number(currentStudent.bucks ?? 0);
         const scores = [];
         snapshot.forEach(userDoc => {
@@ -761,10 +746,10 @@
           }
         }
         rankDisplay.textContent = rank > 0 ? `#${rank}` : "#-";
-      }, error => {
+      } catch (error) {
         console.error("Rank error:", error);
         rankDisplay.textContent = "#-";
-      });
+      }
     }
 
     function getStatusBadge(event) {
@@ -816,8 +801,6 @@
         const displayName = formatEventDisplay(event);
         const points = Number(event.points ?? 0);
         const location = event.location || "";
-        const date = formatEventDate(event.parsedDate);
-        const time = formatEventTime(event.parsedDate);
         const checkedIn = isEventCheckedIn(event);
         const statusBadge = getStatusBadge(event);
         const theme = event.theme || '';
@@ -859,12 +842,9 @@
       return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
     }
 
-    function subscribeToEvents() {
-      if (eventsUnsubscribe) {
-        eventsUnsubscribe();
-        eventsUnsubscribe = null;
-      }
-      eventsUnsubscribe = onSnapshot(collection(db, "events"), snapshot => {
+    async function fetchEvents() {
+      try {
+        const snapshot = await getDocs(collection(db, "events"));
         const loadedEvents = [];
         snapshot.forEach(eventDoc => {
           const data = eventDoc.data();
@@ -874,22 +854,20 @@
         });
         events = loadedEvents;
         renderEvents();
-      }, error => {
-        console.error("Events listener error:", error);
+      } catch (error) {
+        console.error("Events fetch error:", error);
         eventsContainer.innerHTML = `<div class="empty">Unable to load events right now.</div>`;
-      });
+      }
     }
 
-    function subscribeToStudent(user) {
-      if (studentUnsubscribe) {
-        studentUnsubscribe();
-        studentUnsubscribe = null;
-      }
+    async function fetchStudent(user) {
       const studentRef = doc(db, "users", user.uid);
-      studentUnsubscribe = onSnapshot(studentRef, async snapshot => {
+      try {
+        const snapshot = await getDoc(studentRef);
         if (!snapshot.exists()) {
           try {
-            await createStudentAccount(user);
+            const studentData = await createStudentAccount(user);
+            updateStudentStats(studentData);
           } catch (error) {
             console.error("Could not create student account:", error);
             loginError.textContent = "Your account could not be created. Please try again.";
@@ -906,25 +884,43 @@
           return;
         }
         updateStudentStats(studentData);
-      }, error => {
-        console.error("Student listener error:", error);
+      } catch (error) {
+        console.error("Student fetch error:", error);
         loginError.textContent = "Could not load your student account.";
         loginError.classList.add("show");
-      });
+      }
     }
 
-    function cleanupListeners() {
-      if (eventsUnsubscribe) {
-        eventsUnsubscribe();
-        eventsUnsubscribe = null;
+    function startPolling(user) {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
       }
-      if (studentUnsubscribe) {
-        studentUnsubscribe();
-        studentUnsubscribe = null;
+      if (rankInterval) {
+        clearInterval(rankInterval);
+        rankInterval = null;
       }
-      if (usersUnsubscribe) {
-        usersUnsubscribe();
-        usersUnsubscribe = null;
+      
+      fetchEvents();
+      fetchStudent(user);
+      
+      pollInterval = setInterval(() => {
+        fetchEvents();
+      }, 300000);
+      
+      rankInterval = setInterval(() => {
+        fetchRank();
+      }, 300000);
+    }
+
+    function stopPolling() {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+      }
+      if (rankInterval) {
+        clearInterval(rankInterval);
+        rankInterval = null;
       }
     }
 
@@ -937,7 +933,7 @@
     });
 
     onAuthStateChanged(auth, async user => {
-      cleanupListeners();
+      stopPolling();
       currentUser = null;
       currentStudent = null;
       events = [];
@@ -949,22 +945,25 @@
       }
       const email = (user.email || "").trim().toLowerCase();
       console.log("Authenticated email:", email);
-      if (isAdminEmail(email)) {
+      
+      if (isStudentEmail(email)) {
+        currentUser = user;
+        loginOverlay.classList.add("hidden");
+        startPolling(user);
+        return;
+      }
+      
+      const isAdmin = await checkAdminEmail(email);
+      if (isAdmin) {
         console.log("Admin account detected. Redirecting to admin.");
         window.location.replace("/admin.html");
         return;
       }
-      if (!isStudentEmail(email)) {
-        await signOut(auth);
-        loginError.textContent = "You must sign in with your @students.rfsd.k12.wi.us account.";
-        loginError.classList.add("show");
-        loginOverlay.classList.remove("hidden");
-        return;
-      }
-      currentUser = user;
-      loginOverlay.classList.add("hidden");
-      subscribeToStudent(user);
-      subscribeToEvents();
+      
+      await signOut(auth);
+      loginError.textContent = "Please use your student email address (@students.rfsd.k12.wi.us)";
+      loginError.classList.add("show");
+      loginOverlay.classList.remove("hidden");
     });
   </script>
 </body>

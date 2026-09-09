@@ -357,7 +357,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA4ZMuE3-l-PwTQlPvLpykFzUvk7QDF9Z0",
@@ -383,6 +383,9 @@
     const thirdName = document.getElementById("thirdName");
     const thirdBucks = document.getElementById("thirdBucks");
     const thirdAvatar = document.getElementById("thirdAvatar");
+
+    let users = [];
+    let leaderboardInterval = null;
 
     function getInitials(name) {
       if (!name) return '?';
@@ -418,28 +421,28 @@
       elementAvatar.style.display = "block";
     }
 
-    function renderLeaderboard(users) {
-      users.sort((a, b) => {
+    function renderLeaderboard(usersData) {
+      usersData.sort((a, b) => {
         return Number(b.bucks || 0) - Number(a.bucks || 0);
       });
 
-      updateTopCard(firstName, firstBucks, firstAvatar, users[0] || null);
-      updateTopCard(secondName, secondBucks, secondAvatar, users[1] || null);
-      updateTopCard(thirdName, thirdBucks, thirdAvatar, users[2] || null);
+      updateTopCard(firstName, firstBucks, firstAvatar, usersData[0] || null);
+      updateTopCard(secondName, secondBucks, secondAvatar, usersData[1] || null);
+      updateTopCard(thirdName, thirdBucks, thirdAvatar, usersData[2] || null);
 
       leaderboardList.innerHTML = "";
 
-      if (users.length === 0) {
+      if (usersData.length === 0) {
         leaderboardList.innerHTML = `<div class="empty">No students found.</div>`;
         return;
       }
 
-      if (users.length <= 3) {
+      if (usersData.length <= 3) {
         leaderboardList.innerHTML = `<div class="empty">More students will appear as they earn Wiley Bucks.</div>`;
         return;
       }
 
-      users.slice(3).forEach((user, index) => {
+      usersData.slice(3).forEach((user, index) => {
         const rank = index + 4;
         const item = document.createElement("div");
         item.className = "leaderboard-item";
@@ -473,6 +476,52 @@
       });
     }
 
+    async function fetchLeaderboard() {
+      try {
+        const snapshot = await getDocs(collection(db, "users"));
+        const loadedUsers = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (!data.disabled) {
+            loadedUsers.push({
+              id: doc.id,
+              displayName: data.displayName || "Wildcat",
+              photoURL: data.photoURL || "",
+              bucks: Number(data.bucks || 0),
+              eventsAttended: Number(data.eventsAttended || 0)
+            });
+          }
+        });
+        users = loadedUsers;
+        renderLeaderboard(users);
+      } catch (error) {
+        console.error("Leaderboard error:", error);
+        leaderboardList.innerHTML = `
+          <div class="error">Unable to load the leaderboard. Please try again.</div>
+        `;
+      }
+    }
+
+    function startPolling() {
+      if (leaderboardInterval) {
+        clearInterval(leaderboardInterval);
+        leaderboardInterval = null;
+      }
+      
+      fetchLeaderboard();
+      
+      leaderboardInterval = setInterval(() => {
+        fetchLeaderboard();
+      }, 300000);
+    }
+
+    function stopPolling() {
+      if (leaderboardInterval) {
+        clearInterval(leaderboardInterval);
+        leaderboardInterval = null;
+      }
+    }
+
     document.addEventListener('gesturestart', function(e) {
       e.preventDefault();
     });
@@ -499,25 +548,7 @@
         return;
       }
 
-      onSnapshot(collection(db, "users"), snapshot => {
-        const users = [];
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          users.push({
-            id: doc.id,
-            displayName: data.displayName || "Wildcat",
-            photoURL: data.photoURL || "",
-            bucks: Number(data.bucks || 0),
-            eventsAttended: Number(data.eventsAttended || 0)
-          });
-        });
-        renderLeaderboard(users);
-      }, error => {
-        console.error("Leaderboard error:", error);
-        leaderboardList.innerHTML = `
-          <div class="error">Unable to load the leaderboard. Please try again.</div>
-        `;
-      });
+      startPolling();
     });
   </script>
 
